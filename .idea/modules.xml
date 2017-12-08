@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://D:\GitHub\eTu\app\app.iml" filepath="D:\GitHub\eTu\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/eTu.iml" filepath="$PROJECT_DIR$/eTu.iml" />
       <module fileurl="file://D:\GitHub\eTu\eTu.iml" filepath="D:\GitHub\eTu\eTu.iml" />
