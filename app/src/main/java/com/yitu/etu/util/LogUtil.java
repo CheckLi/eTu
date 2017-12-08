@@ -2,6 +2,8 @@ package com.yitu.etu.util;
 
 import android.content.Context;
 
+import com.yitu.etu.BuildConfig;
+
 /**
  * @author lim
  * @ClassName: LogUtil
@@ -14,7 +16,7 @@ public class LogUtil {
     /**
      * 应用调试模式
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = BuildConfig.DEBUG;
 
     public static void show(Context context, String str) {
         if (DEBUG) {

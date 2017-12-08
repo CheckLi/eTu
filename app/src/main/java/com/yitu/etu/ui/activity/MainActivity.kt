@@ -7,7 +7,7 @@ class MainActivity : BaseActivity() {
     override fun getLayout(): Int = R.layout.activity_main
 
     override fun initActionBar() {
-
+//sldkfjklsjlfsjlfjslfjlsjfs
     }
 
     override fun initView() {
