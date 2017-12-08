@@ -1,4 +1,4 @@
-package com.example.administrator.etu
+package com.yitu.etu
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

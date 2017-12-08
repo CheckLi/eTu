@@ -1,4 +1,4 @@
-package com.example.administrator.etu
+package com.yitu.etu
 
 import org.junit.Test
 
