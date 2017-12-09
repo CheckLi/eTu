@@ -5,18 +5,22 @@
     android:layout_height="@dimen/actionBarSize"
     android:background="@color/actionBarColor"
     android:orientation="vertical">
-    <RelativeLayout android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/iv_left"
-            android:layout_width="45dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:padding="10dp"
             android:scaleType="centerInside"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
-            android:src="@drawable/back"/>
+            android:src="@drawable/icon41"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -28,16 +32,20 @@
             android:text="@string/app_name"
             android:textColor="@color/actionBarTitleColor"
             android:textSize="@dimen/title_size"/>
+
         <ImageView
             android:id="@+id/iv_right"
-            android:layout_width="45dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:padding="10dp"
             android:scaleType="centerInside"
-            android:visibility="gone"
-            android:src="@drawable/share"/>
+            android:src="@drawable/icon131"
+            android:visibility="gone"/>
     </RelativeLayout>
-    <View android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/actionBarDivColor"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/actionBarDivColor"/>
 </LinearLayout>

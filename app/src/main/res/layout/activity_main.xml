@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_hello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-    <TextView
-        android:id="@+id/single"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="单选"/>
-    <TextView
-        android:id="@+id/mu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="多选"/>
-    <TextView
-        android:id="@+id/camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="相机"/>
+    <com.yitu.etu.widget.NoScrollViewPage
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tab_select"/>
 
-</LinearLayout>
+    <com.flyco.tablayout.SlidingTabLayout
+        android:id="@+id/tab_select"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/actionBarColor"
+        app:tl_divider_color="#00000000"
+        app:tl_indicator_color="#00000000"
+        app:tl_indicator_gravity="TOP"
+        app:tl_tab_space_equal="true"
+        app:tl_underline_color="#00000000"
+        app:tl_underline_gravity="TOP"
+        app:tl_underline_height="0dp"/>
+
+
+</RelativeLayout>

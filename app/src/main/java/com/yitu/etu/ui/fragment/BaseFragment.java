@@ -31,7 +31,6 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init();
-        initActionBar();
         initView();
         getData();
         initListener();
@@ -44,8 +43,6 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract @LayoutRes
     int getLayout();
-
-    public abstract void initActionBar();
 
     public abstract void initView();
 

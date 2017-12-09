@@ -1,5 +1,6 @@
 package com.yitu.etu.widget
 
+import android.app.Activity
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.util.AttributeSet
@@ -32,6 +33,9 @@ class ActionBarView : FrameLayout {
 
     private fun init() {
         LayoutInflater.from(context).inflate(R.layout.actionbar_layout, this, true)
+        setLeftImage{
+            (context as Activity).onBackPressed()
+        }
     }
 
     fun setTitle(title: String) {
@@ -88,5 +92,13 @@ class ActionBarView : FrameLayout {
         iv_right.setOnClickListener{
             onClick()
         }
+    }
+
+    fun hideLeftImage(){
+        iv_left.visibility=View.GONE
+    }
+
+    fun hideRightImage(){
+        iv_right.visibility=View.GONE
     }
 }

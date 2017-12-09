@@ -68,6 +68,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation "org.jetbrains.anko:anko-sdk15:0.10.3" // So here it's 15 too
+    implementation 'com.flyco.roundview:FlycoRoundView_Lib:1.1.2@aar'
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:1.5.0@aar'
 }
 
 task showMeCache << {

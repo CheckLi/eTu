@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import com.yitu.etu.R;
 
@@ -18,6 +17,7 @@ import com.yitu.etu.R;
 public class activityUtil {
     private static int openAnima = R.anim.open_animation;
     private static int closeAnima =R.anim.close_animation;
+
     public static void nextActivity(Context context, Class<?> toActivity) {
         nextActivity(context, toActivity, null, -1,false, openAnima, closeAnima);
     }

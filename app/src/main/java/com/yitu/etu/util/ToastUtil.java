@@ -44,7 +44,7 @@ public class ToastUtil {
      */
     public static Toast getToast() {
         Toast toast = Toast.makeText(EtuApplication.getInstance(),"",Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.BOTTOM, 0, 0);
+        toast.setGravity(Gravity.CENTER, 0, 0);
         return toast;
     }
 }
