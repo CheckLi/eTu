@@ -1,13 +1,30 @@
 package com.yitu.etu.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.yitu.etu.R;
 import com.yitu.etu.dialog.LoadingDialog;
+import com.yitu.etu.tools.MyActivityManager;
 import com.yitu.etu.util.ToastUtil;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
+import com.yitu.etu.widget.ActionBarView;
+import com.yuyh.library.imgsel.ISNav;
+import com.yuyh.library.imgsel.common.ImageLoader;
+import com.yuyh.library.imgsel.config.ISCameraConfig;
+import com.yuyh.library.imgsel.config.ISListConfig;
+
+import java.util.List;
 
 /**
  * @className:BaseActivity
@@ -17,11 +34,15 @@ import com.yitu.etu.util.ToastUtil;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     private LoadingDialog mWaitDialog;
+    public static final int REQUEST_LIST_CODE = 0;
+    public static final int REQUEST_CAMERA_CODE = 1;
+    public ActionBarView mActionBarView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
+        MyActivityManager.getInstance().addActivity(this);
         init();
         initActionBar();
         initView();
@@ -31,6 +52,72 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void init() {
         mWaitDialog = new LoadingDialog(this, "");
+        ISNav.getInstance().init(new ImageLoader() {
+            @Override
+            public void displayImage(Context context, String path, ImageView imageView) {
+                ImageLoadUtil.getInstance().loadImage(imageView, path, 200, 200);
+            }
+        });
+    }
+
+    public void Multiselect(View view) {
+        ISListConfig config = new ISListConfig.Builder()
+                .multiSelect(true)
+                // 是否记住上次选中记录
+                .rememberSelected(false)
+                // 使用沉浸式状态栏
+                .statusBarColor(getResources().getColor(R.color.actionBarColor)).build();
+
+        ISNav.getInstance().toListActivity(this, config, REQUEST_LIST_CODE);
+    }
+
+    public void Single(View view) {
+        ISListConfig config = new ISListConfig.Builder()
+                // 是否多选
+                .multiSelect(false)
+                .btnText("Confirm")
+                // 确定按钮背景色
+                //.btnBgColor(Color.parseColor(""))
+                // 确定按钮文字颜色
+                .btnTextColor(Color.WHITE)
+                // 使用沉浸式状态栏
+                .statusBarColor(getResources().getColor(R.color.actionBarColor))
+                // 返回图标ResId
+                .backResId(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha)
+                .title("Images")
+                .titleColor(Color.WHITE)
+                .titleBgColor(getResources().getColor(R.color.actionBarColor))
+                .allImagesText("All Images")
+                .needCrop(true)
+                .cropSize(1, 1, 200, 200)
+                // 第一个是否显示相机
+                .needCamera(true)
+                // 最大选择图片数量
+                .maxNum(9)
+                .build();
+
+        ISNav.getInstance().toListActivity(this, config, REQUEST_LIST_CODE);
+    }
+
+    public void Camera(View view) {
+        ISCameraConfig config = new ISCameraConfig.Builder()
+                .needCrop(true)
+                .cropSize(1, 1, 200, 200)
+                .build();
+
+        ISNav.getInstance().toCameraActivity(this, config, REQUEST_CAMERA_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_LIST_CODE && resultCode == RESULT_OK && data != null) {
+            List<String> pathList = data.getStringArrayListExtra("result");
+            selectSuccess(pathList);
+        } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK && data != null) {
+            String path = data.getStringExtra("result");
+            selectSuccess(path);
+        }
     }
 
     public abstract @LayoutRes
@@ -90,4 +177,50 @@ public abstract class BaseActivity extends AppCompatActivity {
             mWaitDialog.hideDialog();
         }
     }
+
+    public void selectSuccess(String path) {
+
+    }
+
+    public void selectSuccess(List<String> pathList) {
+
+    }
+
+    /**
+     * 销毁activity的时候移除mangager的activity
+     */
+    @Override
+    protected void onDestroy() {
+        MyActivityManager.getInstance().removeActivity(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.exit_open_animation,R.anim.exit_close_animation);
+
+    }
+
+    /**
+     * 标题栏的添加
+     *
+     * @param layoutResID
+     */
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+        //添加标题栏
+        FrameLayout layout = (FrameLayout) getWindow().getDecorView();
+        mActionBarView = new ActionBarView(this);
+        try {
+            LinearLayout content = (LinearLayout) layout.getChildAt(0);
+            content.addView(mActionBarView, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            layout.addView(mActionBarView);
+        }
+    }
+
+
 }

@@ -12,12 +12,12 @@ public class EtuApplication extends Application {
     private static EtuApplication mInstance;
 
     public static EtuApplication getInstance() {
-        return mInstance = mInstance == null ? new EtuApplication() : mInstance;
+        return mInstance;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        mInstance=this;
     }
 }

@@ -24,6 +24,10 @@ public class ImageLoadUtil {
         return new ImageLoadUtil();
     }
 
+    public void loadImage(ImageView img, String url, int width, int height) {
+        loadImage(img, url, width, height, -1, -1);
+    }
+
     /**
      * 加载图片
      *

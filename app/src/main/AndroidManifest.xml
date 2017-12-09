@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.yitu.etu">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".EtuApplication"
         android:allowBackup="true"
@@ -10,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.yitu.etu.ui.activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="singleTask">
             <intent-filter>
@@ -18,6 +23,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".ui.activity.TestActivity">
         </activity>
     </application>
 
