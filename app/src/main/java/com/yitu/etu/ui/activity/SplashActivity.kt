@@ -13,7 +13,7 @@ class SplashActivity : BaseActivity() {
     override fun getLayout(): Int = R.layout.activity_test
 
     override fun initActionBar() {
-
+        mActionBarView.hideLeftImage()
     }
 
     override fun initView() {
