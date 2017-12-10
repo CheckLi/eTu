@@ -13,7 +13,6 @@ android {
         versionCode 1
         versionName "1.0"
     }
-
     signingConfigs {
         debug {
             keyAlias 'debug'
@@ -30,7 +29,6 @@ android {
             v2SigningEnabled false
         }
     }
-
     buildTypes {
         release {
             minifyEnabled true
@@ -50,10 +48,11 @@ android {
             shrinkResources false
         }
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:23.0.0'
@@ -64,12 +63,13 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.yuyh.imgsel:library:2.0.2'
-//    implementation 'com.yanzhenjie:permission:1.1.2'//权限申请工具
+    //    implementation 'com.yanzhenjie:permission:1.1.2'//权限申请工具
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation "org.jetbrains.anko:anko-sdk15:0.10.3" // So here it's 15 too
+    implementation 'org.jetbrains.anko:anko-sdk15:0.10.3'
+    // So here it's 15 too
     implementation 'com.flyco.roundview:FlycoRoundView_Lib:1.1.2@aar'
-    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:1.5.0@aar'
+//    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:1.5.0@aar'
 }
 
 task showMeCache << {

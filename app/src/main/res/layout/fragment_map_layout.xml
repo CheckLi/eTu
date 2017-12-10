@@ -3,12 +3,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.yitu.etu.widget.SpringBackListView
-        android:id="@+id/listView"
-        style="@style/MyListView"
-        android:layout_width="match_parent"
-        android:background="#d5eff4"
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:divider="@color/transparent"
-        android:dividerHeight="5dp"/>
+        android:layout_centerInParent="true"
+        android:text="地图页面"
+        android:textSize="20sp"/>
 </RelativeLayout>

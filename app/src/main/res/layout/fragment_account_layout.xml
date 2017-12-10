@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.yitu.etu.widget.SpringBackScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/MyListView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#3c3289"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="30dp">
+
+            <com.yitu.etu.widget.image.CircleImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/icon17"
+                app:border_color="@color/color_f5f5f5"
+                app:border_width="1dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/icon2"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:paddingBottom="5dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="16dp"
+                android:paddingTop="10dp"
+                android:singleLine="true"
+                android:text="182****9229"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll1"
+            android:background="#37373b"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/icon116"
+                android:drawablePadding="10dp"
+                android:gravity="center_horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="成都市"
+                android:textColor="#455293"
+                android:textSize="20sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_blue_bg"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/account_title"
+                    android:text="服务中心"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/round_alpha_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon148"
+                        android:text="我的钱包"/>
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon50"
+                        android:text="个人订单"/>
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon51"
+                        android:text="购物车"/>
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon32"
+                        android:text="我的店铺"/>
+                </LinearLayout>
+
+                <TextView
+                    style="@style/account_title"
+                    android:layout_marginTop="10dp"
+                    android:text="记录"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/round_alpha_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon1"
+                        android:text="我的行程"/>
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/zan_green"
+                        android:text="景点推荐"/>
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon162"
+                        android:text="我的游记"/>
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon137"
+                        android:text="我的收藏"/>
+                </LinearLayout>
+
+                <TextView
+                    style="@style/account_title"
+                    android:layout_marginTop="10dp"
+                    android:text="其它服务"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/round_alpha_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon163"
+                        android:text="账号管理"/>
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon87"
+                        android:text="福利中心"/>
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon132"
+                        android:text="联系客服"/>
+
+                    <TextView
+                        style="@style/account_item"
+                        android:drawableTop="@drawable/icon164"
+                        android:text="软件分享"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</com.yitu.etu.widget.SpringBackScrollView>

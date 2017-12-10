@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/tab_select"/>
 
-    <com.flyco.tablayout.SlidingTabLayout
+    <com.yitu.etu.widget.tablayout.SlidingTabLayout
         android:id="@+id/tab_select"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -23,6 +23,9 @@
         app:tl_indicator_color="#00000000"
         app:tl_indicator_gravity="TOP"
         app:tl_tab_space_equal="true"
+        app:tl_textBold="BOTH"
+        app:tl_textSelectColor="@color/white"
+        app:tl_textUnselectColor="@color/color_808080"
         app:tl_underline_color="#00000000"
         app:tl_underline_gravity="TOP"
         app:tl_underline_height="0dp"/>
