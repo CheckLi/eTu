@@ -86,6 +86,7 @@ class MainActivity : BaseActivity() {
          */
         iv_middle.setOnClickListener {
             tab_select.currentTab = 1
+            select(1)
         }
     }
 

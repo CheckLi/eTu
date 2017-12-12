@@ -81,3 +81,6 @@ dependencies {
 task showMeCache << {
     configurations.compile.each { println it }
 }
+configurations.all {
+    resolutionStrategy.force 'com.android.support:support-annotations:23.1.0'
+}

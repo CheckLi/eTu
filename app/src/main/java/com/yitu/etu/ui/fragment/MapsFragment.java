@@ -449,7 +449,7 @@ public class MapsFragment extends SupportMapFragment implements
             GlideApp.with(MapsFragment.this)
                     .load("http://pic.58pic.com/58pic/13/66/58/20258PICpDh_1024.png")
                     .circleCrop()
-                    .placeholder(R.mipmap.ic_launcher_round)
+                    .placeholder(R.drawable.icon17)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -461,7 +461,7 @@ public class MapsFragment extends SupportMapFragment implements
                             return false;
                         }
                     })
-                    .error(R.mipmap.ic_launcher);
+                    .error(R.drawable.icon17);
 //            .into(simpleTarget);
 
             MarkerOptions markerOption = new MarkerOptions();

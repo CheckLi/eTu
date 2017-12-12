@@ -1,17 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/image"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/colorAccent">
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@mipmap/ic_launcher_round"/>
+    android:background="@drawable/round_white_10dp"
+    android:gravity="center_vertical">
+
+    <com.yitu.etu.widget.image.CircleImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/icon17"
+        app:border_color="#34a6e4"
+        app:border_width="2dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="行走的攻略"
+            android:textColor="@color/color_333333"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="距离你376米"
+            android:textColor="@color/color_999999"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1212121"/>
-
+        android:layout_height="match_parent"
+        android:background="@drawable/round_blue_right_10dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:text="@string/llll"
+        android:textColor="@color/white"/>
 </LinearLayout>
