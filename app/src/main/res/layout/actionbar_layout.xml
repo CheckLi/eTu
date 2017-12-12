@@ -16,7 +16,10 @@
             android:id="@+id/iv_left"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:padding="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:scaleType="centerInside"
             android:src="@drawable/icon41"
             android:visibility="gone"/>
@@ -38,7 +41,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:padding="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:scaleType="centerInside"
             android:src="@drawable/icon131"
             android:visibility="gone"/>

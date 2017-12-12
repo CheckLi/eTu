@@ -25,10 +25,19 @@
         app:tl_tab_space_equal="true"
         app:tl_textBold="BOTH"
         app:tl_textSelectColor="@color/white"
-        app:tl_textUnselectColor="@color/color_808080"
+        app:tl_textUnselectColor="@color/color_818B93"
         app:tl_underline_color="#00000000"
         app:tl_underline_gravity="TOP"
         app:tl_underline_height="0dp"/>
 
-
+    <ImageView
+        android:id="@+id/iv_middle"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:padding="5dp"
+        android:translationY="5dp"
+        android:background="@drawable/shape_circle_3f6184"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icon113"/>
 </RelativeLayout>

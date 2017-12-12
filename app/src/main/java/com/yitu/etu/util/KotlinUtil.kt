@@ -1,5 +1,7 @@
 package com.yitu.etu.util
 
+import android.app.Application
+import android.content.Context
 import android.view.View
 
 /**
@@ -52,4 +54,12 @@ fun String?.checkVisible(vararg hide: String): Int {
  */
 fun View?.checkVisible(content: String) {
     this?.visibility = content.checkVisible()
+}
+
+fun Context.showToast(message:String){
+    ToastUtil.showMessage(message)
+}
+
+fun Application.showToast(message:String){
+    ToastUtil.showMessage(message)
 }

@@ -40,6 +40,8 @@ public class GsonUtil {
                 .registerTypeHierarchyAdapter(Long.class, new LongDefault0Adapter())
                 .registerTypeHierarchyAdapter(long.class, new LongDefault0Adapter())
                 .registerTypeHierarchyAdapter(List.class, new ListDefaultAdapter())
+                .setPrettyPrinting()
+                .disableHtmlEscaping()
                 .create();
     }
 }

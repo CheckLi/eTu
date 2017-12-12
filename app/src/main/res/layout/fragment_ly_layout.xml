@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="#d5eff4">
 
-    <com.yitu.etu.widget.SpringBackListView
-        android:id="@+id/listView"
-        style="@style/MyListView"
+    <include
+        android:id="@+id/layout_head"
+        layout="@layout/ly_head"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
         android:layout_width="match_parent"
-        android:background="#d5eff4"
         android:layout_height="wrap_content"
-        android:divider="@color/transparent"
-        android:dividerHeight="5dp"/>
+        android:layout_below="@+id/layout_head">
+
+    </RelativeLayout>
 </RelativeLayout>

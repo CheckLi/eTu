@@ -1,8 +1,10 @@
 package com.yitu.etu.ui.fragment
 
-import android.view.LayoutInflater
+import android.net.Uri
+import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
-import com.yitu.etu.ui.adapter.LYAdapter
+import io.rong.imkit.fragment.ConversationListFragment
+import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_ly_layout.*
 
 /**
@@ -23,8 +25,24 @@ class LYFragment : BaseFragment() {
     }
 
     override fun initView() {
-        listView.addHeaderView(LayoutInflater.from(activity).inflate(R.layout.ly_head,null,false))
-        listView.adapter = LYAdapter(activity, listOf())
+        addFragment()
+    }
+
+    private fun addFragment() {
+        val fragment = ConversationListFragment()
+        val uri = Uri.parse("rong://" + EtuApplication.getInstance().packageName).buildUpon()
+                .appendPath("conversationlist")
+                .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.GROUP.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.APP_PUBLIC_SERVICE.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.PUSH_SERVICE.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.DISCUSSION.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.CUSTOMER_SERVICE.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.CHATROOM.getName(), "false")
+                .build()
+        fragment.uri = uri
+        childFragmentManager.beginTransaction().replace(rl_content.id, fragment, "lyfragment").commitAllowingStateLoss()
     }
 
     override fun getData() {

@@ -1,6 +1,7 @@
 package com.yitu.etu.ui.fragment
 
 import com.yitu.etu.R
+import com.yitu.etu.util.LogUtil
 
 /**
  * @className:LYFragment
@@ -18,7 +19,7 @@ class AccountFragment : BaseFragment() {
     }
 
     override fun initView() {
-
+        LogUtil.e("初始化")
     }
 
     override fun getData() {

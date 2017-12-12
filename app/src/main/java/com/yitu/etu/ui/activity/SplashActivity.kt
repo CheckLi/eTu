@@ -1,8 +1,12 @@
 package com.yitu.etu.ui.activity
 
+import android.content.Intent
 import android.os.Handler
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
+import com.yitu.etu.util.LogUtil
+import io.rong.imkit.RongIM
+import io.rong.imlib.RongIMClient
 
 class SplashActivity : BaseActivity() {
     private var mHandler = Handler()
@@ -27,7 +31,7 @@ class SplashActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        mHandler?.removeCallbacks(mTime)
+        mHandler.removeCallbacks(mTime)
         super.onDestroy()
 
     }
@@ -36,4 +40,6 @@ class SplashActivity : BaseActivity() {
         super.finish()
         overridePendingTransition(R.anim.open_animation, R.anim.close_animation)
     }
+
+
 }

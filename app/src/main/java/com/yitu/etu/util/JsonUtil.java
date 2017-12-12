@@ -1,7 +1,6 @@
 package com.yitu.etu.util;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
 import java.io.StringReader;
@@ -31,7 +30,7 @@ public class JsonUtil {
         try {
             String json = getStrValue(name);
             if (!TextUtils.isEmpty(json)) {
-                Gson gson = new Gson();
+                Gson gson = GsonUtil.gson();
                 JsonReader reader = new JsonReader(new StringReader(json));
                 reader.setLenient(true);
                 bean = gson.fromJson(reader, cls);
@@ -57,7 +56,7 @@ public class JsonUtil {
         T bean = null;
         try {
             if (!TextUtils.isEmpty(json)) {
-                Gson gson = new Gson();
+                Gson gson =  GsonUtil.gson();
                 JsonReader reader = new JsonReader(new StringReader(json));
                 reader.setLenient(true);
                 bean = gson.fromJson(reader, cls);
@@ -77,10 +76,7 @@ public class JsonUtil {
         String gsonString = null;
         try {
             if (jsonBean != null) {
-                Gson gson = new GsonBuilder()
-                        .setPrettyPrinting()
-                        .disableHtmlEscaping()
-                        .create();
+                Gson gson = GsonUtil.gson();
                 gsonString = gson.toJson(jsonBean);
             }
         } catch (Exception e) {

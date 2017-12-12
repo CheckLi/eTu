@@ -10,6 +10,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.yitu.etu.R;
 import com.yitu.etu.widget.GlideApp;
 
 /**
@@ -25,7 +26,7 @@ public class ImageLoadUtil {
     }
 
     public void loadImage(ImageView img, String url, int width, int height) {
-        loadImage(img, url, width, height, -1, -1);
+        loadImage(img, url, width, height, R.drawable.ic_default_image, R.drawable.ic_default_image,null);
     }
 
     /**
@@ -38,7 +39,7 @@ public class ImageLoadUtil {
      * @param displayError    加载错误的时候显示的图片
      * @param displayLoadding 加载中的时候显示的图片
      */
-    public void loadImage(ImageView img, String url, int width, int height, @DrawableRes int displayError, @DrawableRes int displayLoadding) {
+    public void loadImage(ImageView img, String url, int width, int height, @DrawableRes int displayError, @DrawableRes int displayLoadding,RequestListener listener) {
         GlideApp.with(img.getContext())
                 .load(url)
                 .override(width, height)
@@ -46,7 +47,7 @@ public class ImageLoadUtil {
                 .placeholder(displayLoadding)//加载中图片显示
                 .error(displayError)
                 .transition(new DrawableTransitionOptions().crossFade(200))//渐变动画
-                .listener(new RequestListener<Drawable>() {
+                .listener(listener==null?new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
@@ -56,7 +57,7 @@ public class ImageLoadUtil {
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         return false;
                     }
-                })
+                }:listener)
                 .into(img);
     }
 }
