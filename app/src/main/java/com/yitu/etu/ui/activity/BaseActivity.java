@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -198,7 +199,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.exit_open_animation,R.anim.exit_close_animation);
+        overridePendingTransition(R.anim.exit_open_animation, R.anim.exit_close_animation);
 
     }
 
@@ -222,5 +223,62 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void setTitle(CharSequence title) {
+        mActionBarView.setTitle(title.toString());
+    }
 
+    /**
+     * 按钮点击事件
+     *
+     * @param listener
+     */
+    public void setLeftClick(View.OnClickListener listener) {
+        mActionBarView.setLeftImage(listener);
+    }
+
+    /**
+     * 按钮点击事件
+     *
+     * @param listener
+     */
+    public void setLeftClick(@DrawableRes int drawable, View.OnClickListener listener) {
+        mActionBarView.setLeftImage(drawable, listener);
+    }
+
+    /**
+     * 按钮点击事件
+     *
+     * @param listener
+     */
+    public void setRightClick(View.OnClickListener listener) {
+        mActionBarView.setRightImage(listener);
+    }
+
+    /**
+     * 按钮点击事件
+     *
+     * @param listener
+     */
+    public void setRightClick(@DrawableRes int drawable, View.OnClickListener listener) {
+        mActionBarView.setRightImage(drawable, listener);
+    }
+
+    /**
+     * 设置左侧文字按钮点击事件
+     * @param text
+     * @param onClickListener
+     */
+    public void setLeftText(String text, View.OnClickListener onClickListener){
+        mActionBarView.setLeftText(text,onClickListener);
+    }
+
+    /**\
+     * 设置右侧文字按钮点击事件
+     * @param text
+     * @param onClickListener
+     */
+    public void setRightText(String text, View.OnClickListener onClickListener){
+        mActionBarView.setRightText(text,onClickListener);
+    }
 }

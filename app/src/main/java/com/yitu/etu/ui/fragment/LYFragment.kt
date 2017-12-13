@@ -5,7 +5,6 @@ import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import io.rong.imkit.fragment.ConversationListFragment
 import io.rong.imlib.model.Conversation
-import kotlinx.android.synthetic.main.fragment_ly_layout.*
 
 /**
  * @className:LYFragment
@@ -42,7 +41,8 @@ class LYFragment : BaseFragment() {
                 .appendQueryParameter(Conversation.ConversationType.CHATROOM.getName(), "false")
                 .build()
         fragment.uri = uri
-        childFragmentManager.beginTransaction().replace(rl_content.id, fragment, "lyfragment").commitAllowingStateLoss()
+
+        childFragmentManager.beginTransaction().replace(R.id.rl_content, fragment, "lyfragment").commitAllowingStateLoss()
     }
 
     override fun getData() {

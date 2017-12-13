@@ -6,7 +6,7 @@ import android.support.v4.content.FileProvider;
  * @className:MyFileProvider
  * @description:
  * @author: JIAMING.LI
- * @date:2017年12月12日 15:21
+ * @date:2017年12月13日 21:18
  */
 public class MyFileProvider extends FileProvider{
 }

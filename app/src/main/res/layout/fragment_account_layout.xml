@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/MyListView"
+    android:fillViewport="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,7 +16,7 @@
             android:id="@+id/ll1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#3e5686"
+            android:background="#1C2B3E"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:paddingTop="30dp">
@@ -24,8 +25,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/icon17"
-                app:border_color="@color/color_f5f5f5"
-                app:border_width="1dp"/>
+                app:border_color="#4A5965"
+                app:border_width="3dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -49,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ll1"
-            android:background="#202c41"
+            android:background="#22374A"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -63,7 +64,7 @@
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
                 android:text="成都市"
-                android:textColor="#455293"
+                android:textColor="#536D88"
                 android:textSize="20sp"/>
 
             <LinearLayout
@@ -88,6 +89,7 @@
                     android:padding="10dp">
 
                     <TextView
+                        android:id="@+id/tv_my_wallet"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon148"
                         android:text="我的钱包"/>

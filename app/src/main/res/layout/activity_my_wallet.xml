@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.yitu.etu.ui.activity.MyWalletActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#253A4D"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingTop="25dp">
+
+        <TextView
+            android:id="@+id/tv_wallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="0.00"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="账户余额(元)"
+            android:textColor="#CFE4F1"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="8dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="8dp">
+
+        <com.yitu.etu.widget.image.RoundImageView
+            android:id="@+id/iv_head"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/icon90"
+            app:x_radius="5dp"
+            app:y_radius="5dp"/>
+
+        <com.huizhuang.zxsq.widget.textview.SpanTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_toRightOf="@+id/iv_head"
+            android:gravity="center"
+            android:text="平安福数量\n%0个%"
+            android:textColor="@color/color_333333"
+            app:spanColor="#999999"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_circle_8defc0"
+            android:paddingBottom="4dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="4dp"
+            android:text="购买"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/white"
+        android:drawableRight="@drawable/next"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:padding="15dp"
+        android:text="余额充值"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:drawableRight="@drawable/next"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:padding="15dp"
+        android:text="商品兑换"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:drawableRight="@drawable/next"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:padding="15dp"
+        android:text="余额提现"
+        android:textSize="18sp"/>
+</LinearLayout>
