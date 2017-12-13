@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.yuyh.imgsel:library-2.0.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/library-2.0.2.aar/b78eb459b5500d180049d0ca404ce8b6/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/library-2.0.2.aar/b78eb459b5500d180049d0ca404ce8b6/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.yuyh.imgsel/library/2.0.2/bf04b1b83935b038905df4e5cd034b61aee4731e/library-2.0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
