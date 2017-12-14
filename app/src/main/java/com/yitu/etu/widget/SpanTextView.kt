@@ -76,6 +76,13 @@ class SpanTextView : TextView {
             initBold(bolds)
             separator = if (s.isNullOrEmpty()) "%" else s
             a.recycle()
+        }else{
+            val colors =arrayListOf(toHexEncoding(currentTextColor))
+            val sizes =arrayListOf((textSize / resources.displayMetrics.density).toString())
+            val bolds =arrayListOf("0")
+            initColors(colors)
+            initSize(sizes)
+            initBold(bolds)
         }
         init()
     }
@@ -112,9 +119,9 @@ class SpanTextView : TextView {
                 for ((count, s) in (1 until content.size step 2).withIndex()) {
                     val start = getStringIndex(content, s)
                     val end = start + content[s].length
-                    val sizeindex = if (count > spanSize!!.size - 1) spanSize!!.size - 1 else count
-                    val colorindex = if (count > spanColor!!.size - 1) spanColor!!.size - 1 else count
-                    val boldindex = if (count > isBold!!.size - 1) isBold!!.size - 1 else count
+                    val sizeindex = if (count > spanSize!!.size - 1&&spanSize!!.size>0) spanSize!!.size - 1 else count
+                    val colorindex = if (count > spanColor!!.size - 1&&spanColor!!.size>0) spanColor!!.size - 1 else count
+                    val boldindex = if (count > isBold!!.size - 1&&isBold!!.size>0) isBold!!.size - 1 else count
                     setSpanString(span, spanSize!![sizeindex].toInt(), spanColor!![colorindex]
                             , start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE, isBold!![boldindex])
                 }
