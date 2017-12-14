@@ -2,6 +2,8 @@ package com.yitu.etu.ui.fragment
 
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
 import com.yitu.etu.R
+import com.yitu.etu.ui.activity.BuyCarActivity
+import com.yitu.etu.ui.activity.MyOrderActivity
 import com.yitu.etu.ui.activity.MyWalletActivity
 import kotlinx.android.synthetic.main.fragment_account_layout.*
 
@@ -30,8 +32,25 @@ class AccountFragment : BaseFragment() {
     }
 
     override fun initListener() {
+        /**
+         * 我的钱包
+         */
         tv_my_wallet.setOnClickListener {
             nextActivityFromFragment<MyWalletActivity>()
+        }
+
+        /**
+         * 我的订单
+         */
+        tv_my_order.setOnClickListener {
+            nextActivityFromFragment<MyOrderActivity>()
+        }
+
+        /**
+         * 购物车
+         */
+        tv_buy_car.setOnClickListener {
+            nextActivityFromFragment<BuyCarActivity>()
         }
     }
 }

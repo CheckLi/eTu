@@ -19,7 +19,7 @@ class LYAdapter(context: Context, data: List<String>) : MyBaseAdapter<String>(co
     val random = Random()
     override fun getItemResource(pos: Int): Int = R.layout.ly_chat_item
 
-    override fun getItemView(position: Int, convertView: View, holder: MyBaseAdapter<String>.ViewHolder, parent: ViewGroup): View? {
+    override fun getItemView(position: Int, convertView: View, holder: ViewHolder, parent: ViewGroup): View? {
         convertView.run {
             tv_name.tag = if (tv_name.tag == null) {
                 names[random.nextInt(count)]
