@@ -1,9 +1,11 @@
 package com.yitu.etu.ui.fragment;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -37,8 +38,13 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.yitu.etu.R;
-import com.yitu.etu.entity.MerchantEntity;
+import com.yitu.etu.entity.MapFirendEntity;
+import com.yitu.etu.entity.MapOrderSceneEntity;
+import com.yitu.etu.entity.MapSceneEntity;
+import com.yitu.etu.entity.MerchantBaseEntity;
+import com.yitu.etu.ui.activity.GPSNaviActivity;
 import com.yitu.etu.util.PermissionUtil;
+import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.widget.GlideApp;
 
 import java.text.SimpleDateFormat;
@@ -52,7 +58,7 @@ import java.util.Date;
  * @date:2017年12月10日 14:18
  */
 public class MapsFragment extends SupportMapFragment implements
-        AMapLocationListener, LocationSource, AMap.InfoWindowAdapter {
+        AMapLocationListener, LocationSource, AMap.InfoWindowAdapter, View.OnClickListener {
     private String TAG = this.getClass().getSimpleName();
     private int fragmentId;
 
@@ -69,11 +75,23 @@ public class MapsFragment extends SupportMapFragment implements
 
     private View mRoot;
     private ImageView image;
-    private ArrayList<MerchantEntity> merchantEntitys = new ArrayList<MerchantEntity>();
     private ArrayList<Mmark> markers = new ArrayList<Mmark>();
     private Marker markerClick;
     private int a = 0;
     LayoutInflater inflater;
+
+    public static final int type_order_scene = 3;
+    public static final int type_friend = 1;
+    public static final int type_scene = 2;
+    public static final int type_fd = 4;
+    View btn_type_friend;
+    int type = type_scene;
+    LatLng centerLatLng;
+    private Mmark fd_mark;
+    private View dialog;
+    private View menu;
+    boolean menuOpen = true;
+    private boolean animating;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +100,20 @@ public class MapsFragment extends SupportMapFragment implements
         mRoot = inflater.inflate(R.layout.fragment_map_layout, container,
                 false);
         mMapView = (MapView) mRoot.findViewById(R.id.map);
+        btn_type_friend = mRoot.findViewById(R.id.btn_type_friend);
+        mRoot.findViewById(R.id.btn_friend).setOnClickListener(this);
+
+        mRoot.findViewById(R.id.btn_order_scene).setOnClickListener(this);
+        mRoot.findViewById(R.id.btn_scene).setOnClickListener(this);
+        mRoot.findViewById(R.id.button).setOnClickListener(this);
+        mRoot.findViewById(R.id.btn_location).setOnClickListener(this);
+        mRoot.findViewById(R.id.btn_nai).setOnClickListener(this);
+
+
+        menu = mRoot.findViewById(R.id.menu);
+
+        dialog = mRoot.findViewById(R.id.dialog);
+
         mMapView.onCreate(savedInstanceState);
         image = (ImageView) mRoot.findViewById(R.id.image);
         if (!PermissionUtil.hasPermissions(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
@@ -89,6 +121,14 @@ public class MapsFragment extends SupportMapFragment implements
         }
         initMap();
         return mRoot;
+    }
+
+    public void showDialog() {
+        dialog.setVisibility(View.VISIBLE);
+    }
+
+    public void hiddenDialog() {
+        dialog.setVisibility(View.GONE);
     }
 
     @Override
@@ -105,43 +145,51 @@ public class MapsFragment extends SupportMapFragment implements
             mAmap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
                 @Override
                 public void onCameraChange(CameraPosition cameraPosition) {
-                    if (markerClick != null) {
-                        markerClick.hideInfoWindow();
-                        markerClick = null;
-                    }
                 }
 
                 @Override
                 public void onCameraChangeFinish(CameraPosition cameraPosition) {
-//                    LatLng mTarget = mAmap.getCameraPosition().target;
-//                    Double latitude = mTarget.latitude;
-//                    Double longitude = mTarget.longitude;
-//                    ArrayList<MerchantEntity> aa = new ArrayList<>();
-//                    for (int i = a; i < a + 4; i++) {
-//                        MerchantEntity MerchantEntity = new MerchantEntity();
-//                        MerchantEntity.setId(i);
-//                        MerchantEntity.lng = 116.397972 + a;
-//                        aa.add(MerchantEntity);
-//                    }
-//                    addMarker(aa);
-//                    a = a + 2;
+                    if (markerClick != null) {
+                        markerClick.hideInfoWindow();
+                        markerClick = null;
+                    }
+                    if (fd_mark != null) {
+                        fd_mark.hiddenFd();
+                    }
+                    hiddenDialog();
+
+                    centerLatLng = mAmap.getCameraPosition().target;
                 }
             });
-            ArrayList<MerchantEntity> aa = new ArrayList<>();
-            for (int i = a; i < a + 4; i++) {
-                MerchantEntity MerchantEntity = new MerchantEntity();
-                MerchantEntity.setId(i);
-                MerchantEntity.lng = 116.397972 + a;
-                aa.add(MerchantEntity);
-            }
-            addMarker(aa);
             mAmap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
+
+
+                    if (marker.getObject() == null) {
+                        return true;
+                    }
                     markerClick = marker;
-                    MerchantEntity merchantEntity = (MerchantEntity) marker.getObject();
+                    if (fd_mark != null) {
+                        fd_mark.hiddenFd();
+                    }
+                    MerchantBaseEntity merchantEntity = (MerchantBaseEntity) marker.getObject();
+                    if (merchantEntity.getType() == type_friend) {
+                        marker.showInfoWindow();
+                    } else {
+                        for (Mmark mmark :
+                                markers) {
+                            if (mmark.getId() == merchantEntity.getId()) {
+                                fd_mark = mmark;
+                                mmark.showFd();
+                                if (dialog.getVisibility() != View.VISIBLE) {
+                                    showDialog();
+                                }
+                            }
+                        }
+
+                    }
                     Log.e("点击", merchantEntity.getId() + "");
-                    marker.showInfoWindow();
                     return true;
                 }
             });
@@ -157,24 +205,68 @@ public class MapsFragment extends SupportMapFragment implements
             });
 
             initMyLocation();
+            loadInfo();
         }
     }
+
 
     public void clearMapMarker() {
         mAmap.clear();
         markers.clear();
     }
 
-    public void addMarker(ArrayList<MerchantEntity> merchantEntitys) {
-        this.merchantEntitys = (ArrayList<MerchantEntity>) merchantEntitys.clone();
+    public void loadInfo() {
+        hiddenDialog();
+        if (type == type_friend) {
+            ArrayList<MapFirendEntity> aa = new ArrayList<>();
+//            for (int i = a; i < a + 4; i++) {
+            MapFirendEntity MerchantEntity = new MapFirendEntity();
+            MerchantEntity.setId(1);
+            MerchantEntity.lng = 116.397972;
+            aa.add(MerchantEntity);
+//            }
+            addMarker(aa, type);
+
+        } else if (type == type_scene) {
+            ArrayList<MapSceneEntity> aa = new ArrayList<>();
+            MapSceneEntity MerchantEntity = new MapSceneEntity();
+            MerchantEntity.setId(1);
+            MerchantEntity.lng = 116.397972;
+            aa.add(MerchantEntity);
+
+            MapSceneEntity MerchantEntity2 = new MapSceneEntity();
+            MerchantEntity2.setId(2);
+            MerchantEntity2.lng = 117.397972;
+            aa.add(MerchantEntity2);
+
+            MapSceneEntity MerchantEntity3 = new MapSceneEntity();
+            MerchantEntity3.setId(3);
+            MerchantEntity3.lng = 118.397972;
+            aa.add(MerchantEntity3);
+            addMarker(aa, type);
+
+        } else if (type == type_order_scene) {
+            ArrayList<MapOrderSceneEntity> aa = new ArrayList<>();
+            for (int i = a; i < a + 4; i++) {
+                MapOrderSceneEntity MerchantEntity = new MapOrderSceneEntity();
+                MerchantEntity.setId(i);
+                MerchantEntity.lng = 116.397972 + a;
+                aa.add(MerchantEntity);
+            }
+            addMarker(aa, type);
+
+        }
+    }
+
+    public <T extends MerchantBaseEntity> void addMarker(ArrayList<T> merchantEntitys, int type) {
         if (merchantEntitys == null || merchantEntitys.size() == 0) {
             clearMapMarker();
         }
         for (int i = 0; i < markers.size(); i++) {
             Mmark mmark = markers.get(i);
             boolean equals = false;
-            MerchantEntity merchantEntity3 = null;
-            for (MerchantEntity merchantEntity2 : merchantEntitys) {
+            T merchantEntity3 = null;
+            for (T merchantEntity2 : merchantEntitys) {
                 if (mmark.getId() == merchantEntity2.getId()) {
                     equals = true;
                     merchantEntity3 = merchantEntity2;
@@ -189,9 +281,9 @@ public class MapsFragment extends SupportMapFragment implements
                 merchantEntitys.remove(merchantEntity3);
             }
         }
-        for (MerchantEntity merchantEntity :
+        for (MerchantBaseEntity merchantEntity :
                 merchantEntitys) {
-            markers.add(new Mmark(merchantEntity));
+            markers.add(new Mmark(merchantEntity, type));
         }
         for (Mmark mmark : markers) {
             Log.e("id", "" + mmark.getId());
@@ -204,31 +296,6 @@ public class MapsFragment extends SupportMapFragment implements
         view.buildDrawingCache();
         Bitmap bitmap = view.getDrawingCache();
         return bitmap;
-    }
-
-    public Bitmap drawableToBitmap(Drawable drawable) {
-
-
-        Bitmap bitmap = Bitmap.createBitmap(
-
-                drawable.getIntrinsicWidth(),
-
-                drawable.getIntrinsicHeight(),
-
-                drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
-
-                        : Bitmap.Config.RGB_565);
-
-        Canvas canvas = new Canvas(bitmap);
-
-        //canvas.setBitmap(bitmap);
-
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-
-        drawable.draw(canvas);
-
-        return bitmap;
-
     }
 
     /**
@@ -389,8 +456,37 @@ public class MapsFragment extends SupportMapFragment implements
 
     @Override
     public View getInfoWindow(final Marker marker) {
+        if (marker.getObject() == null) {
+            return null;
+        }
         View view = inflater.inflate(R.layout.pop_map_firend, null,
                 false);
+        ImageView image = (ImageView) view.findViewById(R.id.image);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtil.showMessage("我2");
+            }
+        });
+        GlideApp.with(MapsFragment.this)
+                .load("http://img2.imgtn.bdimg.com/it/u=1025471167,1921781839&fm=27&gp=0.jpg")
+                .circleCrop()
+                .placeholder(R.drawable.icon17)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .error(R.drawable.icon17)
+                .into(image);
+
         return view;
     }
 
@@ -398,7 +494,150 @@ public class MapsFragment extends SupportMapFragment implements
     public View getInfoContents(Marker marker) {
         return null;
     }
-//    /**
+
+    public void toMyLocation() {
+
+        if (mMyLocationPoint != null) {
+            mAmap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude())));
+            mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_friend:
+                if (type != type_friend) {
+                    type = type_friend;
+                    btn_type_friend.setVisibility(View.VISIBLE);
+                    clearMapMarker();
+                    loadInfo();
+                }
+                break;
+            case R.id.btn_order_scene:
+                if (type != type_order_scene) {
+                    type = type_order_scene;
+                    btn_type_friend.setVisibility(View.GONE);
+                    clearMapMarker();
+                    loadInfo();
+                }
+                break;
+            case R.id.btn_scene:
+                if (type != type_scene) {
+                    type = type_scene;
+                    btn_type_friend.setVisibility(View.GONE);
+                    clearMapMarker();
+                    loadInfo();
+                }
+                break;
+
+            case R.id.button:
+                if(!animating){
+                    animating=true;
+                if (menuOpen) {
+                    final float animatedValue = -menu.getHeight() / 3F;
+                    ObjectAnimator animSeachbar = ObjectAnimator.ofFloat(menu, "TranslationY", animatedValue);
+                    animSeachbar.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            menu.setAlpha(1f - ((float) animation.getAnimatedValue()) / animatedValue);
+                        }
+                    });
+                    animSeachbar.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            menuOpen = false;
+
+                            animating=false;
+                            menu.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    animSeachbar.setDuration(500);
+                    animSeachbar.start();
+                } else {
+
+                    menu.setVisibility(View.VISIBLE);
+                    menu.setAlpha(0);
+                    final float animatedValue = menu.getHeight() / 3F;
+                    ObjectAnimator animSeachbar = ObjectAnimator.ofFloat(menu, "TranslationY", 0);
+                    animSeachbar.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            float a = (1 + (1 + (float) animation.getAnimatedValue()) / animatedValue);
+                            if (a > 0f && a < 1f) {
+                                menu.setAlpha(a);
+                            }
+                        }
+                    });
+                    animSeachbar.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            menuOpen = true;
+                            animating=false;
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    animSeachbar.setDuration(500);
+//                    ObjectAnimator alpha = ObjectAnimator.ofFloat(menu, "alpha", 1);
+//                    alpha.setDuration(1500);
+//                    AnimatorSet animatorSet = new AnimatorSet();
+//                    //将所有动画加入到动画序列里面
+//                    animatorSet.playSequentially(animSeachbar, alpha);
+
+                    animSeachbar.start();
+                }
+                }
+                break;
+            case R.id.btn_location:
+                toMyLocation();
+                break;
+
+            case R.id.btn_nai:
+                startActivity(new Intent(getContext(), GPSNaviActivity.class));
+                break;
+            case R.id.btn_type_friend:
+
+                break;
+            case R.id.btn_province:
+
+                break;
+
+
+            default:
+                break;
+        }
+    }
+
+    //    /**
 //     * 计算距离
 //     */
 //    private int canculat() {
@@ -410,18 +649,21 @@ public class MapsFragment extends SupportMapFragment implements
 //        this.distance.setText(f1 + "km");
 //        return (int) AMapUtils.calculateLineDistance(startLatlng, endLatlng);
 //    }
-    class Mmark {
+    class Mmark<T extends MerchantBaseEntity> {
         Marker marker;
-        MerchantEntity merchantEntity;
+        Marker fdmarker;
+        T merchantEntity;
         SimpleTarget<Drawable> simpleTarget;
         boolean remove = false;
+        int type;
 
-        public Mmark(MerchantEntity merchantEntity) {
+        public Mmark(T merchantEntity, int type) {
             this.merchantEntity = merchantEntity;
+            this.type = type;
             add();
         }
 
-        public MerchantEntity getMerchantEntity() {
+        public T getMerchantEntity() {
             return merchantEntity;
         }
 
@@ -430,19 +672,58 @@ public class MapsFragment extends SupportMapFragment implements
         }
 
         public void add() {
-
             simpleTarget = new SimpleTarget<Drawable>() {
                 @Override
                 public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
                     if (!remove) {
                         MarkerOptions markerOption = new MarkerOptions();
-                        markerOption.position(new LatLng(39.906901, 116.397972));
-
+                        markerOption.position(new LatLng(39.906901, merchantEntity.lng));
                         markerOption.draggable(false);//设置Marker可拖动
-                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(drawableToBitmap(resource)));
+                        View view = null;
+                        if (Mmark.this.type == type_friend) {
+                            view = inflater.inflate(R.layout.mark_firend, null,
+                                    false);
+                            ImageView image = (ImageView) view.findViewById(R.id.image);
+                            image.setImageDrawable(resource);
+                            view.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ToastUtil.showMessage("我");
+                                }
+                            });
+
+                        } else if (Mmark.this.type == type_order_scene) {
+                            view = inflater.inflate(R.layout.mark_order_scene, null,
+                                    false);
+                            ImageView image = (ImageView) view.findViewById(R.id.image);
+                            image.setImageDrawable(resource);
+                        } else if (Mmark.this.type == type_scene) {
+
+                            view = inflater.inflate(R.layout.mark_scene, null,
+                                    false);
+                            ImageView image = (ImageView) view.findViewById(R.id.image);
+                            image.setImageDrawable(resource);
+
+                        }
+                        if (Mmark.this.type != type_friend) {
+                            View view2 = inflater.inflate(R.layout.mark_fd, null,
+                                    false);
+                            ImageView image = (ImageView) view2.findViewById(R.id.image);
+                            image.setImageDrawable(resource);
+                            MarkerOptions markerOption2 = new MarkerOptions();
+                            markerOption2.position(new LatLng(39.906901, merchantEntity.lng));
+                            markerOption2.draggable(false);//设置Marker可拖动
+                            markerOption2.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view2)));
+                            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
+                            markerOption2.setFlat(true);//设置marker平贴地图效果
+                            fdmarker = mAmap.addMarker(markerOption2);
+                            fdmarker.setVisible(false);
+                        }
+                        markerOption.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view)));
                         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
                         markerOption.setFlat(true);//设置marker平贴地图效果
-                        mAmap.addMarker(markerOption);
+                        marker = mAmap.addMarker(markerOption);
+                        marker.setObject(merchantEntity);
                     }
                 }
             };
@@ -452,36 +733,46 @@ public class MapsFragment extends SupportMapFragment implements
                     .placeholder(R.drawable.icon17)
                     .listener(new RequestListener<Drawable>() {
                         @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        public boolean onLoadFailed(@Nullable GlideException e, Object
+                                model, Target<Drawable> target, boolean isFirstResource) {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        public boolean onResourceReady(Drawable resource, Object
+                                model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                             return false;
                         }
                     })
-                    .error(R.drawable.icon17);
-//            .into(simpleTarget);
+                    .into(simpleTarget);
 
-            MarkerOptions markerOption = new MarkerOptions();
-            markerOption.position(new LatLng(39.906901, merchantEntity.lng));
-            markerOption.draggable(false);//设置Marker可拖动
-            TextView textView = new TextView(getContext());
-            textView.setText("" + merchantEntity.getId());
-            View view=inflater.inflate(R.layout.mark_firend, null,
-                    false);
-            markerOption.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view)));
-            // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-            markerOption.setFlat(true);//设置marker平贴地图效果
-            marker = mAmap.addMarker(markerOption);
-            marker.setObject(merchantEntity);
+        }
+
+        public void hiddenFd() {
+            if (fdmarker != null) {
+                fdmarker.setVisible(false);
+//                fdmarker.setZIndex(fdmarker.getZIndex() - 3);
+                marker.setVisible(true);
+            }
+        }
+
+        public void showFd() {
+            if (fdmarker != null) {
+                marker.setVisible(false);
+                fdmarker.setToTop();
+                fdmarker.setZIndex(fdmarker.getZIndex() + 3);
+                fdmarker.setVisible(true);
+            }
         }
 
         public void remove() {
             remove = true;
             if (marker != null) {
                 marker.destroy();
+
+            }
+            if (fdmarker != null) {
+                fdmarker.destroy();
             }
             simpleTarget.onStop();
         }
