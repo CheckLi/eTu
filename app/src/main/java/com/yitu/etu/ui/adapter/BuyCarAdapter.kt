@@ -12,9 +12,13 @@ import com.yitu.etu.entity.BuyCarBean
  * @date:2017年12月14日 23:23
  */
 class BuyCarAdapter : MyBaseAdapter<BuyCarBean> {
+
     override fun getItemResource(pos: Int): Int = R.layout.adapter_item_buy_car
 
     override fun getItemView(position: Int, convertView: View, holder: ViewHolder?, parent: ViewGroup?): View {
+        convertView.run {
+
+        }
         return convertView
     }
 

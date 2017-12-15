@@ -15,9 +15,9 @@ public class CrashException extends Exception implements Thread.UncaughtExceptio
             ex.printStackTrace();
             // 执行这句会杀死进程(优点：会把整个应用的静态变量全部释放)
             MyActivityManager.getInstance().finishAllActivity();
-            /*android.os.Process.killProcess(android.os.Process.myPid());
+            android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
-            System.gc();*/
+            System.gc();
         }
     }
 }
