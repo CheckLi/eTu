@@ -1,6 +1,5 @@
 package com.yitu.etu.ui.adapter;
 import android.content.Context;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,6 +13,10 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 	private boolean isAnimation = true;
 
 	public MyBaseAdapter(Context context, List<T> data) {
+		this.data = data == null ? new ArrayList<T>() : data;
+	}
+
+	public MyBaseAdapter( List<T> data) {
 		this.data = data == null ? new ArrayList<T>() : data;
 	}
 
@@ -64,25 +67,6 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		return getItemView(position, convertView, holder,parent);
-	}
-
-	public class ViewHolder {
-		private SparseArray<View> views = new SparseArray<View>();
-		private View convertView;
-
-		public ViewHolder(View convertView) {
-			this.convertView = convertView;
-		}
-
-		@SuppressWarnings("unchecked")
-		public <T extends View> T getView(int resId) {
-			View v = views.get(resId);
-			if (null == v) {
-				v = convertView.findViewById(resId);
-				views.put(resId, v);
-			}
-			return (T) v;
-		}
 	}
 
 	public void addAll(List<T> elem) {

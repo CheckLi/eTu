@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.yitu.etu.ui.activity.MyOrderActivity">
+
+    <com.yitu.etu.widget.tablayout.SlidingTabLayout
+        android:id="@+id/tl_tab"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:tl_tab_space_equal="true"
+        app:tl_textSelectColor="@color/color_D9414F"
+        app:tl_textUnselectColor="@color/color_333333"
+        app:tl_textsize="16sp"
+        app:tl_underline_color="#0052B996"
+        app:tl_indicator_color="#52B996"
+        app:tl_underline_gravity="BOTTOM"
+        app:tl_underline_height="2dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@color/color_f5f5f5"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

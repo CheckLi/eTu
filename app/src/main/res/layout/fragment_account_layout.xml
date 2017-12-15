@@ -95,11 +95,13 @@
                         android:text="我的钱包"/>
 
                     <TextView
+                        android:id="@+id/tv_my_order"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon50"
                         android:text="个人订单"/>
 
                     <TextView
+                        android:id="@+id/tv_buy_car"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon51"
                         android:text="购物车"/>
