@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.yitu.etu">
+    package="com.yitu.etu">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -112,6 +112,9 @@
 
         <service android:name="com.amap.api.location.APSService"/>
 
+        <activity android:name=".ui.activity.MapSearchActivity"></activity>
+
+        <activity android:name=".ui.activity.GPSNaviActivity"></activity>
         <activity
             android:name=".ui.activity.MyWalletActivity"
             android:screenOrientation="portrait">

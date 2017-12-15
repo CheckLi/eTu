@@ -6,7 +6,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 2017120716
+        versionCode 12
         versionName "2.8.24 Dev"
     }
 
