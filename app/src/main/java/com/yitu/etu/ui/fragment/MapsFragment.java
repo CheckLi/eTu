@@ -1,6 +1,9 @@
 package com.yitu.etu.ui.fragment;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -87,7 +90,7 @@ public class MapsFragment extends SupportMapFragment implements
     private Mmark fd_mark;
     private View dialog;
     private ViewGroup menu;
-    boolean menuOpen = false;
+    boolean menuOpen = true;
     private boolean animating;
     private ImageView mButton;
 
@@ -557,123 +560,85 @@ public class MapsFragment extends SupportMapFragment implements
         if (!animating) {
             animating = true;
             if (menuOpen) {
-          /*  final float animatedValue = -menu.getHeight() / 3F;
-            ObjectAnimator animSeachbar = ObjectAnimator.ofFloat(menu, "TranslationY", animatedValue);
-            animSeachbar.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    menu.setAlpha(1f - ((float) animation.getAnimatedValue()) / animatedValue);
-                }
-            });
-            animSeachbar.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
+                final float animatedValue = -menu.getHeight() / 3F;
+                ObjectAnimator animSeachbar = ObjectAnimator.ofFloat(menu, "TranslationY", animatedValue);
+                animSeachbar.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        menu.setAlpha(1f - ((float) animation.getAnimatedValue()) / animatedValue);
+                    }
+                });
+                animSeachbar.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    menuOpen = false;
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        menuOpen = false;
 
-                    animating=false;
-                    menu.setVisibility(View.GONE);
-                }
+                        animating = false;
+                        menu.setVisibility(View.GONE);
+                    }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-                }
-            });
-            animSeachbar.setDuration(500);
-            animSeachbar.start();*/
-                menu.setVisibility(View.GONE);
-                menuOpen=false;
-                animating=false;
+                    }
+                });
+                animSeachbar.setDuration(500);
+                animSeachbar.start();
             } else {
+
                 menu.setVisibility(View.VISIBLE);
-                menuOpen=true;
-                animating=false;
-                /*//第一阶段动画
-                ObjectAnimator anim1 = null;
-                float start = 0;
-                for (int i = 0; i < menu.getChildCount(); i++) {
-                    View view = menu.getChildAt(i);
-                    if (anim1 == null) {
-                        anim1 = ObjectAnimator.ofFloat(view, "TranslationY", start, view.getTop() + view.getHeight()).setDuration(200);
-                        start += view.getTop() + view.getHeight();
+                menu.setAlpha(0);
+                final float animatedValue = menu.getHeight() / 3F;
+                ObjectAnimator animSeachbar = ObjectAnimator.ofFloat(menu, "TranslationY", 0);
+                animSeachbar.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        float a = (1 + (1 + (float) animation.getAnimatedValue()) / animatedValue);
+                        if (a > 0f && a < 1f) {
+                            menu.setAlpha(a);
+                        }
                     }
-                    anim1.start();
-                }
-                //第二阶段动画
-                ObjectAnimator anim2 = null;
-                for (int i = 1; i < menu.getChildCount(); i++) {
-                    View view = menu.getChildAt(i);
-                    if (anim2 == null) {
-                        anim2 = ObjectAnimator.ofFloat(view, "TranslationY", start, view.getTop() + view.getHeight()).setDuration(200);
-                        start += view.getTop() + view.getHeight();
-                        anim2.setStartDelay(200);
+                });
+                animSeachbar.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
                     }
-                    anim2.start();
-                }
-                //第三阶段动画
-                ObjectAnimator anim3 = null;
-                for (int i = 2; i < menu.getChildCount(); i++) {
-                    View view = menu.getChildAt(i);
-                    if (anim3 == null) {
-                        anim3 = ObjectAnimator.ofFloat(view, "TranslationY", start, view.getTop() + view.getHeight()).setDuration(200);
-                        start += view.getTop() + view.getHeight();
-                        anim3.setStartDelay(400);
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        menuOpen = true;
+                        animating = false;
                     }
-                    anim3.start();
-                }*/
-            /*menu.setVisibility(View.VISIBLE);
-            menu.setAlpha(0);
-            final float animatedValue = menu.getHeight() / 3F;
-            ObjectAnimator animSeachbar = ObjectAnimator.ofFloat(menu, "TranslationY", 0);
-            animSeachbar.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    float a = (1 + (1 + (float) animation.getAnimatedValue()) / animatedValue);
-                    if (a > 0f && a < 1f) {
-                        menu.setAlpha(a);
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
                     }
-                }
-            });
-            animSeachbar.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
 
-                }
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    menuOpen = true;
-                    animating=false;
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-            animSeachbar.setDuration(500);
+                    }
+                });
+                animSeachbar.setDuration(500);
 //                    ObjectAnimator alpha = ObjectAnimator.ofFloat(menu, "alpha", 1);
 //                    alpha.setDuration(1500);
 //                    AnimatorSet animatorSet = new AnimatorSet();
 //                    //将所有动画加入到动画序列里面
 //                    animatorSet.playSequentially(animSeachbar, alpha);
 
-            animSeachbar.start();*/
+                animSeachbar.start();
             }
         }
     }
