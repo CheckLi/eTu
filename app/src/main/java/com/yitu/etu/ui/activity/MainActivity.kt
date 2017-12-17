@@ -155,6 +155,11 @@ class MainActivity : BaseActivity() {
     override fun onStop() {
         super.onStop()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EtuApplication.setUserInfo(null)
+    }
 }
 
 private class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {

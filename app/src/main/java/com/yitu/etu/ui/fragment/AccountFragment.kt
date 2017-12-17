@@ -3,6 +3,7 @@ package com.yitu.etu.ui.fragment
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
 import com.yitu.etu.R
 import com.yitu.etu.ui.activity.BuyCarActivity
+import com.yitu.etu.ui.activity.MapSelectActivity
 import com.yitu.etu.ui.activity.MyOrderActivity
 import com.yitu.etu.ui.activity.MyWalletActivity
 import kotlinx.android.synthetic.main.fragment_account_layout.*
@@ -51,6 +52,13 @@ class AccountFragment : BaseFragment() {
          */
         tv_buy_car.setOnClickListener {
             nextActivityFromFragment<BuyCarActivity>()
+        }
+
+        /**
+         * 我的店铺
+         */
+        tv_my_shop.setOnClickListener {
+            nextActivityFromFragment<MapSelectActivity>()
         }
     }
 }

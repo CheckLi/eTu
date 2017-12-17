@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yitu.etu">
+          package="com.yitu.etu">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -48,7 +48,8 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="c2c7b4e84ebbba1784f7974cd21f998f">
-            <!--//开发者申请的key-->
+
+            <!-- //开发者申请的key -->
         </meta-data>
 
         <activity
@@ -112,18 +113,34 @@
 
         <service android:name="com.amap.api.location.APSService"/>
 
-        <activity android:name=".ui.activity.MapSearchActivity"></activity>
-
-        <activity android:name=".ui.activity.GPSNaviActivity"></activity>
+        <activity
+            android:name=".ui.activity.MapSearchActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.MyWalletActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.activity.MyOrderActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.BuyCarActivity">
+        <activity
+            android:name=".ui.activity.BuyCarActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.amap.api.navi.AmapRouteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/NoTitleBar"/>
+        <activity
+            android:name=".ui.activity.NavActivity"
+            android:theme="@style/NoTitleBar">
+        </activity>
+        <activity android:name=".ui.activity.MapSelectActivity">
         </activity>
     </application>
 

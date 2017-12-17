@@ -4,8 +4,10 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -31,18 +35,30 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.Poi;
+import com.amap.api.navi.AmapNaviPage;
+import com.amap.api.navi.AmapNaviParams;
+import com.amap.api.navi.AmapNaviType;
+import com.amap.api.navi.INaviInfoCallback;
+import com.amap.api.navi.model.AMapNaviLocation;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.MapFirendEntity;
 import com.yitu.etu.entity.MapOrderSceneEntity;
 import com.yitu.etu.entity.MapSceneEntity;
 import com.yitu.etu.entity.MerchantBaseEntity;
-import com.yitu.etu.ui.activity.GPSNaviActivity;
+import com.yitu.etu.entity.UserInfoEntity;
+import com.yitu.etu.tools.GsonCallback;
+import com.yitu.etu.tools.Http;
+import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.activity.MapSearchActivity;
 import com.yitu.etu.util.PermissionUtil;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.widget.GlideApp;
@@ -50,6 +66,10 @@ import com.yitu.etu.widget.GlideApp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * @className:MapsFragment
@@ -83,7 +103,6 @@ public class MapsFragment extends SupportMapFragment implements
     public static final int type_order_scene = 3;
     public static final int type_friend = 1;
     public static final int type_scene = 2;
-    public static final int type_fd = 4;
     View btn_type_friend;
     int type = type_scene;
     LatLng centerLatLng;
@@ -93,7 +112,7 @@ public class MapsFragment extends SupportMapFragment implements
     boolean menuOpen = true;
     private boolean animating;
     private ImageView mButton;
-
+    MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -103,9 +122,10 @@ public class MapsFragment extends SupportMapFragment implements
         mMapView = (MapView) mRoot.findViewById(R.id.map);
         btn_type_friend = mRoot.findViewById(R.id.btn_type_friend);
         mRoot.findViewById(R.id.btn_friend).setOnClickListener(this);
-
         mRoot.findViewById(R.id.btn_order_scene).setOnClickListener(this);
         mRoot.findViewById(R.id.btn_scene).setOnClickListener(this);
+        mRoot.findViewById(R.id.btn_province).setOnClickListener(this);
+        btn_type_friend.setOnClickListener(this);
         mButton = (ImageView) mRoot.findViewById(R.id.button);
         mButton.setOnClickListener(this);
         mRoot.findViewById(R.id.btn_location).setOnClickListener(this);
@@ -122,8 +142,57 @@ public class MapsFragment extends SupportMapFragment implements
             PermissionUtil.requestPermissions(this, 100, Manifest.permission.ACCESS_COARSE_LOCATION);
         }
         initMap();
+
+        login();
+
         return mRoot;
     }
+
+    public void login() {
+        HashMap params = new HashMap<String, String>();
+        params.put("name", "18281619229");
+        params.put("password", "li52525252");
+        Http.post(Urls.login, params, new GsonCallback<UserInfoEntity>() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Log.e("Exception", "Exception");
+            }
+
+            @Override
+            public void onResponse(UserInfoEntity response, int id) {
+                if (response.getStatus() == 1) {
+                    EtuApplication.setUserInfo(response.getData());
+                    updateUserInfo();
+                }
+            }
+        }, false);
+    }
+
+    public void updateUserInfo() {
+        HashMap params = new HashMap<String, String>();
+        params.put("name", "李佳明2222");
+        Http.post(Urls.updateUserInfo, params, new GsonCallback<UserInfoEntity>() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Log.e("Exception", "Exception");
+            }
+
+            @Override
+            public void onResponse(UserInfoEntity response, int id) {
+                if (response.getStatus() == 1) {
+                }
+            }
+        });
+
+    }
+
+    public void search() {
+        Intent intent = new Intent(getContext(), MapSearchActivity.class);
+        intent.putExtra("type", type);
+        startActivity(intent);
+    }
+
+    ;
 
     public void showDialog() {
         dialog.setVisibility(View.VISIBLE);
@@ -338,6 +407,13 @@ public class MapsFragment extends SupportMapFragment implements
         mAmap.getUiSettings().setScaleControlsEnabled(false);// 标尺开关
         mAmap.getUiSettings().setCompassEnabled(false);// 指南针开关
         mAmap.getUiSettings().setZoomControlsEnabled(false);
+
+        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
+        mAmap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+//aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
+        mAmap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+
         Log.d(TAG,
                 "max = " + mAmap.getMaxZoomLevel() + "min = "
                         + mAmap.getMinZoomLevel());
@@ -417,7 +493,7 @@ public class MapsFragment extends SupportMapFragment implements
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
-        Log.d(TAG, "onLocationChanged");
+//        Log.d(TAG, "onLocationChanged");
         if (amapLocation != null) {
             if (amapLocation.getErrorCode() == 0) {
                 // 定位成功回调信息，设置相关消息
@@ -440,7 +516,7 @@ public class MapsFragment extends SupportMapFragment implements
                 if (mMyLocationPoint == null) {
                     mMyLocationPoint = amapLocation;
                     if (mMyLocationPoint != null) {
-//                        mAmap.moveCamera(CameraUpdateFactory.zoomTo(13));
+//                        mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
 //                        mAmap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude())));
                     }
                 }
@@ -541,19 +617,95 @@ public class MapsFragment extends SupportMapFragment implements
                 break;
 
             case R.id.btn_nai:
-                startActivity(new Intent(getContext(), GPSNaviActivity.class));
+                Poi start = new Poi("三元桥", new LatLng(39.96087, 116.45798), "");
+/**终点传入的是北京站坐标,但是POI的ID "B000A83M61"对应的是北京西站，所以实际算路以北京西站作为终点**/
+                Poi end = new Poi("北京站", new LatLng(39.904556, 116.427231), "B000A83M61");
+                List<Poi> wayList = new ArrayList();//途径点目前最多支持3个。
+                wayList.add(new Poi("团结湖", new LatLng(39.93413, 116.461676), ""));
+                wayList.add(new Poi("呼家楼", new LatLng(39.923484, 116.461327), ""));
+                wayList.add(new Poi("华润大厦", new LatLng(39.912914, 116.434247), ""));
+                AmapNaviPage.getInstance().showRouteActivity(getActivity(), new AmapNaviParams(start, null, end, AmapNaviType.DRIVER), new INaviInfoCallback() {
+                    @Override
+                    public void onInitNaviFailure() {
+
+                    }
+
+                    @Override
+                    public void onGetNavigationText(String s) {
+
+                    }
+
+                    @Override
+                    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
+
+                    }
+
+                    @Override
+                    public void onArriveDestination(boolean b) {
+
+                    }
+
+                    @Override
+                    public void onStartNavi(int i) {
+
+                    }
+
+                    @Override
+                    public void onCalculateRouteSuccess(int[] ints) {
+
+                    }
+
+                    @Override
+                    public void onCalculateRouteFailure(int i) {
+
+                    }
+
+                    @Override
+                    public void onStopSpeaking() {
+
+                    }
+                });
+//                startActivity(new Intent(getContext(), NavActivity.class));
                 break;
             case R.id.btn_type_friend:
-
+                showSexPop(v);
                 break;
             case R.id.btn_province:
-
+                showAreaDialog();
                 break;
 
 
             default:
                 break;
         }
+    }
+    public void showNoSceneDialog()
+    {
+
+    }
+    public void showSexPop(View v) {
+        PopupWindow popupWindow = new PopupWindow(getContext());
+        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        TextView text2 = new TextView(getContext());
+        text2.setText("dsadsadsad");
+        text2.setBackgroundColor(getResources().getColor(R.color.white));
+        popupWindow.setContentView(text2);
+        popupWindow.showAsDropDown(v, 20, 0);
+    }
+
+
+
+    public void showAreaDialog() {
+        Dialog dialog = new Dialog(getContext(), R.style.LoadingDialog);
+        TextView text = new TextView(getContext());
+        text.setText("dsadsadsad");
+        text.setBackgroundColor(getResources().getColor(R.color.white));
+        dialog.setContentView(text);
+        dialog.show();
     }
 
     private void playMenuAnimation() {

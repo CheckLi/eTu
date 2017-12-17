@@ -84,7 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 // 使用沉浸式状态栏
                 .statusBarColor(getResources().getColor(R.color.actionBarColor))
                 // 返回图标ResId
-                .backResId(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha)
+                .backResId(R.drawable.ic_back)
                 .title("Images")
                 .titleColor(Color.WHITE)
                 .titleBgColor(getResources().getColor(R.color.actionBarColor))

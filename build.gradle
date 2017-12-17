@@ -21,9 +21,9 @@ allprojects {
         jcenter()
         mavenCentral()
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-        maven {
+        /*maven {
             url "http://192.168.1.33:8081/nexus/content/repositories/central/"
-        }
+        }*/
     }
 }
 

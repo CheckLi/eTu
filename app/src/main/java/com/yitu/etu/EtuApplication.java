@@ -2,6 +2,7 @@ package com.yitu.etu;
 
 import android.app.Application;
 
+import com.yitu.etu.entity.UserInfoEntity;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,15 @@ import okhttp3.OkHttpClient;
  */
 public class EtuApplication extends Application {
     private static EtuApplication mInstance;
+    private static UserInfoEntity.DataBean userInfo;
+
+    public static UserInfoEntity.DataBean getUserInfo() {
+        return userInfo;
+    }
+
+    public static void setUserInfo(UserInfoEntity.DataBean userInfo) {
+        EtuApplication.userInfo = userInfo;
+    }
 
     public static EtuApplication getInstance() {
         return mInstance;

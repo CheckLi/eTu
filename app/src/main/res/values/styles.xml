@@ -81,4 +81,18 @@
         <item name="android:cacheColorHint">#00000000</item>
         <item name="android:fadingEdge">none</item>
     </style>
+    <style name="NoTitleBar" >
+        <item name="android:windowActionBar">false</item>
+        <item name="windowNoTitle">false</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <!-- 弹出框样式 -->
+    <style name="transparentDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+    </style>
 </resources>

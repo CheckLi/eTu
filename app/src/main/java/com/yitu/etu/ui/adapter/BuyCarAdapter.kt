@@ -13,7 +13,7 @@ import com.yitu.etu.entity.BuyCarBean
  */
 class BuyCarAdapter : MyBaseAdapter<BuyCarBean> {
 
-    override fun getItemResource(pos: Int): Int = R.layout.adapter_item_buy_car
+    override fun getItemResource(pos: Int): Int = R.layout.adapter_item_buy_car1
 
     override fun getItemView(position: Int, convertView: View, holder: ViewHolder?, parent: ViewGroup?): View {
         convertView.run {
