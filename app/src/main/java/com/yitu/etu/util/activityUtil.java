@@ -14,7 +14,7 @@ import com.yitu.etu.R;
  * @author: JIAMING.LI
  * @date:2017年12月09日 14:00
  */
-public class activityUtil {
+public  class  activityUtil {
     private static int openAnima = R.anim.open_animation;
     private static int closeAnima =R.anim.close_animation;
 
@@ -96,14 +96,13 @@ public class activityUtil {
             intent.putExtras(bundle);
         }
 
-        if (openAnimation != -1 && closeAnimation != -1) {
-            fragment.getActivity().overridePendingTransition(openAnimation, closeAnimation);
-        }
-
         if (requestCode == -1) {
             fragment.startActivity(intent);
         } else if (requestCode != -1) {
             fragment.startActivityForResult(intent, requestCode);
+        }
+        if (openAnimation != -1 && closeAnimation != -1) {
+            fragment.getActivity().overridePendingTransition(openAnimation, closeAnimation);
         }
         if(finish){
             fragment.getActivity().finish();

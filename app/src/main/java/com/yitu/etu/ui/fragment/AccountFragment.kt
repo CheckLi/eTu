@@ -124,7 +124,6 @@ class AccountFragment : BaseFragment() {
              */
             RongIM.getInstance().startCustomerServiceChat(activity, "KEFU151304509872992", "在线客服",csInfo)
         }
-
         /**
          * 软件分享
          */
