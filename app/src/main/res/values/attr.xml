@@ -32,5 +32,8 @@
             <enum name="right" value="1"></enum>
         </attr>
     </declare-styleable>
-
+    <!-- 末行对齐方式 -->
+    <declare-styleable name="AutoLinearLayout">
+        <attr name="numbers_index" format="integer"/>
+    </declare-styleable>
 </resources>

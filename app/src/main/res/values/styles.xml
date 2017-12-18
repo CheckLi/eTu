@@ -95,4 +95,24 @@
         <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
     </style>
+
+    <style name="shop_edit_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textColor">@color/color_333333</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/round_white_5dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="recomment_edit_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textColor">@color/color_333333</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/round_white_5dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

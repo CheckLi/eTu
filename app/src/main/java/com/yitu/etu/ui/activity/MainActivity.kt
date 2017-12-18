@@ -36,7 +36,7 @@ class MainActivity : BaseActivity() {
 
 
     override fun getData() {
-        connect("V/5c0iO7/74KtI5u6KGrKJyVKf8tDNGGG7nsty1vQz4of9wb70YGHTZOb9AzVLpHTBFEaRTIlTIcvQZ9Da5x0w==")
+        connect("PPorPzeapqdz6169J4kuPpyVKf8tDNGGG7nsty1vQz6Alaw6Zz6WSs8vTrg3zQ4NjPjEH258Y8hrWy0QHixfpA==")
     }
 
     /**

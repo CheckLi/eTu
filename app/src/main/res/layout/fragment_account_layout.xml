@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.yitu.etu.widget.SpringBackScrollView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/MyListView"
@@ -128,21 +128,25 @@
                     android:padding="10dp">
 
                     <TextView
+                        android:id="@+id/tv_my_route"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon1"
                         android:text="我的行程"/>
 
                     <TextView
+                        android:id="@+id/tv_view_recomment"
                         style="@style/account_item"
                         android:drawableTop="@drawable/zan_green"
                         android:text="景点推荐"/>
 
                     <TextView
+                        android:id="@+id/tv_my_travels"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon162"
                         android:text="我的游记"/>
 
                     <TextView
+                        android:id="@+id/tv_my_collect"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon137"
                         android:text="我的收藏"/>
@@ -163,21 +167,25 @@
                     android:padding="10dp">
 
                     <TextView
+                        android:id="@+id/tv_account_manage"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon163"
                         android:text="账号管理"/>
 
                     <TextView
+                        android:id="@+id/tv_boon_center"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon87"
                         android:text="福利中心"/>
 
                     <TextView
+                        android:id="@+id/tv_call_service"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon132"
                         android:text="联系客服"/>
 
                     <TextView
+                        android:id="@+id/tv_software_share"
                         style="@style/account_item"
                         android:drawableTop="@drawable/icon164"
                         android:text="软件分享"/>
@@ -185,4 +193,4 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
-</com.yitu.etu.widget.SpringBackScrollView>
+</ScrollView>
