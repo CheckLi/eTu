@@ -11,4 +11,4 @@ import com.yitu.etu.entity.UserInfo
  *
  */
 
-class LoginSuccessEvent(val userInfo: UserInfo)
+class LoginSuccessEvent(val userInfo: UserInfo?)

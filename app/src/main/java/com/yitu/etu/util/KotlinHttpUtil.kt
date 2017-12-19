@@ -36,6 +36,6 @@ fun Context.isLogin(): Boolean {
     return EtuApplication.getInstance().isLogin
 }
 
-fun String.host():String{
+fun String.addHost():String{
     return Urls.address+this
 }

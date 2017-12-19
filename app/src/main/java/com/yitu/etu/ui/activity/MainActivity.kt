@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import com.bumptech.glide.Glide
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.ui.fragment.AccountFragment
@@ -62,6 +63,7 @@ class MainActivity : BaseActivity() {
                     fragments?.forEach {
                         if(it is MapsFragment){
                             it.search()
+                            return@setLeftImage
                         }
                     }
                 }
@@ -167,6 +169,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        Glide.get(this).clearMemory()
         super.onDestroy()
     }
 }

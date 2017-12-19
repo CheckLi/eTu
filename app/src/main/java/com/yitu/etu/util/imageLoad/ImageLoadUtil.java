@@ -1,17 +1,17 @@
 package com.yitu.etu.util.imageLoad;
 
-import android.graphics.drawable.Drawable;
+import android.app.Activity;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.RequestOptions;
 import com.yitu.etu.R;
-import com.yitu.etu.widget.GlideApp;
 
 /**
  * @className:ImageLoad
@@ -26,14 +26,21 @@ public class ImageLoadUtil {
     }
 
     public void loadImage(ImageView img, String url, int width, int height) {
-        loadImage(img, url, width, height, R.drawable.ic_default_image, R.drawable.ic_default_image,null);
+        loadImage((Activity)(img.getContext()),img, url, width, height, R.drawable.ic_default_image, R.drawable.ic_default_image,null);
     }
     public void loadImage(ImageView img, String url,int defaultDrawable, int width, int height) {
-        loadImage(img, url, width, height, defaultDrawable, defaultDrawable,null);
+        loadImage((Activity)(img.getContext()),img, url, width, height, defaultDrawable, defaultDrawable,null);
+    }
+    public void loadImage(Fragment fragment, ImageView img, String url, int defaultDrawable, int width, int height) {
+        loadImage(fragment,img, url, width, height, defaultDrawable, defaultDrawable,null);
+    }
+
+    public void loadImage(Fragment fragment,ImageView img, String url,int defaultDrawable, int width, int height,RequestListener listener) {
+        loadImage(fragment,img, url, width, height, defaultDrawable, defaultDrawable,listener);
     }
 
     public void loadImage(ImageView img, String url,int defaultDrawable, int width, int height,RequestListener listener) {
-        loadImage(img, url, width, height, defaultDrawable, defaultDrawable,listener);
+        loadImage((Activity)(img.getContext()),img, url, width, height, defaultDrawable, defaultDrawable,listener);
     }
 
     /**
@@ -46,25 +53,48 @@ public class ImageLoadUtil {
      * @param displayError    加载错误的时候显示的图片
      * @param displayLoadding 加载中的时候显示的图片
      */
-    public void loadImage(ImageView img, String url, int width, int height, @DrawableRes int displayError, @DrawableRes int displayLoadding,RequestListener listener) {
-        GlideApp.with(img.getContext())
-                .load(url)
-                .override(width, height)
-                .centerCrop()
-                .placeholder(displayLoadding)//加载中图片显示
-                .error(displayError)
-                .transition(new DrawableTransitionOptions().crossFade(200))//渐变动画
-                .listener(listener==null?new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return true;
-                    }
+    public void loadImage(Activity activity, ImageView img, String url, int width, int height, @DrawableRes int displayError, @DrawableRes int displayLoadding, RequestListener listener) {
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(displayLoadding) //加载中图片
+                .error(displayError) //加载失败图片
+                .fallback(displayError) //url为空图片
+                .centerCrop() // 填充方式
+                .override(width,height) //尺寸
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return true;
-                    }
-                }:listener)
-                .into(img);
+                .priority(Priority.HIGH) //优先级
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC); //缓存策略，后面详细介绍
+
+        Glide.with(activity)
+                .load(url)
+                .listener(listener)
+                .transition(new DrawableTransitionOptions().crossFade(200))
+                .apply(requestOptions).into(img);
+    }
+    /**
+     * 加载图片
+     *
+     * @param img             载体
+     * @param url             链接
+     * @param width           宽
+     * @param height          高
+     * @param displayError    加载错误的时候显示的图片
+     * @param displayLoadding 加载中的时候显示的图片
+     */
+    public void loadImage(Fragment fragment, ImageView img, String url, int width, int height, @DrawableRes int displayError, @DrawableRes int displayLoadding, RequestListener listener) {
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(displayLoadding) //加载中图片
+                .error(displayError) //加载失败图片
+                .fallback(displayError) //url为空图片
+                .centerCrop() // 填充方式
+                .override(width,height) //尺寸
+
+                .priority(Priority.HIGH) //优先级
+                .diskCacheStrategy(DiskCacheStrategy.NONE); //缓存策略，后面详细介绍
+
+        Glide.with(fragment)
+                .load(url)
+                .transition(new DrawableTransitionOptions().crossFade(200))
+                .listener(listener)
+                .apply(requestOptions).into(img);
     }
 }

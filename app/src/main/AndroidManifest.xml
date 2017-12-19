@@ -54,7 +54,7 @@
         <!-- 友盟 -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="561cae6ae0f55abd990035bf">
+            android:value="5a38eb90a40fa35071000080">
         </meta-data>
 
         <activity

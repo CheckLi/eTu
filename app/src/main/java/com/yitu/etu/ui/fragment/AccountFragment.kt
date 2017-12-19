@@ -8,6 +8,7 @@ import com.yitu.etu.entity.UserInfo
 import com.yitu.etu.eventBusItem.LoginSuccessEvent
 import com.yitu.etu.ui.activity.*
 import com.yitu.etu.util.Empty
+import com.yitu.etu.util.addHost
 import com.yitu.etu.util.imageLoad.ImageLoadUtil
 import com.yitu.etu.util.isLogin
 import io.rong.imkit.RongIM
@@ -53,7 +54,7 @@ class AccountFragment : BaseFragment() {
         ll_header.setOnClickListener {
             if (isLogin()) {
 
-            }else{
+            } else {
                 nextActivityFromFragment<LoginActivity>()
             }
         }
@@ -155,7 +156,7 @@ class AccountFragment : BaseFragment() {
      * 登陆成功回调
      */
     @Subscribe
-    fun onEventLoginSuccess(event: LoginSuccessEvent){
+    fun onEventLoginSuccess(event: LoginSuccessEvent) {
         //等于空代表退出登陆
         initUserInfo(event.userInfo)
     }
@@ -163,18 +164,20 @@ class AccountFragment : BaseFragment() {
     /**
      * 初始化个人信息
      */
-     fun AccountFragment.initUserInfo(userInfo: UserInfo?) {
+    fun AccountFragment.initUserInfo(userInfo: UserInfo?) {
         if (userInfo == null) {
             tv_login.visibility = View.VISIBLE
             tv_username.text = ""
             tv_username.visibility = View.GONE
-            ImageLoadUtil.getInstance().loadImage(iv_head, "drawable://" , R.drawable.default_head, 200, 200)
+            ImageLoadUtil.getInstance().loadImage(iv_head, "drawable://", R.drawable.default_head, 200, 200)
         } else {
             with(userInfo) {
                 tv_login.visibility = View.GONE
                 tv_username.text = name.Empty()
                 tv_username.visibility = View.VISIBLE
-                ImageLoadUtil.getInstance().loadImage(iv_head,"http://api.91eto.com/assets/data/sys/userico.jpg",R.drawable.default_head, 200, 200)
+                ImageLoadUtil.getInstance().loadImage(this@AccountFragment
+                        , iv_head, header.addHost()
+                        , R.drawable.default_head, 200, 200)
             }
         }
     }
