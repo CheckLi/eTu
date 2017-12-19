@@ -48,7 +48,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.MapFirendEntity;
 import com.yitu.etu.entity.MapOrderSceneEntity;
@@ -146,30 +145,10 @@ public class MapsFragment extends SupportMapFragment implements
         }
         initMap();
 
-        login();
         Log.e("sha1", APKSHA1.SHA1(getContext()));
         return mRoot;
     }
 
-    public void login() {
-        HashMap params = new HashMap<String, String>();
-        params.put("name", "18281619229");
-        params.put("password", "li52525252");
-        Http.post(Urls.login, params, new GsonCallback<ObjectBaseEntity<UserInfoEntity>>() {
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                Log.e("Exception", "Exception");
-            }
-
-            @Override
-            public void onResponse(ObjectBaseEntity<UserInfoEntity> response, int id) {
-                if (response.success()) {
-                    EtuApplication.setUserInfo(response.getData());
-                    updateUserInfo();
-                }
-            }
-        }, false);
-    }
 
     public void updateUserInfo() {
         HashMap params = new HashMap<String, String>();

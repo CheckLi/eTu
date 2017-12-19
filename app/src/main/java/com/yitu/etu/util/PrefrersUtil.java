@@ -44,13 +44,13 @@ public class PrefrersUtil {
                 editor.putFloat(key, (Float) object);
             }else if(object instanceof Integer) {
                 editor.putInt(key, (Integer) object);
-            }if(object instanceof String) {
+            }else if(object instanceof String) {
                 editor.putString(key, (String) object);
-            }if(object instanceof Long) {
+            }else if(object instanceof Long) {
                 editor.putLong(key, (Long) object);
-            }if(object instanceof Boolean) {
+            }else if(object instanceof Boolean) {
                 editor.putBoolean(key, (Boolean) object);
-            }if(object instanceof Set) {
+            }else if(object instanceof Set) {
                 editor.putStringSet(key, (Set<String>) object);
             }
             editor.apply();
@@ -59,6 +59,24 @@ public class PrefrersUtil {
         }
     }
 
+    /**
+     * 保存class数据
+     * @param key
+     * @param object
+     */
+    public void saveClass(String key,Object object){
+        String json=JsonUtil.getInstance().getJsonString(object);
+        saveValue(key,json);
+    }
+
+    public <T> T getClass(String key,Class<T> tClass){
+        return JsonUtil.getInstance().getJsonLocalBean(key,tClass);
+    }
+
+    public void remove(String key){
+        editor.remove(key);
+        editor.apply();
+    }
 
     /**
      * 从本地获取string数据

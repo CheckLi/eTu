@@ -109,7 +109,7 @@ public class JsonUtil {
      */
     private String getStrValue(String name) {
         try{
-            PrefrersUtil.getInstance().getValue(name,"");
+            return PrefrersUtil.getInstance().getValue(name,"");
         }catch(Exception e){
             e.printStackTrace();
         }

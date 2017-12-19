@@ -1,5 +1,6 @@
 package com.yitu.etu.ui.activity
 
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -21,6 +22,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
     override fun getLayout(): Int = R.layout.activity_main
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun initActionBar() {
         mActionBarView.hideLeftImage()
@@ -53,7 +58,12 @@ class MainActivity : BaseActivity() {
             }
             1 -> {
                 mActionBarView.setLeftImage(R.drawable.icon114) {
-                    showToast("搜索")
+                    val fragments=supportFragmentManager.fragments
+                    fragments?.forEach {
+                        if(it is MapsFragment){
+                            it.search()
+                        }
+                    }
                 }
                 mActionBarView.setTitle("e 途")
                 mActionBarView.setRightImage(R.drawable.icon87) {
@@ -158,7 +168,6 @@ class MainActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        EtuApplication.setUserInfo(null)
     }
 }
 

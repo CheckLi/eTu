@@ -28,6 +28,13 @@ public class ImageLoadUtil {
     public void loadImage(ImageView img, String url, int width, int height) {
         loadImage(img, url, width, height, R.drawable.ic_default_image, R.drawable.ic_default_image,null);
     }
+    public void loadImage(ImageView img, String url,int defaultDrawable, int width, int height) {
+        loadImage(img, url, width, height, defaultDrawable, defaultDrawable,null);
+    }
+
+    public void loadImage(ImageView img, String url,int defaultDrawable, int width, int height,RequestListener listener) {
+        loadImage(img, url, width, height, defaultDrawable, defaultDrawable,listener);
+    }
 
     /**
      * 加载图片
@@ -50,12 +57,12 @@ public class ImageLoadUtil {
                 .listener(listener==null?new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
+                        return true;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
+                        return true;
                     }
                 }:listener)
                 .into(img);

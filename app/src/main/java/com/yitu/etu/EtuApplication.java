@@ -4,11 +4,16 @@ import android.app.Application;
 
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
-import com.yitu.etu.entity.UserInfoEntity;
+import com.yitu.etu.entity.AppConstant;
+import com.yitu.etu.entity.UserInfo;
+import com.yitu.etu.eventBusItem.LoginSuccessEvent;
+import com.yitu.etu.util.PrefrersUtil;
+import com.yitu.etu.util.TextUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import io.rong.eventbus.EventBus;
 import io.rong.imkit.RongIM;
 import okhttp3.OkHttpClient;
 
@@ -20,15 +25,7 @@ import okhttp3.OkHttpClient;
  */
 public class EtuApplication extends Application {
     private static EtuApplication mInstance;
-    private static UserInfoEntity userInfo;
-
-    public static UserInfoEntity getUserInfo() {
-        return userInfo;
-    }
-
-    public static void setUserInfo(UserInfoEntity userInfo) {
-        EtuApplication.userInfo = userInfo;
-    }
+    private UserInfo userInfo;
 
     public static EtuApplication getInstance() {
         return mInstance;
@@ -38,6 +35,7 @@ public class EtuApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        readUserInfo();//读取个人登陆信息
         /**
          * 异常代理
          */
@@ -89,10 +87,58 @@ public class EtuApplication extends Application {
     /**
      * 分享参数配置
      */
-    public void share(){
+    public void share() {
         UMShareAPI.get(this);
         PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
         PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad", "http://sns.whalecloud.com");
+    }
+
+    /**
+     * 判断登陆用
+     *
+     * @return
+     */
+    public boolean isLogin() {
+        if (userInfo != null && userInfo.getId() != 0 && !TextUtils.isEmpty(userInfo.getToken())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    /**
+     * 存储个人信息
+     *
+     * @param userInfo
+     */
+    public void setUserInfo(UserInfo userInfo) {
+        if (userInfo != null&& userInfo.getId() != 0 && !TextUtils.isEmpty(userInfo.getToken())) {
+            this.userInfo = userInfo;
+            //存储登陆信息，第二次进入直接读取
+            PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_USER_INFO, userInfo);
+        } else {
+            this.userInfo = null;
+        }
+    }
+
+    /**
+     * 从本地读取个人数据
+     */
+    public void readUserInfo() {
+        this.userInfo = PrefrersUtil.getInstance().getClass(AppConstant.PARAM_SAVE_USER_INFO, UserInfo.class);
+    }
+
+    /**
+     * 退出登陆
+     */
+    public void loginOut() {
+        setUserInfo(null);
+        PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_USER_INFO);
+        EventBus.getDefault().post(new LoginSuccessEvent(null));
     }
 }

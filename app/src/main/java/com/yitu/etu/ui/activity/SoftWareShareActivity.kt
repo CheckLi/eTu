@@ -1,9 +1,14 @@
 package com.yitu.etu.ui.activity
 
+import android.Manifest
+import android.os.Build
+import android.support.v4.app.ActivityCompat
 import com.umeng.socialize.ShareAction
+import com.umeng.socialize.UMShareAPI
 import com.umeng.socialize.UMShareListener
 import com.umeng.socialize.bean.SHARE_MEDIA
 import com.yitu.etu.R
+
 
 class SoftWareShareActivity : BaseActivity() {
 
@@ -12,29 +17,61 @@ class SoftWareShareActivity : BaseActivity() {
     override fun initActionBar() {
         title = "我的分享"
         setRightText("分享") {
-            ShareAction(this)
-                    .withText("hello")
-                    .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.WEIXIN)
-                    .setCallback(object : UMShareListener {
-                        override fun onResult(p0: SHARE_MEDIA?) {
-                            showToast("分享成功")
-                        }
-
-                        override fun onCancel(p0: SHARE_MEDIA?) {
-                            showToast("取消分享")
-                        }
-
-                        override fun onError(p0: SHARE_MEDIA?, p1: Throwable?) {
-                            showToast(p1?.message)
-                        }
-
-                        override fun onStart(p0: SHARE_MEDIA?) {
-                            showToast("开始分享")
-                        }
-
-                    })
-                    .open()
+            //先请求权限
+            if (requestPermission()) {
+                share()
+            }
         }
+    }
+
+    private fun share() {
+        if (UMShareAPI.get(this).isInstall(this, SHARE_MEDIA.WEIXIN)) {
+            showToast("请安装微信")
+            return
+        } else if (UMShareAPI.get(this).isInstall(this, SHARE_MEDIA.QQ)) {
+            showToast("请安装QQ")
+            return
+        }
+        ShareAction(this)
+                .withText("hello")
+                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
+                .setCallback(object : UMShareListener {
+                    override fun onResult(p0: SHARE_MEDIA?) {
+                        showToast("分享成功")
+                    }
+
+                    override fun onCancel(p0: SHARE_MEDIA?) {
+                        showToast("取消分享")
+                    }
+
+                    override fun onError(p0: SHARE_MEDIA?, p1: Throwable?) {
+                        showToast(p1?.message)
+                    }
+
+                    override fun onStart(p0: SHARE_MEDIA?) {
+                        showToast("开始分享")
+                    }
+
+                })
+                .open()
+    }
+
+    private fun requestPermission(): Boolean {
+        if (Build.VERSION.SDK_INT >= 23) {
+            val pArray = arrayOf<String>(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_APN_SETTINGS)
+            val mPermissionList = pArray
+            ActivityCompat.requestPermissions(this, mPermissionList, 123)
+            return false
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == 123) {
+            share()
+        }
+
     }
 
     override fun initView() {
@@ -46,5 +83,8 @@ class SoftWareShareActivity : BaseActivity() {
     override fun initListener() {
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        UMShareAPI.get(this).release()
+    }
 }

@@ -1,12 +1,20 @@
 package com.yitu.etu.ui.fragment
 
+import android.view.View
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
+import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
+import com.yitu.etu.entity.UserInfo
+import com.yitu.etu.eventBusItem.LoginSuccessEvent
 import com.yitu.etu.ui.activity.*
+import com.yitu.etu.util.Empty
+import com.yitu.etu.util.imageLoad.ImageLoadUtil
+import com.yitu.etu.util.isLogin
 import io.rong.imkit.RongIM
 import io.rong.imlib.model.CSCustomServiceInfo
 import kotlinx.android.synthetic.main.fragment_account_layout.*
-
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 
 /**
@@ -30,7 +38,8 @@ class AccountFragment : BaseFragment() {
     }
 
     override fun initView() {
-
+        EventBus.getDefault().register(this)
+        initUserInfo(EtuApplication.getInstance().userInfo)
     }
 
     override fun getData() {
@@ -38,6 +47,16 @@ class AccountFragment : BaseFragment() {
     }
 
     override fun initListener() {
+        /**
+         * 登录和个人资料入口
+         */
+        ll_header.setOnClickListener {
+            if (isLogin()) {
+
+            }else{
+                nextActivityFromFragment<LoginActivity>()
+            }
+        }
         /**
          * 我的钱包
          */
@@ -122,7 +141,7 @@ class AccountFragment : BaseFragment() {
              * @param customServiceInfo 当前使用客服者的用户信息。{@link io.rong.imlib.model.CSCustomServiceInfo}
              *              * KEFU151041166014716上线客服id
              */
-            RongIM.getInstance().startCustomerServiceChat(activity, "KEFU151304509872992", "在线客服",csInfo)
+            RongIM.getInstance().startCustomerServiceChat(activity, "KEFU151304509872992", "在线客服", csInfo)
         }
         /**
          * 软件分享
@@ -130,5 +149,39 @@ class AccountFragment : BaseFragment() {
         tv_software_share.setOnClickListener {
             nextActivityFromFragment<SoftWareShareActivity>()
         }
+    }
+
+    /**
+     * 登陆成功回调
+     */
+    @Subscribe
+    fun onEventLoginSuccess(event: LoginSuccessEvent){
+        //等于空代表退出登陆
+        initUserInfo(event.userInfo)
+    }
+
+    /**
+     * 初始化个人信息
+     */
+     fun AccountFragment.initUserInfo(userInfo: UserInfo?) {
+        if (userInfo == null) {
+            tv_login.visibility = View.VISIBLE
+            tv_username.text = ""
+            tv_username.visibility = View.GONE
+            ImageLoadUtil.getInstance().loadImage(iv_head, "drawable://" , R.drawable.default_head, 200, 200)
+        } else {
+            with(userInfo) {
+                tv_login.visibility = View.GONE
+                tv_username.text = name.Empty()
+                tv_username.visibility = View.VISIBLE
+                ImageLoadUtil.getInstance().loadImage(iv_head,"http://api.91eto.com/assets/data/sys/userico.jpg",R.drawable.default_head, 200, 200)
+            }
+        }
+    }
+
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
     }
 }

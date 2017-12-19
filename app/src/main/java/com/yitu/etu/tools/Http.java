@@ -1,7 +1,6 @@
 package com.yitu.etu.tools;
 
-import com.yitu.etu.EtuApplication;
-import com.yitu.etu.entity.UserInfoEntity;
+import com.yitu.etu.entity.GeneralRequestParams;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
@@ -43,9 +42,8 @@ public class Http {
             }
         }
         if (needToken) {
-            UserInfoEntity userInfo = EtuApplication.getUserInfo();
-            if (userInfo != null) {
-                postFormBuilder.addParams("token",userInfo.getToken());
+            for (Map.Entry<String,String> map: GeneralRequestParams.getParams().entrySet()){
+                postFormBuilder.addParams(map.getKey(),map.getValue());
             }
 
         }
