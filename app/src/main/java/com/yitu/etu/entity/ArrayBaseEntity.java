@@ -12,7 +12,9 @@ public class ArrayBaseEntity <T>{
     public List<T> data;
     public String message;
     public String time;
-
+    public boolean success(){
+        return  status==1?true:false;
+    }
     public int getStatus() {
         return status;
     }

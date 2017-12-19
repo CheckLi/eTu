@@ -163,7 +163,7 @@ public class MapsFragment extends SupportMapFragment implements
 
             @Override
             public void onResponse(ObjectBaseEntity<UserInfoEntity> response, int id) {
-                if (response.getStatus() == 1) {
+                if (response.success()) {
                     EtuApplication.setUserInfo(response.getData());
                     updateUserInfo();
                 }
@@ -174,15 +174,15 @@ public class MapsFragment extends SupportMapFragment implements
     public void updateUserInfo() {
         HashMap params = new HashMap<String, String>();
         params.put("name", "李佳明2222");
-        Http.post(Urls.updateUserInfo, params, new GsonCallback<UserInfoEntity>() {
+        Http.post(Urls.updateUserInfo, params, new GsonCallback<ObjectBaseEntity<UserInfoEntity>>() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 Log.e("Exception", "Exception");
             }
 
             @Override
-            public void onResponse(UserInfoEntity response, int id) {
-                if (response.getStatus() == 1) {
+            public void onResponse(ObjectBaseEntity<UserInfoEntity> response, int id) {
+                if (response.success()) {
                 }
             }
         });
