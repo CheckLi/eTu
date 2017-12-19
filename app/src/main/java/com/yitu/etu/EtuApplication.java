@@ -11,9 +11,10 @@ import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.concurrent.TimeUnit;
 
-import io.rong.eventbus.EventBus;
 import io.rong.imkit.RongIM;
 import okhttp3.OkHttpClient;
 

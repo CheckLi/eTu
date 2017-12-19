@@ -62,6 +62,7 @@ import com.yitu.etu.ui.activity.MapSearchActivity;
 import com.yitu.etu.util.APKSHA1;
 import com.yitu.etu.util.PermissionUtil;
 import com.yitu.etu.util.ToastUtil;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.GlideApp;
 
 import java.text.SimpleDateFormat;
@@ -529,24 +530,7 @@ public class MapsFragment extends SupportMapFragment implements
                 ToastUtil.showMessage("我2");
             }
         });
-        GlideApp.with(MapsFragment.this)
-                .load("http://img2.imgtn.bdimg.com/it/u=1025471167,1921781839&fm=27&gp=0.jpg")
-                .circleCrop()
-                .placeholder(R.drawable.icon17)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .error(R.drawable.icon17)
-                .into(image);
-
+        ImageLoadUtil.getInstance().loadImage(image,"http://img2.imgtn.bdimg.com/it/u=1025471167,1921781839&fm=27&gp=0.jpg",R.drawable.default_head,80,80);
         return view;
     }
 
@@ -868,6 +852,7 @@ public class MapsFragment extends SupportMapFragment implements
                     }
                 }
             };
+
             GlideApp.with(MapsFragment.this)
                     .load("http://pic.58pic.com/58pic/13/66/58/20258PICpDh_1024.png")
                     .circleCrop()

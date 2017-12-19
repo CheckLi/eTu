@@ -20,7 +20,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:gravity="center"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textColor="@color/white"
             android:scaleType="centerInside"
             android:text="按钮"

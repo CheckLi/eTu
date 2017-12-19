@@ -25,13 +25,7 @@ class SoftWareShareActivity : BaseActivity() {
     }
 
     private fun share() {
-        if (UMShareAPI.get(this).isInstall(this, SHARE_MEDIA.WEIXIN)) {
-            showToast("请安装微信")
-            return
-        } else if (UMShareAPI.get(this).isInstall(this, SHARE_MEDIA.QQ)) {
-            showToast("请安装QQ")
-            return
-        }
+
         ShareAction(this)
                 .withText("hello")
                 .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
@@ -45,11 +39,26 @@ class SoftWareShareActivity : BaseActivity() {
                     }
 
                     override fun onError(p0: SHARE_MEDIA?, p1: Throwable?) {
-                        showToast(p1?.message)
+                        when (p0) {
+                            SHARE_MEDIA.WEIXIN -> {
+                                if (UMShareAPI.get(this@SoftWareShareActivity).isInstall(this@SoftWareShareActivity, SHARE_MEDIA.WEIXIN)) {
+                                    showToast("请安装微信")
+                                    return
+                                }
+                            }
+                            SHARE_MEDIA.QQ -> {
+                                if (UMShareAPI.get(this@SoftWareShareActivity).isInstall(this@SoftWareShareActivity, SHARE_MEDIA.QQ)) {
+                                    showToast("请安装QQ")
+                                    return
+                                }
+                            }
+                            else -> showToast("分享异常")
+                        }
                     }
 
                     override fun onStart(p0: SHARE_MEDIA?) {
                         showToast("开始分享")
+
                     }
 
                 })

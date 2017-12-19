@@ -156,9 +156,9 @@ class AccountFragment : BaseFragment() {
      * 登陆成功回调
      */
     @Subscribe
-    fun onEventLoginSuccess(event: LoginSuccessEvent) {
+    fun onEventLoginSuccess(event: LoginSuccessEvent?) {
         //等于空代表退出登陆
-        initUserInfo(event.userInfo)
+        initUserInfo(event?.userInfo)
     }
 
     /**
@@ -169,15 +169,14 @@ class AccountFragment : BaseFragment() {
             tv_login.visibility = View.VISIBLE
             tv_username.text = ""
             tv_username.visibility = View.GONE
-            ImageLoadUtil.getInstance().loadImage(iv_head, "drawable://", R.drawable.default_head, 200, 200)
+            ImageLoadUtil.getInstance().loadImage(iv_head, "drawable://", R.drawable.default_head, 100, 100)
         } else {
             with(userInfo) {
                 tv_login.visibility = View.GONE
                 tv_username.text = name.Empty()
                 tv_username.visibility = View.VISIBLE
-                ImageLoadUtil.getInstance().loadImage(this@AccountFragment
-                        , iv_head, header.addHost()
-                        , R.drawable.default_head, 200, 200)
+                ImageLoadUtil.getInstance().loadImage(iv_head, header.addHost()
+                        , R.drawable.default_head, 100, 100)
             }
         }
     }

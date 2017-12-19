@@ -3,12 +3,14 @@ package com.yitu.etu.ui.activity
 import android.util.Log
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
+import com.yitu.etu.entity.AppConstant
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
 import com.yitu.etu.eventBusItem.LoginSuccessEvent
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http.post
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.util.PrefrersUtil
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.Call
 import org.greenrobot.eventbus.EventBus
@@ -28,6 +30,11 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun initView() {
+        et_username.setText(PrefrersUtil.getInstance().getValue(AppConstant.PARAM_SAVE_USERNAME,""))
+        et_username.setSelection(et_username.text.length)
+        if(!et_username.text.isNullOrEmpty()){
+            tv_password.requestFocus()
+        }
     }
 
     override fun getData() {
@@ -69,6 +76,7 @@ class LoginActivity : BaseActivity() {
                     override fun onResponse(response: ObjectBaseEntity<UserInfo>, id: Int) {
                         hideWaitDialog()
                         if (response.success()) {
+                            PrefrersUtil.getInstance().saveValue(AppConstant.PARAM_SAVE_USERNAME,name)
                             EtuApplication.getInstance().userInfo = response.data
                             EventBus.getDefault().post(LoginSuccessEvent(response.data))
                             finish()

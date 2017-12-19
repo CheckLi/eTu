@@ -8,4 +8,5 @@ package com.yitu.etu.entity;
  */
 public class AppConstant {
     public static String PARAM_SAVE_USER_INFO="param_save_user_info";
+    public static String PARAM_SAVE_USERNAME="param_save_username";
 }

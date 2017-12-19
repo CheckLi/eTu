@@ -211,5 +211,5 @@
 -keep class com.linkedin.** { *; }
 -keep class com.android.dingtalk.share.ddsharemodule.** { *; }
 -keepattributes Signature
-
+-dontwarn com.squareup.okhttp.**
 -ignorewarnings

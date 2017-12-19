@@ -56,7 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ISNav.getInstance().init(new ImageLoader() {
             @Override
             public void displayImage(Context context, String path, ImageView imageView) {
-                ImageLoadUtil.getInstance().loadImage(imageView, path, 200, 200);
+                ImageLoadUtil.getInstance().loadImage(imageView, path, 80, 80);
             }
         });
     }
