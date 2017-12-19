@@ -43,7 +43,7 @@ public class Http {
             }
         }
         if (needToken) {
-            UserInfoEntity.DataBean userInfo = EtuApplication.getUserInfo();
+            UserInfoEntity userInfo = EtuApplication.getUserInfo();
             if (userInfo != null) {
                 postFormBuilder.addParams("token",userInfo.getToken());
             }

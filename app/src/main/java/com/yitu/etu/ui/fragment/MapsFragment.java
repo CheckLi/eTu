@@ -54,11 +54,13 @@ import com.yitu.etu.entity.MapFirendEntity;
 import com.yitu.etu.entity.MapOrderSceneEntity;
 import com.yitu.etu.entity.MapSceneEntity;
 import com.yitu.etu.entity.MerchantBaseEntity;
+import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.UserInfoEntity;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.ui.activity.MapSearchActivity;
+import com.yitu.etu.util.APKSHA1;
 import com.yitu.etu.util.PermissionUtil;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.widget.GlideApp;
@@ -113,6 +115,7 @@ public class MapsFragment extends SupportMapFragment implements
     private boolean animating;
     private ImageView mButton;
     MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -144,7 +147,7 @@ public class MapsFragment extends SupportMapFragment implements
         initMap();
 
         login();
-
+        Log.e("sha1", APKSHA1.SHA1(getContext()));
         return mRoot;
     }
 
@@ -152,14 +155,14 @@ public class MapsFragment extends SupportMapFragment implements
         HashMap params = new HashMap<String, String>();
         params.put("name", "18281619229");
         params.put("password", "li52525252");
-        Http.post(Urls.login, params, new GsonCallback<UserInfoEntity>() {
+        Http.post(Urls.login, params, new GsonCallback<ObjectBaseEntity<UserInfoEntity>>() {
             @Override
             public void onError(Call call, Exception e, int id) {
                 Log.e("Exception", "Exception");
             }
 
             @Override
-            public void onResponse(UserInfoEntity response, int id) {
+            public void onResponse(ObjectBaseEntity<UserInfoEntity> response, int id) {
                 if (response.getStatus() == 1) {
                     EtuApplication.setUserInfo(response.getData());
                     updateUserInfo();
@@ -516,12 +519,12 @@ public class MapsFragment extends SupportMapFragment implements
                 if (mMyLocationPoint == null) {
                     mMyLocationPoint = amapLocation;
                     if (mMyLocationPoint != null) {
-//                        mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
-//                        mAmap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude())));
+                        mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
+                        mAmap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude())));
                     }
                 }
                 mMyLocationPoint = amapLocation;
-//                mLocationChangeListener.onLocationChanged(mMyLocationPoint);
+                mLocationChangeListener.onLocationChanged(mMyLocationPoint);
             } else {
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                 Log.e("AmapError",
@@ -671,7 +674,8 @@ public class MapsFragment extends SupportMapFragment implements
                 showSexPop(v);
                 break;
             case R.id.btn_province:
-                showAreaDialog();
+//                showAreaDialog();
+                search();
                 break;
 
 
@@ -679,10 +683,11 @@ public class MapsFragment extends SupportMapFragment implements
                 break;
         }
     }
-    public void showNoSceneDialog()
-    {
+
+    public void showNoSceneDialog() {
 
     }
+
     public void showSexPop(View v) {
         PopupWindow popupWindow = new PopupWindow(getContext());
         popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
@@ -696,7 +701,6 @@ public class MapsFragment extends SupportMapFragment implements
         popupWindow.setContentView(text2);
         popupWindow.showAsDropDown(v, 20, 0);
     }
-
 
 
     public void showAreaDialog() {

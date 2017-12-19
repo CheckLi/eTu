@@ -20,13 +20,13 @@ import okhttp3.OkHttpClient;
  */
 public class EtuApplication extends Application {
     private static EtuApplication mInstance;
-    private static UserInfoEntity.DataBean userInfo;
+    private static UserInfoEntity userInfo;
 
-    public static UserInfoEntity.DataBean getUserInfo() {
+    public static UserInfoEntity getUserInfo() {
         return userInfo;
     }
 
-    public static void setUserInfo(UserInfoEntity.DataBean userInfo) {
+    public static void setUserInfo(UserInfoEntity userInfo) {
         EtuApplication.userInfo = userInfo;
     }
 
