@@ -3,6 +3,7 @@ package com.yitu.etu.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Handler
+import android.text.InputFilter
 import android.util.Log
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
@@ -31,6 +32,8 @@ class RegistActivity : BaseActivity() {
     }
 
     override fun initView() {
+        et_code.filters= arrayOf(InputFilter.LengthFilter(6))
+        et_username.filters= arrayOf(InputFilter.LengthFilter(11))
         initHand()
     }
 

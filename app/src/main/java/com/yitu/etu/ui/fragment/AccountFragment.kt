@@ -11,6 +11,7 @@ import com.yitu.etu.util.Empty
 import com.yitu.etu.util.addHost
 import com.yitu.etu.util.imageLoad.ImageLoadUtil
 import com.yitu.etu.util.isLogin
+import com.yitu.etu.util.location.LocationUtil
 import io.rong.imkit.RongIM
 import io.rong.imlib.model.CSCustomServiceInfo
 import kotlinx.android.synthetic.main.fragment_account_layout.*
@@ -39,8 +40,17 @@ class AccountFragment : BaseFragment() {
     }
 
     override fun initView() {
+
         EventBus.getDefault().register(this)
         initUserInfo(EtuApplication.getInstance().userInfo)
+        val location=EtuApplication.getInstance().location
+        if(location==null){
+            LocationUtil.getInstance().startLocation{
+                tv_location.text = it?.city.Empty()
+            }
+        }else{
+            tv_location.text = location.city
+        }
     }
 
     override fun getData() {

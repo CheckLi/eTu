@@ -2,6 +2,8 @@ package com.yitu.etu;
 
 import android.app.Application;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
 import com.autonavi.amap.mapcore.FileUtil;
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
@@ -13,6 +15,7 @@ import com.yitu.etu.eventBusItem.EventClearSuccess;
 import com.yitu.etu.eventBusItem.LoginSuccessEvent;
 import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
+import com.yitu.etu.util.location.LocationUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,7 +34,7 @@ import okhttp3.OkHttpClient;
 public class EtuApplication extends Application {
     private static EtuApplication mInstance;
     private UserInfo userInfo;
-
+    private AMapLocation mLocation;
     public static EtuApplication getInstance() {
         return mInstance;
     }
@@ -88,7 +91,19 @@ public class EtuApplication extends Application {
 
         share();
         Picasso.with(this).setIndicatorsEnabled(true);
+        initLocation();//获取定位信息
     }
+
+    public void initLocation(){
+        LocationUtil.getInstance().startLocation(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                mLocation=aMapLocation;
+            }
+        });
+    }
+
+
 
     /**
      * 分享参数配置
@@ -167,5 +182,13 @@ public class EtuApplication extends Application {
                 }
             }
         }).start();
+    }
+
+    public AMapLocation getLocation() {
+        return mLocation;
+    }
+
+    public void setLocation(AMapLocation location) {
+        mLocation = location;
     }
 }

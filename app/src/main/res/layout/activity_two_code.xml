@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="30dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.yitu.etu.ui.activity.TwoCodeActivity">
+
+    <ImageView
+        android:id="@+id/tv_two_code"
+        android:layout_width="150dp"
+        android:background="@color/white"
+        android:padding="4dp"
+        android:layout_height="150dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/etu_default"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="20dp"
+        android:lineSpacingExtra="4dp"
+        android:layout_height="wrap_content"
+        android:text="你可以通过分享自己的二维码让其他用户扫描来对你进行好友添加"/>
+</LinearLayout>

@@ -1,10 +1,10 @@
 package com.yitu.etu.ui.activity
 
 import android.view.View
+import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.eventBusItem.EventClearSuccess
-import com.yitu.etu.eventBusItem.LoginSuccessEvent
 import com.yitu.etu.util.isLogin
 import kotlinx.android.synthetic.main.activity_account_manage.*
 import org.greenrobot.eventbus.EventBus
@@ -26,6 +26,17 @@ class AccountManageActivity : BaseActivity() {
     }
 
     override fun initListener() {
+
+        /**
+         * 我的二维码
+         */
+        tv_er.setOnClickListener {
+            nextActivity<TwoCodeActivity>()
+        }
+
+        /**
+         * 清理缓存
+         */
         tv_clear_cache.setOnClickListener {
             showWaitDialog("清理中...")
             EtuApplication.getInstance().clearCache()
@@ -38,12 +49,7 @@ class AccountManageActivity : BaseActivity() {
             EtuApplication.getInstance().loginOut()
             finish()
         }
-        /**
-         * 退出登陆
-         */
-        tv_er.setOnClickListener {
-            EventBus.getDefault().post(LoginSuccessEvent(null))
-        }
+
     }
 
     override fun onDestroy() {

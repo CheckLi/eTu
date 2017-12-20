@@ -3,24 +3,27 @@ package com.yitu.etu.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Handler
+import android.text.InputFilter
 import android.util.Log
 import com.yitu.etu.R
+import com.yitu.etu.entity.AppConstant
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http.post
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.util.PrefrersUtil
 import kotlinx.android.synthetic.main.activity_foreget_password.*
 import okhttp3.Call
 
-class ForegetPasswordActivity : BaseActivity() {
+class ForgetPasswordActivity : BaseActivity() {
     private val timeTotal = 60//s
     private var time = timeTotal//s
     private val timeDelaed = 1000L//ms
     private var hand: Handler? = null
-    val WHAT_SEND = 0//发送中
-    val WHAT_SEND_ERROR = 1//发送错误
-    val WHAT_SEND_FINISH = 2//发送完成
-    val WHAT_SEND_RESET = 3//发送完成
+    private val WHAT_SEND = 0//发送中
+    private val WHAT_SEND_ERROR = 1//发送错误
+    private val WHAT_SEND_FINISH = 2//发送完成
+    private val WHAT_SEND_RESET = 3//发送完成
     override fun getLayout(): Int = R.layout.activity_foreget_password
 
     override fun initActionBar() {
@@ -31,6 +34,13 @@ class ForegetPasswordActivity : BaseActivity() {
     }
 
     override fun initView() {
+        et_code.filters= arrayOf(InputFilter.LengthFilter(6))
+        et_username.filters= arrayOf(InputFilter.LengthFilter(11))
+        et_username.setText(PrefrersUtil.getInstance().getValue(AppConstant.PARAM_SAVE_USERNAME, ""))
+        et_username.setSelection(et_username.text.length)
+        if (!et_username.text.isNullOrEmpty()) {
+            et_code.requestFocus()
+        }
         initHand()
     }
 
@@ -62,7 +72,7 @@ class ForegetPasswordActivity : BaseActivity() {
             return
         }
         showWaitDialog("发送中...")
-        post(Urls.sendCode, hashMapOf("phone" to phone), object : GsonCallback<ObjectBaseEntity<Any>>() {
+        post(Urls.sendForgetCode, hashMapOf("phone" to phone), object : GsonCallback<ObjectBaseEntity<Any>>() {
             override fun onError(call: Call, e: Exception, id: Int) {
                 Log.e("Exception", e.message)
                 showToast("获取失败")

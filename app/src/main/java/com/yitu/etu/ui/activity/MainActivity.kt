@@ -142,7 +142,7 @@ class MainActivity : BaseActivity() {
      * @param callback 连接回调。
      * @return RongIM  客户端核心类的实例。
      */
-     open fun connect(token: String) {
+      fun connect(token: String) {
 
         if (EtuApplication.getInstance().applicationInfo.packageName == SystemUtils.getCurProcessName(EtuApplication.getInstance().applicationContext)) {
 

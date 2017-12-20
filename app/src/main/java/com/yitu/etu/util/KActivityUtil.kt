@@ -3,7 +3,9 @@ package com.huizhuang.zxsq.utils
 import android.app.Activity
 import android.content.Context
 import android.support.v4.app.Fragment
+import com.yitu.etu.ui.activity.LoginActivity
 import com.yitu.etu.util.activityUtil
+import com.yitu.etu.util.isLogin
 import org.jetbrains.anko.internals.AnkoInternals
 
 /**
@@ -72,6 +74,21 @@ inline fun <reified T : Activity> Context.nextActivity(requestCode: Int) {
 /**
  * 进入下一个activity,需要检查是否登陆，如果未登录需要跳转到登陆界面
  */
-inline fun <reified T : Activity> Context.nextActivity() {
-    activityUtil.nextActivity(this, T::class.java, null, false)
+inline fun <reified T : Activity> Context.nextCheckLoginActivity() {
+    if(isLogin()) {
+        activityUtil.nextActivity(this, T::class.java, null, false)
+    }else{
+        activityUtil.nextActivity(this, LoginActivity::class.java, null, false)
+    }
+}
+
+/**
+ * 进入下一个activity,需要检查是否登陆，如果未登录需要跳转到登陆界面
+ */
+inline fun <reified T : Activity> Fragment.nextCheckLoginActivity() {
+    if(isLogin()) {
+        activityUtil.nextActivity(this, T::class.java, null, false)
+    }else{
+        activityUtil.nextActivity(this, LoginActivity::class.java, null, false)
+    }
 }

@@ -64,7 +64,7 @@ class LoginActivity : BaseActivity() {
          * 忘记密码
          */
         tv_forget_password.setOnClickListener {
-            nextActivity<ForegetPasswordActivity>()
+            nextActivity<ForgetPasswordActivity>(1001)
         }
     }
 
