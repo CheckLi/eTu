@@ -1,6 +1,8 @@
 package com.yitu.etu.tools;
 
+import com.yitu.etu.BuildConfig;
 import com.yitu.etu.entity.GeneralRequestParams;
+import com.yitu.etu.util.LogUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
@@ -46,6 +48,9 @@ public class Http {
                 postFormBuilder.addParams(map.getKey(),map.getValue());
             }
 
+        }
+        if (BuildConfig.DEBUG) {
+            LogUtil.e("response:","请求参数"+params.toString()+"\n通用参数"+GeneralRequestParams.getParams().toString());
         }
         RequestCall postFormRequest = postFormBuilder.build();
         postFormRequest.execute(callback);

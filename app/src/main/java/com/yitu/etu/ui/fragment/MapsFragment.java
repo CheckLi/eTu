@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -150,7 +152,19 @@ public class MapsFragment extends SupportMapFragment implements
         return mRoot;
     }
 
+    Handler hand=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
 
+    Runnable mRunnable=new Runnable() {
+        @Override
+        public void run() {
+            hand.postDelayed(mRunnable,1000L);
+        }
+    };
     public void updateUserInfo() {
         HashMap params = new HashMap<String, String>();
         params.put("name", "李佳明2222");

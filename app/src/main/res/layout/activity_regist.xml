@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.yitu.etu.ui.activity.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/round_white_5dp_top"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_username"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:inputType="number"
+            android:hint="手机号"
+            android:padding="15dp"/>
+
+        <RadioGroup
+            android:id="@+id/rg_user_select"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_ebfafd_to_alpha0"
+                android:button="@null"
+                android:checked="true"
+                android:text="个人"
+                android:textColor="@color/color_666666"/>
+
+            <RadioButton
+                android:id="@+id/rb_shop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/selector_ebfafd_to_alpha0"
+                android:button="@null"
+                android:text="商家"
+                android:textColor="@color/color_666666"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/et_code"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:hint="验证码"
+            android:inputType="number"
+            android:digits="1234567890"
+            android:padding="15dp"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tv_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:background="@color/white"
+            android:minWidth="100dp"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="发送验证码"
+            android:textColor="@color/selector_333333_to_999999"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/tv_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/round_white_5dp_bottom"
+        android:hint="登陆密码"
+        android:inputType="textPassword"
+        android:padding="15dp"
+        android:textSize="14sp"/>
+
+    <CheckBox
+        android:id="@+id/tv_forget_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@drawable/selector_regist_xy"
+        android:layout_marginLeft="16dp"
+        android:paddingTop="16dp"
+        android:checked="true"
+        android:paddingBottom="16dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:drawablePadding="10dp"
+        android:text="同意注册协议"
+        android:textColor="#D44041"/>
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/round_d44041_5dp"
+        android:text="注 册"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+</LinearLayout>

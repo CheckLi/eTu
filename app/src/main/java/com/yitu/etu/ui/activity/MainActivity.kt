@@ -1,6 +1,7 @@
 package com.yitu.etu.ui.activity
 
 import android.os.Bundle
+import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -11,14 +12,16 @@ import com.yitu.etu.ui.fragment.AccountFragment
 import com.yitu.etu.ui.fragment.LYFragment
 import com.yitu.etu.ui.fragment.MapsFragment
 import com.yitu.etu.util.LogUtil
+import com.yitu.etu.util.isLogin
+import com.yitu.etu.util.userInfo
 import com.yitu.etu.widget.tablayout.OnTabSelectListener
+import io.rong.common.FileUtils
 import io.rong.imkit.RongIM
 import io.rong.imkit.RongIM.UserInfoProvider
 import io.rong.imkit.utils.SystemUtils
 import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.activity_main.*
-
-
+import java.io.File
 
 
 class MainActivity : BaseActivity() {
@@ -42,7 +45,33 @@ class MainActivity : BaseActivity() {
 
 
     override fun getData() {
-        connect("PPorPzeapqdz6169J4kuPpyVKf8tDNGGG7nsty1vQz6Alaw6Zz6WSs8vTrg3zQ4NjPjEH258Y8hrWy0QHixfpA==")
+        if(isLogin()) {
+            connect(userInfo().token)
+        }
+        val buff=StringBuffer("")
+        buff.append("缓存目录1$cacheDir\n")
+        buff.append("缓存目录2$filesDir\n")
+
+        buff.append("缓存目录3${getExternalFilesDir(Environment.DIRECTORY_PICTURES)}\n")
+        buff.append("缓存目录4$externalCacheDir\n")
+        buff.append("缓存目录5${FileUtils.getCachePath(this)}\n")
+        val file=cacheDir
+
+        buff.append("缓存目录1$cacheDir 大小 ${file.length()/1024.0f}kb ${getsize(file)}kb\n")
+        LogUtil.e("cache",buff.toString())
+    }
+
+    fun getsize(file:File):Float{
+        val files=file.listFiles()
+        var lenght=0.0f
+        files.forEach {
+            if(it.isDirectory){
+                getsize(it)
+            }else{
+                lenght+=file.length()/1024.0f
+            }
+        }
+        return lenght
     }
 
     /**
@@ -113,7 +142,7 @@ class MainActivity : BaseActivity() {
      * @param callback 连接回调。
      * @return RongIM  客户端核心类的实例。
      */
-    private fun connect(token: String) {
+     open fun connect(token: String) {
 
         if (EtuApplication.getInstance().applicationInfo.packageName == SystemUtils.getCurProcessName(EtuApplication.getInstance().applicationContext)) {
 
@@ -170,6 +199,7 @@ class MainActivity : BaseActivity() {
 
     override fun onDestroy() {
         Glide.get(this).clearMemory()
+        RongIM.getInstance().disconnect()
         super.onDestroy()
     }
 }

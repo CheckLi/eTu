@@ -2,10 +2,14 @@ package com.yitu.etu;
 
 import android.app.Application;
 
+import com.autonavi.amap.mapcore.FileUtil;
+import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.yitu.etu.entity.AppConstant;
 import com.yitu.etu.entity.UserInfo;
+import com.yitu.etu.eventBusItem.EventClearSuccess;
 import com.yitu.etu.eventBusItem.LoginSuccessEvent;
 import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
@@ -83,6 +87,7 @@ public class EtuApplication extends Application {
         });*/
 
         share();
+        Picasso.with(this).setIndicatorsEnabled(true);
     }
 
     /**
@@ -118,7 +123,7 @@ public class EtuApplication extends Application {
      * @param userInfo
      */
     public void setUserInfo(UserInfo userInfo) {
-        if (userInfo != null&& userInfo.getId() != 0 && !TextUtils.isEmpty(userInfo.getToken())) {
+        if (userInfo != null && userInfo.getId() != 0 && !TextUtils.isEmpty(userInfo.getToken())) {
             this.userInfo = userInfo;
             //存储登陆信息，第二次进入直接读取
             PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_USER_INFO, userInfo);
@@ -141,5 +146,26 @@ public class EtuApplication extends Application {
         setUserInfo(null);
         PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_USER_INFO);
         EventBus.getDefault().post(new LoginSuccessEvent(null));
+        RongIM.getInstance().logout();
+    }
+
+    /**
+     * 清理缓存
+     */
+    public void clearCache() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Picasso.with(getApplicationContext()).invalidate(getCacheDir());
+                    Glide.get(getApplicationContext()).clearDiskCache();
+                    FileUtil.deleteFile(getCacheDir());
+                    EventBus.getDefault().post(new EventClearSuccess(true));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    EventBus.getDefault().post(new EventClearSuccess(false));
+                }
+            }
+        }).start();
     }
 }

@@ -177,6 +177,15 @@ class AccountFragment : BaseFragment() {
                 tv_username.visibility = View.VISIBLE
                 ImageLoadUtil.getInstance().loadImage(iv_head, header.addHost()
                         , R.drawable.default_head, 100, 100)
+                val drawable = resources.getDrawable(when (sex) {
+                    0 -> R.drawable.icon2
+                    else -> R.drawable.icon0
+                })
+                drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+                tv_username.setCompoundDrawables(null, null, drawable, null)
+                if (activity is MainActivity) {
+                    (activity as MainActivity).connect(token)
+                }
             }
         }
     }

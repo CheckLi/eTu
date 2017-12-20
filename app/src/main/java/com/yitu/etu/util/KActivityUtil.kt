@@ -61,3 +61,17 @@ inline fun <reified T : Activity> Fragment.nextActivityFromFragment(finish: Bool
 inline fun <reified T : Activity> Context.nextActivity(finish: Boolean) {
     activityUtil.nextActivity(this, T::class.java, null, finish)
 }
+
+/**
+ * 进入下一个activity
+ */
+inline fun <reified T : Activity> Context.nextActivity(requestCode: Int) {
+    activityUtil.nextActivity(this, T::class.java, null,requestCode, false)
+}
+
+/**
+ * 进入下一个activity,需要检查是否登陆，如果未登录需要跳转到登陆界面
+ */
+inline fun <reified T : Activity> Context.nextActivity() {
+    activityUtil.nextActivity(this, T::class.java, null, false)
+}

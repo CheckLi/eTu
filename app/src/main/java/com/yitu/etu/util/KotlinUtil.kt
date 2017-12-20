@@ -2,7 +2,10 @@ package com.yitu.etu.util
 
 import android.app.Application
 import android.content.Context
+import android.support.v4.app.Fragment
 import android.view.View
+import com.yitu.etu.EtuApplication
+import com.yitu.etu.entity.UserInfo
 
 /**
  *
@@ -62,4 +65,17 @@ fun Context.showToast(message:String){
 
 fun Application.showToast(message:String){
     ToastUtil.showMessage(message)
+}
+
+/**
+ * 获取用户信息
+ */
+fun Context.userInfo():UserInfo{
+    return EtuApplication.getInstance().userInfo
+}
+/**
+ * 获取用户信息
+ */
+fun Fragment.userInfo():UserInfo{
+    return EtuApplication.getInstance().userInfo
 }
