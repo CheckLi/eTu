@@ -14,6 +14,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.yitu.etu.R;
 
+import java.io.File;
+
 /**
  * @className:ImageLoad
  * @description:
@@ -81,11 +83,20 @@ public class ImageLoadGlideUtil {
         } else {
             activity = ((Activity) img.getContext());
         }
-        Glide.with(activity)
-                .load(url)
-                .listener(listener)
-                .transition(new DrawableTransitionOptions().crossFade(200))
-                .apply(requestOptions).into(img);
+        if(url.contains("http:")||url.contains("https:")){
+            Glide.with(activity)
+                    .load(url)
+                    .listener(listener)
+                    .transition(new DrawableTransitionOptions().crossFade(200))
+                    .apply(requestOptions).into(img);
+        }else{
+            Glide.with(activity)
+                    .load(new File(url))
+                    .listener(listener)
+                    .transition(new DrawableTransitionOptions().crossFade(200))
+                    .apply(requestOptions).into(img);
+        }
+
     }
 
     /**

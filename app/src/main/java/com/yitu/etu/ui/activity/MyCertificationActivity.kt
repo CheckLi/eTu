@@ -9,7 +9,7 @@ import com.yitu.etu.tools.Http
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.util.FileUtil
 import com.yitu.etu.util.addHost
-import com.yitu.etu.util.imageLoad.ImageLoadGlideUtil
+import com.yitu.etu.util.imageLoad.ImageLoadUtil
 import com.yitu.etu.util.post
 import kotlinx.android.synthetic.main.activity_my_certification.*
 import okhttp3.Call
@@ -44,9 +44,14 @@ class MyCertificationActivity : BaseActivity() {
                 hideWaitDialog()
                 if (response.success()) {
                     with(response.data) {
-                        ImageLoadGlideUtil.getInstance().loadImage(iv_id_card_front, sfzfm.addHost(), 350, 350)
-                        ImageLoadGlideUtil.getInstance().loadImage(iv_id_card_verso, sfzfm.addHost(), 350, 350)
-                        ImageLoadGlideUtil.getInstance().loadImage(iv_id_card_hand, czz.addHost(), 350, 350)
+                        ImageLoadUtil.getInstance().loadImage(iv_id_card_front, sfzzm.addHost(), 350, 350)
+                        ImageLoadUtil.getInstance().loadImage(iv_id_card_verso, sfzfm.addHost(), 350, 350)
+                        ImageLoadUtil.getInstance().loadImage(iv_id_card_hand, czz.addHost(), 350, 350)
+                        showToast(when (status) {
+                            -1 -> "审核未通过"
+                            0 -> "等待审核"
+                            else -> "审核通过"
+                        })
                     }
                 } else {
                     showToast(response.message)
@@ -70,7 +75,7 @@ class MyCertificationActivity : BaseActivity() {
          */
         fl_card_front.setOnClickListener {
             position = 0
-            Single(false)
+            Single(true)
         }
 
         /**
@@ -112,15 +117,15 @@ class MyCertificationActivity : BaseActivity() {
     fun init(path: String) {
         when (position) {
             0 -> {
-                initDisplay(iv_id_card_front, "file://$path")
+                initDisplay(iv_id_card_front, path)
                 postData1 = FileUtil.GetImageStr(path)
             }
             1 -> {
-                initDisplay(iv_id_card_verso, "file://$path")
+                initDisplay(iv_id_card_verso, path)
                 postData2 = FileUtil.GetImageStr(path)
             }
             2 -> {
-                initDisplay(iv_id_card_hand, "file://$path")
+                initDisplay(iv_id_card_hand, path)
                 postData3 = FileUtil.GetImageStr(path)
             }
         }
@@ -128,7 +133,7 @@ class MyCertificationActivity : BaseActivity() {
     }
 
     private fun initDisplay(image: ImageView, path: String) {
-        ImageLoadGlideUtil.getInstance().loadImage(image, path, 350, 350)
+        ImageLoadUtil.getInstance().loadImage(image, path, 350, 350)
     }
 
     fun putInfo() {
@@ -145,9 +150,9 @@ class MyCertificationActivity : BaseActivity() {
             return
         }
         val params = HashMap<String, String>()
-        params.put("sfzzm", postData1.substring(0, 20))
-        params.put("sfzfm", postData2.substring(0, 20))
-        params.put("czz", postData3.substring(0, 20))
+        params.put("sfzzm", postData1)
+        params.put("sfzfm", postData2)
+        params.put("czz", postData3)
         showWaitDialog("上传中...")
         thread {
             Http.post(Urls.putRenz, params, object : GsonCallback<ObjectBaseEntity<Any>>() {

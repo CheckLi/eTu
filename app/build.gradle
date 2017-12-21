@@ -86,12 +86,13 @@ dependencies {
     implementation files('libs/Msc.jar')
     compile 'com.squareup.picasso:picasso:2.5.2'
     implementation files('libs/zxing-3.3.0.jar')
+//    密码输入框
+    compile 'com.jungly:gridPasswordView:0.3'
 }
 
 task showMeCache << {
     configurations.compile.each { println it }
 }
-/*
 configurations.all {
     resolutionStrategy.force 'com.android.support:support-annotations:23.1.0'
-}*/
+}

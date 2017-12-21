@@ -11,7 +11,7 @@ import com.yitu.etu.entity.UserInfo
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.util.*
-import com.yitu.etu.util.imageLoad.ImageLoadGlideUtil
+import com.yitu.etu.util.imageLoad.ImageLoadUtil
 import kotlinx.android.synthetic.main.activity_account_data.*
 import okhttp3.Call
 import java.util.*
@@ -26,7 +26,7 @@ class AccountDataActivity : BaseActivity() {
     override fun initView() {
         if (userInfo() != null) {
             with(userInfo()) {
-                ImageLoadGlideUtil.getInstance().loadImage(iv_head, header.addHost(), 80, 80)
+                ImageLoadUtil.getInstance().loadImage(iv_head, header.addHost(), 80, 80)
                 tv_username.text = name.Empty()
                 rg_sex.check(when (sex) {
                     0 -> R.id.rb_sex_girl
@@ -79,7 +79,7 @@ class AccountDataActivity : BaseActivity() {
     private var postFileBase64=""
     private var postFilePath=""
     fun postFile(path: String?) {
-        ImageLoadGlideUtil.getInstance().loadImage(iv_head, "file://${path.Empty()}", 80, 80)
+        ImageLoadUtil.getInstance().loadImage(iv_head, path.Empty(), 80, 80)
         postFileBase64=FileUtil.GetImageStr(path)
         postFilePath=path.Empty()
     }

@@ -9,6 +9,8 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.yitu.etu.R;
 
+import java.io.File;
+
 /**
  * @className:ImageLoad
  * @description:
@@ -45,7 +47,13 @@ public class ImageLoadUtil {
      * @param displayLoadding 加载中的时候显示的图片
      */
     public void loadImage(ImageView img, String url, int width, int height, @DrawableRes int displayError, @DrawableRes int displayLoadding, Callback listener) {
-        RequestCreator creator = Picasso.with(img.getContext()).load(url);
+        RequestCreator creator=null;
+        if(url.contains("http:")||url.contains("https:")){
+            creator= Picasso.with(img.getContext()).load(url);
+        }else{
+            creator= Picasso.with(img.getContext()).load(new File(url));
+        }
+
         width= (int) (img.getResources().getDisplayMetrics().density*width);
         height= (int) (img.getResources().getDisplayMetrics().density*height);
         if(width>0&&height<=0){

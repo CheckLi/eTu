@@ -18,4 +18,7 @@ public class Urls {
     public static final String loginPasswordChange = address + "/user/savePassword";//登陆密码修改
     public static final String putRenz = address + "/user/uprenz";//上传认证信息
     public static final String getRenz = address + "/user/renz";//获取认证信息
+    public static final String setPayPassword = address + "/user/setPaypwd";//设置支付密码
+    public static final String paySms = address + "/user/getPaypwdSms";//获取支付密码验证码
+    public static final String reSetPayPassword = address + "/user/forgetPaypwd";//重新设置支付密码
 }

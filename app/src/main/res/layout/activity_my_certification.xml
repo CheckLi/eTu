@@ -21,7 +21,7 @@
                android:text="上传身份证正面照"
                android:layout_gravity="center"
                android:layout_height="wrap_content"/>
-           <ImageView
+           <com.yitu.etu.widget.image.RecyclerImageView
                android:id="@+id/iv_id_card_front"
                android:layout_width="match_parent"
                android:scaleType="centerCrop"
@@ -42,7 +42,7 @@
                android:text="上传身份证反面照"
                android:layout_gravity="center"
                android:layout_height="wrap_content"/>
-           <ImageView
+           <com.yitu.etu.widget.image.RecyclerImageView
                android:id="@+id/iv_id_card_verso"
                android:layout_width="match_parent"
                android:scaleType="centerCrop"
@@ -64,7 +64,7 @@
                android:text="上传手持身份证照"
                android:layout_gravity="center"
                android:layout_height="wrap_content"/>
-           <ImageView
+           <com.yitu.etu.widget.image.RecyclerImageView
                android:id="@+id/iv_id_card_hand"
                android:layout_width="match_parent"
                android:scaleType="centerCrop"

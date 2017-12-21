@@ -273,6 +273,10 @@
         </activity>
         <activity android:name=".ui.activity.MyCertificationActivity">
         </activity>
+        <activity android:name=".ui.activity.AboutMeActivity">
+        </activity>
+        <activity android:name=".ui.activity.RePayPasswordActivity">
+        </activity>
     </application>
 
 </manifest>

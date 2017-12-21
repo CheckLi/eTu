@@ -56,14 +56,13 @@ class MainActivity : BaseActivity() {
         buff.append("缓存目录4$externalCacheDir\n")
         buff.append("缓存目录5${FileUtils.getCachePath(this)}\n")
         val file=cacheDir
-
-        buff.append("缓存目录1$cacheDir 大小 ${file.length()/1024.0f}kb ${getsize(file)}kb\n")
+        getsize(file)
+        buff.append("缓存目录1$cacheDir 大小 ${file.length()/1024.0f}kb ${lenght}kb\n")
         LogUtil.e("cache",buff.toString())
     }
-
+    var lenght=0.0f
     fun getsize(file:File):Float{
         val files=file.listFiles()
-        var lenght=0.0f
         files.forEach {
             if(it.isDirectory){
                 getsize(it)

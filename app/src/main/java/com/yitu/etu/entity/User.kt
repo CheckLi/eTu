@@ -35,7 +35,7 @@ data class UserInfo(
 		@SerializedName("is_del") val isDel: Int=0, //0
 		@SerializedName("created") val created: Int=0, //1512573048
 		@SerializedName("updated") val updated: Int=0, //1512573139
-		@SerializedName("ispaypwd") val ispaypwd: Int=0, //0
+		@SerializedName("ispaypwd") var ispaypwd: Int=0, //0
 		@SerializedName("token") val token: String="" //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGkuOTFldG8uY29tIiwiaWF0IjoxNTEzNDExODc0LCJpZCI6MzF9.s-UtStiEgghabcAN8idmWrlC2EqXwN5puKUPyL9uQUI
 )
 

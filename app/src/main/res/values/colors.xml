@@ -6,6 +6,7 @@
     <color name="colorPrimaryDark">#3F6184</color>
     <color name="colorAccent">#FF4081</color>
     <color name="color_b4000000">#b4000000</color>
+    <color name="color_b4ffffff">#b4ffffff</color>
     <color name="white">#ffffff</color>
     <color name="color_3478F5">#3478F5</color>
     <color name="color_7fcecece">#7fcecece</color>
@@ -20,4 +21,5 @@
     <color name="color_e5e5e5">#e5e5e5</color>
     <color name="color_818B93">#818B93</color>
     <color name="color_D9414F">#D9414F</color>
+    <color name="color_5A5A5A">#5A5A5A</color>
 </resources>

@@ -61,8 +61,9 @@
             android:background="@color/color_e5e5e5"
             android:layout_height="1px"/>
         <TextView
+            android:id="@+id/tv_pay_password"
             android:layout_width="match_parent"
-            android:text="支付密码（未设置）"
+            android:text="支付密码"
             android:textSize="15sp"
             android:padding="10dp"
             android:background="@drawable/white_click_bg"
@@ -81,6 +82,7 @@
             android:background="@color/color_e5e5e5"
             android:layout_height="1px"/>
         <TextView
+            android:id="@+id/tv_about_me"
             android:layout_width="match_parent"
             android:text="关于软件"
             android:padding="10dp"

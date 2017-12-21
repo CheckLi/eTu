@@ -18,7 +18,7 @@ import com.yitu.etu.R;
 import com.yitu.etu.dialog.LoadingDialog;
 import com.yitu.etu.tools.MyActivityManager;
 import com.yitu.etu.util.ToastUtil;
-import com.yitu.etu.util.imageLoad.ImageLoadGlideUtil;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.ActionBarView;
 import com.yuyh.library.imgsel.ISNav;
 import com.yuyh.library.imgsel.common.ImageLoader;
@@ -57,7 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ISNav.getInstance().init(new ImageLoader() {
             @Override
             public void displayImage(Context context, String path, ImageView imageView) {
-                ImageLoadGlideUtil.getInstance().loadImage(imageView, path, 80, 80);
+                ImageLoadUtil.getInstance().loadImage(imageView, path, 80, 80);
             }
         });
     }
