@@ -28,8 +28,8 @@
                 android:layout_height="wrap_content">
                 <com.yitu.etu.widget.image.CircleImageView
                     android:id="@+id/iv_head"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:src="@drawable/default_head"
                     app:border_color="#4A5965"
                     app:border_width="3dp"/>

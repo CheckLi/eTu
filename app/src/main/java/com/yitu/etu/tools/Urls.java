@@ -15,5 +15,7 @@ public class Urls {
     public static final String regist = address + "/user/register";//⽤户注册
     public static final String foregetPassword = address + "/user/forgetpwd";//忘记密码提交新密
     public static final String chatToken = address + "/user/getIMToken";//获取融云toke
-
+    public static final String loginPasswordChange = address + "/user/savePassword";//登陆密码修改
+    public static final String putRenz = address + "/user/uprenz";//上传认证信息
+    public static final String getRenz = address + "/user/renz";//获取认证信息
 }

@@ -63,7 +63,7 @@ class AccountFragment : BaseFragment() {
          */
         ll_header.setOnClickListener {
             if (isLogin()) {
-
+                nextActivityFromFragment<AccountDataActivity>()
             } else {
                 nextActivityFromFragment<LoginActivity>()
             }

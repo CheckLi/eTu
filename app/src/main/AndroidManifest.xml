@@ -251,7 +251,27 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
         </activity>
-        <activity android:name=".ui.activity.TwoCodeActivity">
+        <activity
+            android:name=".ui.activity.TwoCodeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
+        </activity>
+        <activity
+            android:name=".ui.activity.AccountDataActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
+        </activity>
+        <activity
+            android:name=".ui.activity.EditInputActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateVisible">
+        </activity>
+        <activity android:name=".ui.activity.PasswordChangActivity">
+        </activity>
+        <activity android:name=".ui.activity.MyCertificationActivity">
         </activity>
     </application>
 

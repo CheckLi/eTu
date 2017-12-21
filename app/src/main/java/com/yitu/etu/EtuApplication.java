@@ -142,6 +142,7 @@ public class EtuApplication extends Application {
             this.userInfo = userInfo;
             //存储登陆信息，第二次进入直接读取
             PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_USER_INFO, userInfo);
+            EventBus.getDefault().post(new LoginSuccessEvent( this.userInfo));
         } else {
             this.userInfo = null;
         }

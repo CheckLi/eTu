@@ -13,13 +13,13 @@ import com.google.gson.annotations.SerializedName
 
 data class UserInfo(
 		@SerializedName("id") val id: Int=0, //31
-		@SerializedName("name") val name: String="", //182****9229
+		@SerializedName("name") var name: String="", //182****9229
 		@SerializedName("type") val type: Int=0, //0
 		@SerializedName("usertype") val usertype: Int=0, //0
-		@SerializedName("intro") val intro: String="", //这家伙很懒，什么都没留下
+		@SerializedName("intro") var intro: String="", //这家伙很懒，什么都没留下
 		@SerializedName("phone") val phone: String="", //18281619229
-		@SerializedName("sex") val sex: Int=0, //0
-		@SerializedName("header") val header: String="", ///assets/data/sys/userico.jpg
+		@SerializedName("sex") var sex: Int=0, //0
+		@SerializedName("header") var header: String="", ///assets/data/sys/userico.jpg
 		@SerializedName("salt") val salt: String="", //9zvUsBTe
 		@SerializedName("password") val password: String="", //be64e7e18decd33bae11dec86209e94d
 		@SerializedName("address") val address: String="",
@@ -37,4 +37,17 @@ data class UserInfo(
 		@SerializedName("updated") val updated: Int=0, //1512573139
 		@SerializedName("ispaypwd") val ispaypwd: Int=0, //0
 		@SerializedName("token") val token: String="" //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGkuOTFldG8uY29tIiwiaWF0IjoxNTEzNDExODc0LCJpZCI6MzF9.s-UtStiEgghabcAN8idmWrlC2EqXwN5puKUPyL9uQUI
+)
+
+
+data class RenZBean(
+		@SerializedName("id") val id: Int, //10
+		@SerializedName("user_id") val userId: Int, //31
+		@SerializedName("type") val type: Int, //0
+		@SerializedName("sfzzm") val sfzzm: String, ///assets/data/20171221/15138494398884.jpg
+		@SerializedName("sfzfm") val sfzfm: String, ///assets/data/20171221/15138494398280.jpg
+		@SerializedName("czz") val czz: String, ///assets/data/20171221/15138494395307.jpg
+		@SerializedName("created") val created: Int, //1513849439
+		@SerializedName("updated") val updated: Int, //0
+		@SerializedName("status") val status: Int //0
 )

@@ -18,7 +18,7 @@ import com.yitu.etu.R;
 import com.yitu.etu.dialog.LoadingDialog;
 import com.yitu.etu.tools.MyActivityManager;
 import com.yitu.etu.util.ToastUtil;
-import com.yitu.etu.util.imageLoad.ImageLoadUtil;
+import com.yitu.etu.util.imageLoad.ImageLoadGlideUtil;
 import com.yitu.etu.widget.ActionBarView;
 import com.yuyh.library.imgsel.ISNav;
 import com.yuyh.library.imgsel.common.ImageLoader;
@@ -43,6 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
+        getIntentExtra(getIntent());
         MyActivityManager.getInstance().addActivity(this);
         init();
         initActionBar();
@@ -56,27 +57,35 @@ public abstract class BaseActivity extends AppCompatActivity {
         ISNav.getInstance().init(new ImageLoader() {
             @Override
             public void displayImage(Context context, String path, ImageView imageView) {
-                ImageLoadUtil.getInstance().loadImage(imageView, path, 80, 80);
+                ImageLoadGlideUtil.getInstance().loadImage(imageView, path, 80, 80);
             }
         });
     }
 
-    public void Multiselect(View view) {
+    public void Multiselect() {
         ISListConfig config = new ISListConfig.Builder()
                 .multiSelect(true)
                 // 是否记住上次选中记录
                 .rememberSelected(false)
                 // 使用沉浸式状态栏
-                .statusBarColor(getResources().getColor(R.color.actionBarColor)).build();
+                .statusBarColor(getResources().getColor(R.color.actionBarColor))
+                // 返回图标ResId
+                .backResId(R.drawable.icon41)
+                .titleBgColor(getResources().getColor(R.color.actionBarColor))
+                .title("图片选择")
+                .titleColor(Color.WHITE).build();
 
         ISNav.getInstance().toListActivity(this, config, REQUEST_LIST_CODE);
     }
 
-    public void Single(View view) {
+    public void Single() {
+        Single(true);
+    }
+
+    public void Single(boolean crop) {
         ISListConfig config = new ISListConfig.Builder()
                 // 是否多选
                 .multiSelect(false)
-                .btnText("Confirm")
                 // 确定按钮背景色
                 //.btnBgColor(Color.parseColor(""))
                 // 确定按钮文字颜色
@@ -84,12 +93,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                 // 使用沉浸式状态栏
                 .statusBarColor(getResources().getColor(R.color.actionBarColor))
                 // 返回图标ResId
-                .backResId(R.drawable.ic_back)
-                .title("Images")
+                .backResId(R.drawable.icon41)
+                .title("图片选择")
                 .titleColor(Color.WHITE)
                 .titleBgColor(getResources().getColor(R.color.actionBarColor))
                 .allImagesText("All Images")
-                .needCrop(true)
+                .needCrop(crop)
                 .cropSize(1, 1, 200, 200)
                 // 第一个是否显示相机
                 .needCamera(true)
@@ -132,7 +141,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract void initListener();
 
+    public void getIntentExtra(Intent intent){
 
+    }
     /**
      * 隐藏系统软键盘
      */
@@ -226,6 +237,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void setTitle(CharSequence title) {
         mActionBarView.setTitle(title.toString());
+        super.setTitle(title);
     }
 
     /**

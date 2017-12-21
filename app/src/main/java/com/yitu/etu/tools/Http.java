@@ -47,7 +47,6 @@ public class Http {
             for (Map.Entry<String,String> map: GeneralRequestParams.getParams().entrySet()){
                 postFormBuilder.addParams(map.getKey(),map.getValue());
             }
-
         }
         if (BuildConfig.DEBUG) {
             LogUtil.e("response:","请求参数"+params.toString()+"\n通用参数"+GeneralRequestParams.getParams().toString());

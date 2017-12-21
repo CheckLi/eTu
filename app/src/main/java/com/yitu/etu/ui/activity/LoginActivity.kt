@@ -9,14 +9,12 @@ import com.yitu.etu.R
 import com.yitu.etu.entity.AppConstant
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
-import com.yitu.etu.eventBusItem.LoginSuccessEvent
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http.post
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.util.PrefrersUtil
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.Call
-import org.greenrobot.eventbus.EventBus
 
 class LoginActivity : BaseActivity() {
     override fun getLayout(): Int = R.layout.activity_login
@@ -88,7 +86,6 @@ class LoginActivity : BaseActivity() {
                         if (response.success()) {
                             PrefrersUtil.getInstance().saveValue(AppConstant.PARAM_SAVE_USERNAME, name)
                             EtuApplication.getInstance().userInfo = response.data
-                            EventBus.getDefault().post(LoginSuccessEvent(response.data))
                             finish()
                         } else {
                             showToast("登陆失败")

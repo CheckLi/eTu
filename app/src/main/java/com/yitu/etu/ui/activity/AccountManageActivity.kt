@@ -1,7 +1,7 @@
 package com.yitu.etu.ui.activity
 
 import android.view.View
-import com.huizhuang.zxsq.utils.nextActivity
+import com.huizhuang.zxsq.utils.nextCheckLoginActivity
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.eventBusItem.EventClearSuccess
@@ -31,7 +31,28 @@ class AccountManageActivity : BaseActivity() {
          * 我的二维码
          */
         tv_er.setOnClickListener {
-            nextActivity<TwoCodeActivity>()
+            nextCheckLoginActivity<TwoCodeActivity>()
+        }
+
+        /**
+         * 资料修改
+         */
+        tv_chang_info.setOnClickListener {
+            nextCheckLoginActivity<AccountDataActivity>()
+        }
+
+        /**
+         * 密码修改
+         */
+        tv_password_change.setOnClickListener {
+            nextCheckLoginActivity<PasswordChangActivity>()
+        }
+
+        /**
+         * 我的认证
+         */
+        tv_my_renZ.setOnClickListener {
+            nextCheckLoginActivity<MyCertificationActivity>()
         }
 
         /**

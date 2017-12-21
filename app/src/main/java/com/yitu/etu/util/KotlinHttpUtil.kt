@@ -22,6 +22,12 @@ import com.zhy.http.okhttp.callback.Callback
 inline fun <reified T : Any> Fragment.post(url: String, params: HashMap<String, String>, callback: Callback<T>) {
     Http.post(url, params, callback)
 }
+/**
+ * 进入下一个activity
+ */
+inline fun <reified T : Any> Context.post(url: String, params: HashMap<String, String>, callback: Callback<T>) {
+    Http.post(url, params, callback)
+}
 
 /**
  * 判断是否登陆

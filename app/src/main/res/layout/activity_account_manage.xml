@@ -18,17 +18,18 @@
             android:layout_marginTop="10dp"
             android:padding="10dp"
             android:textSize="15sp"
-            android:background="@color/white"
+            android:background="@drawable/white_click_bg"
             android:layout_height="wrap_content"/>
         <View
             android:layout_width="match_parent"
             android:background="@color/color_e5e5e5"
             android:layout_height="1px"/>
         <TextView
+            android:id="@+id/tv_chang_info"
             android:layout_width="match_parent"
             android:text="资料修改"
             android:padding="10dp"
-            android:background="@color/white"
+            android:background="@drawable/white_click_bg"
             android:textSize="15sp"
             android:layout_height="wrap_content"/>
         <View
@@ -36,22 +37,24 @@
             android:background="@color/color_e5e5e5"
             android:layout_height="1px"/>
         <TextView
+            android:id="@+id/tv_password_change"
             android:layout_width="match_parent"
             android:text="密码修改"
             android:textSize="15sp"
             android:padding="10dp"
-            android:background="@color/white"
+            android:background="@drawable/white_click_bg"
             android:layout_height="wrap_content"/>
         <View
             android:layout_width="match_parent"
             android:background="@color/color_e5e5e5"
             android:layout_height="1px"/>
         <TextView
+            android:id="@+id/tv_my_renZ"
             android:layout_width="match_parent"
             android:text="我的认证"
             android:textSize="15sp"
             android:padding="10dp"
-            android:background="@color/white"
+            android:background="@drawable/white_click_bg"
             android:layout_height="wrap_content"/>
         <View
             android:layout_width="match_parent"
@@ -59,10 +62,10 @@
             android:layout_height="1px"/>
         <TextView
             android:layout_width="match_parent"
-            android:text="支付密码（已设置）"
+            android:text="支付密码（未设置）"
             android:textSize="15sp"
             android:padding="10dp"
-            android:background="@color/white"
+            android:background="@drawable/white_click_bg"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tv_clear_cache"
@@ -71,7 +74,7 @@
             android:padding="10dp"
             android:layout_marginTop="10dp"
             android:textSize="15sp"
-            android:background="@color/white"
+            android:background="@drawable/white_click_bg"
             android:layout_height="wrap_content"/>
         <View
             android:layout_width="match_parent"
@@ -79,10 +82,10 @@
             android:layout_height="1px"/>
         <TextView
             android:layout_width="match_parent"
-            android:text="关羽软件"
+            android:text="关于软件"
             android:padding="10dp"
             android:textSize="15sp"
-            android:background="@color/white"
+            android:background="@drawable/white_click_bg"
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/login_out"
@@ -92,7 +95,7 @@
             android:padding="10dp"
             android:textSize="15sp"
             android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:background="@drawable/white_click_bg"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 </ScrollView>

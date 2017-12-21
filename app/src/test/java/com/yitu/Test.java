@@ -9,6 +9,13 @@ import java.io.File;
  * @date:2017年12月09日 17:50
  */
 public class Test {
+
+    @org.junit.Test
+    public void stringTest(){
+        String s="sdfsdf.png";
+        System.out.println(s.substring(s.lastIndexOf(".")+1));
+    }
+
     @org.junit.Test
     public void test() {
         File file = new File("D:/360data/重要数据/桌面/项目图标/项目图标/12345");
