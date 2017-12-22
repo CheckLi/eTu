@@ -1,9 +1,13 @@
 package com.yitu.etu.util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 
 /**
  * @className:JsonUtil
@@ -39,6 +43,15 @@ public class JsonUtil {
             e.printStackTrace();
         }
         return bean;
+    }
+
+    public <T> ArrayList<T> fromJsonList(String json, Class<T> cls) {
+        ArrayList<T> mList = new ArrayList<T>();
+        JsonArray array = new JsonParser().parse(json).getAsJsonArray();
+        for(final JsonElement elem : array){
+            mList.add(GsonUtil.gson().fromJson(elem, cls));
+        }
+        return mList;
     }
 
     /**

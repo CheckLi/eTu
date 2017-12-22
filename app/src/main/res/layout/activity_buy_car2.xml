@@ -12,7 +12,7 @@
         android:id="@+id/listview"
         style="@style/MyListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/rl_content"
         android:divider="@color/transparent"
         android:dividerHeight="5dp"
@@ -45,6 +45,7 @@
             >
 
             <CheckBox
+                android:id="@+id/cb_select_all"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:button="@drawable/selector_check_box_buy_car"
@@ -54,6 +55,7 @@
                 android:textStyle="bold"/>
 
             <com.huizhuang.zxsq.widget.textview.SpanTextView
+                android:id="@+id/tv_total_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

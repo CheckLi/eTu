@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.yitu.etu.widget.image.RoundImageView
-
+            android:id="@+id/iv_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
@@ -75,12 +75,15 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
+        android:id="@+id/tv_desc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="5dp"
         android:text="旅行小店"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textColor="@color/color_999999"
         android:textSize="12sp"
         android:textStyle="bold"

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.yitu.etu.EtuApplication;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -71,6 +72,10 @@ public class PrefrersUtil {
 
     public <T> T getClass(String key,Class<T> tClass){
         return JsonUtil.getInstance().getJsonLocalBean(key,tClass);
+    }
+
+    public <T> ArrayList<T> getListClass(String key, Class<T> tClass){
+        return JsonUtil.getInstance().fromJsonList(getValue(key,"[]"),tClass);
     }
 
     public void remove(String key){

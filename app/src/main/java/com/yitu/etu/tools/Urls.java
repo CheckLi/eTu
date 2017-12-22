@@ -28,5 +28,5 @@ public class Urls {
      */
     public static final String URL_ORDER_LIST_NOT_USE = address + "/shop/get_my_orderlist";//获取订单列表未使用
     public static final String URL_ORDER_LIST_USE = address + "/shop/get_my_order";//获取订单列表按类型type分 1未用，2使用
-    public static final String URL_ORDER_DETAIL = address + "/shop/get_order_info";//获取订单列表按类型type分 1未用，2使用
+    public static final String URL_ORDER_DETAIL = address + "/shop/get_order_info";//获取订单详情
 }

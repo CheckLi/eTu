@@ -174,6 +174,7 @@ public class EtuApplication extends Application {
         setChatToken(null);
         PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_USER_INFO);
         PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_CHAT_TOKEN);
+        PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_BUY_CAR);
         EventBus.getDefault().post(new LoginSuccessEvent(null));
         RongIM.getInstance().logout();
     }
