@@ -88,6 +88,7 @@ dependencies {
     implementation files('libs/zxing-3.3.0.jar')
 //    密码输入框
     compile 'com.jungly:gridPasswordView:0.3'
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-4'
 }
 
 task showMeCache << {
