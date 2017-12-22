@@ -21,4 +21,12 @@ public class Urls {
     public static final String setPayPassword = address + "/user/setPaypwd";//设置支付密码
     public static final String paySms = address + "/user/getPaypwdSms";//获取支付密码验证码
     public static final String reSetPayPassword = address + "/user/forgetPaypwd";//重新设置支付密码
+    public static final String URL_GET_USER_INFO = address + "/user/getinfo";//获取用户信息，包含钱包信息
+
+    /**
+     * 订单相关
+     */
+    public static final String URL_ORDER_LIST_NOT_USE = address + "/shop/get_my_orderlist";//获取订单列表未使用
+    public static final String URL_ORDER_LIST_USE = address + "/shop/get_my_order";//获取订单列表按类型type分 1未用，2使用
+    public static final String URL_ORDER_DETAIL = address + "/shop/get_order_info";//获取订单列表按类型type分 1未用，2使用
 }

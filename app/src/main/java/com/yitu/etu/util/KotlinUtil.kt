@@ -79,3 +79,11 @@ fun Context.userInfo():UserInfo{
 fun Fragment.userInfo():UserInfo{
     return EtuApplication.getInstance().userInfo
 }
+
+/**
+ * 获取时间
+ */
+fun Long.getTime(format:String?=null):String{
+    return DateUtil.getTime(this.toString(),format)
+
+}

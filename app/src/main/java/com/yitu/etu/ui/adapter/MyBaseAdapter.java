@@ -26,7 +26,7 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public T getItem(int position) {
 		if (position >= data.size())
 			return null;
 		return data.get(position);
@@ -84,8 +84,7 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 	}
 
 	public void replaceAll(List<T> elem) {
-		data.clear();
-		data.addAll(elem);
+		data=new ArrayList<>(elem);
 		notifyDataSetChanged();
 	}
 }

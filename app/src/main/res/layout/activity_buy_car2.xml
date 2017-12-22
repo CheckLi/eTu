@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f5f5f5"
+    tools:context="com.yitu.etu.ui.activity.BuyCarActivity">
+
+    <ListView
+        android:id="@+id/listview"
+        style="@style/MyListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rl_content"
+        android:divider="@color/transparent"
+        android:dividerHeight="5dp"
+        android:padding="10dp"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_toLeftOf="@+id/to_settlement"
+            android:background="@color/color_e5e5e5"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/line1"
+            android:layout_toLeftOf="@+id/to_settlement"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            >
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:button="@drawable/selector_check_box_buy_car"
+                android:paddingLeft="5dp"
+                android:text="全选"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+            <com.huizhuang.zxsq.widget.textview.SpanTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="合计：%￥0.00%"
+                android:textStyle="bold"
+                app:spanColor="#FF2220"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/to_settlement"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="#ED5465"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="去结算"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+    </RelativeLayout>
+    <!--没有购物车数据的时候显示-->
+    <com.yitu.etu.widget.DataEmptyView
+        android:id="@+id/data_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/activityBackground"
+        android:visibility="gone"
+        app:icon="@drawable/cart_default_bg"
+        app:message="购物车为空!"/>
+</RelativeLayout>

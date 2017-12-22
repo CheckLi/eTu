@@ -33,9 +33,9 @@ class AccountDataActivity : BaseActivity() {
                     else -> R.id.rb_sex_boy
                 })
                 tv_intro.text = intro.Empty()
-                rg_friend.check(when (sex) {
-                    0 -> R.id.rg_friend_yes
-                    else -> R.id.rg_friend_no
+                rg_friend.check(when (nomap) {
+                    1 -> R.id.rg_friend_no
+                    else -> R.id.rg_friend_yes
                 })
             }
         }

@@ -8,6 +8,7 @@ import com.yitu.etu.ui.fragment.OrderFragment
 import kotlinx.android.synthetic.main.activity_my_order.*
 
 class MyOrderActivity : BaseActivity() {
+
     override fun getLayout(): Int = R.layout.activity_my_order
 
     override fun initActionBar() {
@@ -21,16 +22,20 @@ class MyOrderActivity : BaseActivity() {
     }
 
     override fun getData() {
+
     }
 
     override fun initListener() {
     }
 
+
+
+
     class OrderFragmentAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> OrderFragment()
-                else -> OrderFragment()
+                0 -> OrderFragment.getInstance(2)
+                else -> OrderFragment.getInstance(1)
             }
         }
 

@@ -10,9 +10,15 @@ import com.squareup.picasso.Picasso;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.yitu.etu.entity.AppConstant;
+import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.UserInfo;
+import com.yitu.etu.entity.ChatToken;
 import com.yitu.etu.eventBusItem.EventClearSuccess;
 import com.yitu.etu.eventBusItem.LoginSuccessEvent;
+import com.yitu.etu.tools.GsonCallback;
+import com.yitu.etu.tools.Http;
+import com.yitu.etu.tools.Urls;
+import com.yitu.etu.util.LogUtil;
 import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
 import com.yitu.etu.util.location.LocationUtil;
@@ -20,9 +26,12 @@ import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import io.rong.imkit.RongIM;
+import io.rong.imlib.RongIMClient;
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
 /**
@@ -34,7 +43,9 @@ import okhttp3.OkHttpClient;
 public class EtuApplication extends Application {
     private static EtuApplication mInstance;
     private UserInfo userInfo;
+    private String chatToken;
     private AMapLocation mLocation;
+
     public static EtuApplication getInstance() {
         return mInstance;
     }
@@ -94,15 +105,14 @@ public class EtuApplication extends Application {
         initLocation();//获取定位信息
     }
 
-    public void initLocation(){
+    public void initLocation() {
         LocationUtil.getInstance().startLocation(new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
-                mLocation=aMapLocation;
+                mLocation = aMapLocation;
             }
         });
     }
-
 
 
     /**
@@ -142,7 +152,7 @@ public class EtuApplication extends Application {
             this.userInfo = userInfo;
             //存储登陆信息，第二次进入直接读取
             PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_USER_INFO, userInfo);
-            EventBus.getDefault().post(new LoginSuccessEvent( this.userInfo));
+            EventBus.getDefault().post(new LoginSuccessEvent(this.userInfo));
         } else {
             this.userInfo = null;
         }
@@ -153,6 +163,7 @@ public class EtuApplication extends Application {
      */
     public void readUserInfo() {
         this.userInfo = PrefrersUtil.getInstance().getClass(AppConstant.PARAM_SAVE_USER_INFO, UserInfo.class);
+        this.chatToken = PrefrersUtil.getInstance().getValue(AppConstant.PARAM_SAVE_CHAT_TOKEN, "");
     }
 
     /**
@@ -160,9 +171,19 @@ public class EtuApplication extends Application {
      */
     public void loginOut() {
         setUserInfo(null);
+        setChatToken(null);
         PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_USER_INFO);
+        PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_CHAT_TOKEN);
         EventBus.getDefault().post(new LoginSuccessEvent(null));
         RongIM.getInstance().logout();
+    }
+
+    public String getChatToken() {
+        return chatToken;
+    }
+
+    public void setChatToken(String chatToken) {
+        this.chatToken = chatToken;
     }
 
     /**
@@ -191,5 +212,56 @@ public class EtuApplication extends Application {
 
     public void setLocation(AMapLocation location) {
         mLocation = location;
+    }
+
+    /**
+     * 链接聊天服务器
+     */
+    public void connectChat() {
+        if (isLogin()) {
+            if (!TextUtils.isEmpty(chatToken)) {
+                connect();
+            } else {
+                Http.post(Urls.chatToken, new HashMap<String, String>(), new GsonCallback<ObjectBaseEntity<ChatToken>>() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(ObjectBaseEntity<ChatToken> response, int id) {
+                        if (response.success()) {
+                            setChatToken(response.getData().getToken());
+                            PrefrersUtil.getInstance().saveValue(AppConstant.PARAM_SAVE_CHAT_TOKEN, chatToken);
+                            connect();
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private void connect() {
+        RongIM.connect(chatToken, new RongIMClient.ConnectCallback() {
+            /**
+             * Token 错误。可以从下面两点检查 1.  Token 是否过期，如果过期您需要向 App Server 重新请求一个新的 Token
+             * 2.  token 对应的 appKey 和工程里设置的 appKey 是否一致
+             */
+            @Override
+            public void onTokenIncorrect() {
+                LogUtil.e("chatConnect", "Token 错误。可以从下面两点检查 1.  Token 是否过期，如果过期您需要向 App Server 重新请求一个新的 Token\n" +
+                        "             * 2.  token 对应的 appKey 和工程里设置的 appKey 是否一致");
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                LogUtil.e("chatConnect", "聊天链接成功");
+            }
+
+            @Override
+            public void onError(RongIMClient.ErrorCode errorCode) {
+                LogUtil.e("chatConnect", "聊天链接失败" + errorCode.getMessage() + " " + errorCode.getValue());
+            }
+        });
     }
 }

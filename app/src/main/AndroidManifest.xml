@@ -69,7 +69,6 @@
             </intent-filter>
         </activity>
         <!-- 融云 -->
-        <!--
         <provider
             android:name=".MyFileProvider"
             android:authorities="com.yitu.etu.FileProvider"
@@ -79,7 +78,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/rc_file_path"/>
         </provider>
-        -->
         <!-- 首页 -->
         <activity
             android:name=".ui.activity.MainActivity"
@@ -168,7 +166,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.BuyCarActivity"
+            android:name=".ui.activity.ShopListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait">
         </activity>
@@ -276,6 +274,10 @@
         <activity android:name=".ui.activity.AboutMeActivity">
         </activity>
         <activity android:name=".ui.activity.RePayPasswordActivity">
+        </activity>
+        <activity android:name=".ui.activity.OrderDetailActivity">
+        </activity>
+        <activity android:name=".ui.activity.BuyCarActivity">
         </activity>
     </application>
 

@@ -9,6 +9,7 @@ package com.yitu.etu.entity;
 public class AppConstant {
     public static String PARAM_SAVE_USER_INFO="param_save_user_info";//本地存储用户数据
     public static String PARAM_SAVE_USERNAME="param_save_username";//本地存储用户名
+    public static String PARAM_SAVE_CHAT_TOKEN="param_save_chat_token";//聊天token
 
 
     public static String PARAM_RESULT_STRING="param_result_string";//修改文本框值

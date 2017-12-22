@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.yitu.etu.dialog.LoadingDialog;
 import com.yitu.etu.util.ToastUtil;
 
@@ -19,6 +20,8 @@ import com.yitu.etu.util.ToastUtil;
  * @date:2017年12月08日 17:36
  */
 public abstract class BaseFragment extends Fragment {
+    public int page = 1;
+    public boolean add = true;
     private LoadingDialog mWaitDialog;
 
     @Nullable
@@ -106,6 +109,28 @@ public abstract class BaseFragment extends Fragment {
         if (mWaitDialog != null) {
             mWaitDialog.hideDialog();
         }
+    }
+
+    /**
+     * 数据拉去成功的时候调用
+     * @param smart
+     * @param isRefresh
+     * @param size
+     */
+    public void RefreshSuccess(SmartRefreshLayout smart, boolean isRefresh, int size) {
+        smart.finishRefresh();
+        smart.finishLoadmore();
+        if(isRefresh){
+            page=1;
+        }
+        if (size < 10) {
+            add = false;
+        } else {
+            add = true;
+            page++;
+        }
+        smart.setEnableLoadmore(add);
+
     }
 
 }

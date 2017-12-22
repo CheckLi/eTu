@@ -19,7 +19,7 @@
         android:headerDividersEnabled="true"
         android:divider="@color/transparent"
         android:dividerHeight="0dp"
-        tools:context="com.yitu.etu.ui.activity.BuyCarActivity"
+        tools:context="com.yitu.etu.ui.activity.ShopListActivity"
         app:mode="right"/>
     <com.scwang.smartrefresh.layout.footer.ClassicsFooter
         android:layout_width="match_parent"

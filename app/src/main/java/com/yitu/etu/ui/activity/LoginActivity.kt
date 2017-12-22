@@ -86,6 +86,7 @@ class LoginActivity : BaseActivity() {
                         if (response.success()) {
                             PrefrersUtil.getInstance().saveValue(AppConstant.PARAM_SAVE_USERNAME, name)
                             EtuApplication.getInstance().userInfo = response.data
+                            EtuApplication.getInstance().connectChat()//登陆聊天服务器
                             finish()
                         } else {
                             showToast("登陆失败")

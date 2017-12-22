@@ -12,6 +12,7 @@ import com.yitu.etu.util.addHost
 import com.yitu.etu.util.imageLoad.ImageLoadUtil
 import com.yitu.etu.util.isLogin
 import com.yitu.etu.util.location.LocationUtil
+import com.yitu.etu.util.userInfo
 import io.rong.imkit.RongIM
 import io.rong.imlib.model.CSCustomServiceInfo
 import kotlinx.android.synthetic.main.fragment_account_layout.*
@@ -93,7 +94,11 @@ class AccountFragment : BaseFragment() {
          * 我的店铺
          */
         tv_my_shop.setOnClickListener {
-            nextActivityFromFragment<MyShopActivity>()
+            if(isLogin()&&userInfo().usertype!=0) {
+                nextActivityFromFragment<MyShopActivity>()
+            }else{
+                showToast("您还不是商家")
+            }
         }
 
         /**
@@ -152,7 +157,7 @@ class AccountFragment : BaseFragment() {
              * @param customServiceInfo 当前使用客服者的用户信息。{@link io.rong.imlib.model.CSCustomServiceInfo}
              *              * KEFU151041166014716上线客服id
              */
-            RongIM.getInstance().startCustomerServiceChat(activity, "KEFU151304509872992", "在线客服", csInfo)
+            RongIM.getInstance().startCustomerServiceChat(activity, "KEFU151041166014716", "在线客服", csInfo)
         }
         /**
          * 软件分享
@@ -193,9 +198,6 @@ class AccountFragment : BaseFragment() {
                 })
                 drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
                 tv_username.setCompoundDrawables(null, null, drawable, null)
-                if (activity is MainActivity) {
-                    (activity as MainActivity).connect(token)
-                }
             }
         }
     }

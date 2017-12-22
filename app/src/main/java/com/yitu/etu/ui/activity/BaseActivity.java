@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.yitu.etu.R;
 import com.yitu.etu.dialog.LoadingDialog;
 import com.yitu.etu.tools.MyActivityManager;
@@ -34,6 +35,8 @@ import java.util.List;
  * @date:2017年12月08日 16:19
  */
 public abstract class BaseActivity extends AppCompatActivity {
+    public int page = 1;
+    public boolean add = true;
     private LoadingDialog mWaitDialog;
     public static final int REQUEST_LIST_CODE = 0;
     public static final int REQUEST_CAMERA_CODE = 1;
@@ -292,5 +295,28 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void setRightText(String text, View.OnClickListener onClickListener){
         mActionBarView.setRightText(text,onClickListener);
+    }
+
+
+    /**
+     * 数据拉去成功的时候调用
+     * @param smart
+     * @param isRefresh
+     * @param size
+     */
+    public void RefreshSuccess(SmartRefreshLayout smart, boolean isRefresh, int size) {
+        smart.finishRefresh();
+        smart.finishLoadmore();
+        if(isRefresh){
+            page=1;
+        }
+        if (size < 10) {
+            add = false;
+        } else {
+            add = true;
+            page++;
+        }
+        smart.setEnableLoadmore(add);
+
     }
 }

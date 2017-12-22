@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="10dp"
+    tools:context="com.yitu.etu.ui.activity.OrderDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/round_acbar_10dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:text="我的订单"
+            android:textColor="#516B8C"
+            android:textSize="16sp"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/div_1dp_height_8b9da"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            android:shrinkColumns="*"
+            android:stretchColumns="*">
+
+            <TableRow
+                android:divider="@drawable/div_1dp_width_8b9da"
+                android:showDividers="middle">
+
+                <TextView
+                    style="@style/tab_style2"
+                    android:text="商品"/>
+
+                <TextView
+                    style="@style/tab_style"
+                    android:text="订单编号"/>
+
+                <TextView
+                    style="@style/tab_style"
+                    android:text="交易金额"/>
+
+                <TextView
+                    style="@style/tab_style"
+                    android:text="交易时间"/>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tr_order"
+                android:divider="@drawable/div_1dp_width_8b9da"
+                android:gravity="center_vertical"
+                android:showDividers="middle">
+
+                <TextView
+                    style="@style/tab_style2"
+                    android:text=""/>
+
+                <TextView
+                    style="@style/tab_style"
+                    android:singleLine="true"
+                    android:text=""/>
+
+                <TextView
+                    style="@style/tab_style"
+                    android:singleLine="true"
+                    android:text=""/>
+
+                <TextView
+                    style="@style/tab_style"
+                    android:singleLine="true"
+                    android:text=""/>
+            </TableRow>
+
+            <TableRow
+                android:divider="@drawable/div_1dp_width_8b9da"
+                android:showDividers="middle">
+
+                <TextView
+                    style="@style/tab_style2"
+                    android:text=""/>
+
+                <TextView
+                    style="@style/tab_style"
+                    android:singleLine="true"
+                    android:text=""/>
+
+                <TextView
+                    style="@style/tab_style"
+                    android:singleLine="true"
+                    android:text=""/>
+
+                <TextView
+                    style="@style/tab_style"
+                    android:singleLine="true"
+                    android:text=""/>
+            </TableRow>
+        </TableLayout>
+
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="兑换编码"
+            android:textStyle="bold"
+            android:textColor="#516B8C"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="有效期:以商铺的具体时间为准，过期作废，不予以赔偿"
+            android:textSize="12sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/color_333333"/>
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/location_order"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="地址"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="电话："
+            android:textSize="12sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="right"
+            android:text="最终解释权归本公司所有"
+            android:textSize="12sp"/>
+
+
+    </LinearLayout>
+
+</FrameLayout>

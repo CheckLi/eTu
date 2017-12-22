@@ -10,7 +10,7 @@ class ChatActivity : BaseActivity() {
     override fun getLayout(): Int = R.layout.activity_chat
 
     override fun initActionBar() {
-
+        title=intent.data.getQueryParameter("title")
     }
 
     override fun initView() {
