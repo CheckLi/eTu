@@ -7,19 +7,16 @@ import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -28,6 +25,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
@@ -44,6 +42,12 @@ import com.amap.api.navi.AmapNaviParams;
 import com.amap.api.navi.AmapNaviType;
 import com.amap.api.navi.INaviInfoCallback;
 import com.amap.api.navi.model.AMapNaviLocation;
+import com.amap.api.services.cloud.CloudItem;
+import com.amap.api.services.cloud.CloudItemDetail;
+import com.amap.api.services.cloud.CloudResult;
+import com.amap.api.services.cloud.CloudSearch;
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.core.LatLonPoint;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -51,29 +55,24 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.yitu.etu.R;
-import com.yitu.etu.entity.MapFirendEntity;
+import com.yitu.etu.entity.MapFriendEntity;
 import com.yitu.etu.entity.MapOrderSceneEntity;
 import com.yitu.etu.entity.MapSceneEntity;
 import com.yitu.etu.entity.MerchantBaseEntity;
-import com.yitu.etu.entity.ObjectBaseEntity;
-import com.yitu.etu.entity.UserInfoEntity;
-import com.yitu.etu.tools.GsonCallback;
-import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.activity.CircleFirendActivity;
 import com.yitu.etu.ui.activity.MapSearchActivity;
-import com.yitu.etu.util.APKSHA1;
 import com.yitu.etu.util.PermissionUtil;
 import com.yitu.etu.util.ToastUtil;
-import com.yitu.etu.util.imageLoad.ImageLoadUtil;
+import com.yitu.etu.util.Tools;
 import com.yitu.etu.widget.GlideApp;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import okhttp3.Call;
 
 /**
  * @className:MapsFragment
@@ -117,6 +116,11 @@ public class MapsFragment extends SupportMapFragment implements
     private boolean animating;
     private ImageView mButton;
     MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+    private String sex = "";
+    private ImageView dialog_image;
+    private TextView tv_title;
+    private TextView tv_address;
+    private TextView tv_yj_num;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -140,59 +144,53 @@ public class MapsFragment extends SupportMapFragment implements
         menu = (ViewGroup) mRoot.findViewById(R.id.menu);
 
         dialog = mRoot.findViewById(R.id.dialog);
-
+        dialog_image = (ImageView) mRoot.findViewById(R.id.dialog_image);
+        tv_title = (TextView) mRoot.findViewById(R.id.tv_title);
+        tv_address = (TextView) mRoot.findViewById(R.id.tv_address);
+        tv_yj_num = (TextView) mRoot.findViewById(R.id.tv_yj_num);
         mMapView.onCreate(savedInstanceState);
         image = (ImageView) mRoot.findViewById(R.id.image);
         if (!PermissionUtil.hasPermissions(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
             PermissionUtil.requestPermissions(this, 100, Manifest.permission.ACCESS_COARSE_LOCATION);
         }
         initMap();
-
-        Log.e("sha1", APKSHA1.SHA1(getContext()));
         return mRoot;
-    }
-
-    Handler hand=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
-
-    Runnable mRunnable=new Runnable() {
-        @Override
-        public void run() {
-            hand.postDelayed(mRunnable,1000L);
-        }
-    };
-    public void updateUserInfo() {
-        HashMap params = new HashMap<String, String>();
-        params.put("name", "李佳明2222");
-        Http.post(Urls.updateUserInfo, params, new GsonCallback<ObjectBaseEntity<UserInfoEntity>>() {
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                Log.e("Exception", "Exception");
-            }
-
-            @Override
-            public void onResponse(ObjectBaseEntity<UserInfoEntity> response, int id) {
-                if (response.success()) {
-                }
-            }
-        });
-
     }
 
     public void search() {
         Intent intent = new Intent(getContext(), MapSearchActivity.class);
         intent.putExtra("type", type);
+        intent.putExtra("lat",mAmap.getCameraPosition().target.latitude);
+
+        intent.putExtra("lng",mAmap.getCameraPosition().target.longitude);
         startActivity(intent);
     }
 
-    ;
-
-    public void showDialog() {
+    <T extends MerchantBaseEntity> void showDialog(T merchantEntity, int type) {
         dialog.setVisibility(View.VISIBLE);
+        if (type == type_order_scene) {
+//            dialog_image.set
+            MapOrderSceneEntity data = (MapOrderSceneEntity) merchantEntity;
+            tv_title.setText(data.title);
+            tv_address.setText(data.address);
+            tv_yj_num.setVisibility(View.GONE);
+            GlideApp.with(MapsFragment.this)
+                    .load(Urls.address + data.getImage())
+                    .centerCrop()
+                    .placeholder(R.drawable.icon17).into(dialog_image);
+
+        } else if (type == type_scene) {
+            tv_yj_num.setVisibility(View.VISIBLE);
+            MapSceneEntity data = (MapSceneEntity) merchantEntity;
+            tv_title.setText(data.title);
+            tv_address.setText(data.address);
+            tv_yj_num.setText(data.yjcount + "条游记");
+            GlideApp.with(MapsFragment.this)
+                    .load(Urls.address + data.getImage())
+                    .centerCrop()
+                    .placeholder(R.drawable.icon17).into(dialog_image);
+
+        }
     }
 
     public void hiddenDialog() {
@@ -223,10 +221,11 @@ public class MapsFragment extends SupportMapFragment implements
                     }
                     if (fd_mark != null) {
                         fd_mark.hiddenFd();
+                        fd_mark = null;
                     }
-                    hiddenDialog();
-
                     centerLatLng = mAmap.getCameraPosition().target;
+                    loadInfo();
+
                 }
             });
             mAmap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
@@ -240,6 +239,7 @@ public class MapsFragment extends SupportMapFragment implements
                     markerClick = marker;
                     if (fd_mark != null) {
                         fd_mark.hiddenFd();
+                        fd_mark = null;
                     }
                     MerchantBaseEntity merchantEntity = (MerchantBaseEntity) marker.getObject();
                     if (merchantEntity.getType() == type_friend) {
@@ -247,17 +247,21 @@ public class MapsFragment extends SupportMapFragment implements
                     } else {
                         for (Mmark mmark :
                                 markers) {
-                            if (mmark.getId() == merchantEntity.getId()) {
+                            if (mmark.getId().equals(merchantEntity.getId())) {
                                 fd_mark = mmark;
                                 mmark.showFd();
-                                if (dialog.getVisibility() != View.VISIBLE) {
-                                    showDialog();
+                                if (merchantEntity.getType() == type_order_scene) {
+                                    showDialog((MapOrderSceneEntity) marker.getObject(), merchantEntity.getType());
+                                } else if (merchantEntity.getType() == type_scene) {
+                                    showDialog((MapSceneEntity) marker.getObject(), merchantEntity.getType());
                                 }
+
+//                                break;
                             }
                         }
 
                     }
-                    Log.e("点击", merchantEntity.getId() + "");
+//                    Log.e("点击", merchantEntity.getId() + "");
                     return true;
                 }
             });
@@ -273,56 +277,154 @@ public class MapsFragment extends SupportMapFragment implements
             });
 
             initMyLocation();
-            loadInfo();
+//            loadInfo();
         }
     }
 
 
     public void clearMapMarker() {
-        mAmap.clear();
+        for (Mmark marker :
+                markers) {
+            marker.remove();
+        }
         markers.clear();
+        fd_mark = null;
+        markerClick = null;
+        mAmap.clear();
+
     }
 
     public void loadInfo() {
         hiddenDialog();
-        if (type == type_friend) {
-            ArrayList<MapFirendEntity> aa = new ArrayList<>();
-//            for (int i = a; i < a + 4; i++) {
-            MapFirendEntity MerchantEntity = new MapFirendEntity();
-            MerchantEntity.setId(1);
-            MerchantEntity.lng = 116.397972;
-            aa.add(MerchantEntity);
-//            }
-            addMarker(aa, type);
+        CloudSearch mCloudSearch = new CloudSearch(getContext());// 初始化查询类
+        mCloudSearch.setOnCloudSearchListener(new CloudSearch.OnCloudSearchListener() {
+            @Override
+            public void onCloudSearched(CloudResult cloudResult, int i) {
+                Log.e("CloudSearch", "CloudSearch");
+                if (cloudResult != null) {
+                    ArrayList<CloudItem> cloudItems = cloudResult.getClouds();
+                    if (cloudItems != null && cloudItems.size() > 0) {
+                        ArrayList<MapFriendEntity> mapFirendEntitys = new ArrayList<>();
+                        ArrayList<MapOrderSceneEntity> mapOrderSceneEntitys = new ArrayList<>();
+                        ArrayList<MapSceneEntity> mapSceneEntitys = new ArrayList<>();
 
-        } else if (type == type_scene) {
-            ArrayList<MapSceneEntity> aa = new ArrayList<>();
-            MapSceneEntity MerchantEntity = new MapSceneEntity();
-            MerchantEntity.setId(1);
-            MerchantEntity.lng = 116.397972;
-            aa.add(MerchantEntity);
+                        for (CloudItem cloudItem :
+                                cloudItems) {
+                            HashMap<String, String> filld = cloudItem.getCustomfield();
+                            if (type == type_friend) {
+                                MapFriendEntity mapFirendEntity = new MapFriendEntity();
+                                mapFirendEntity.image = filld.get("image");
+                                mapFirendEntity.user_id = filld.get("user_id");
+                                mapFirendEntity.sex = filld.get("sex");
+                                mapFirendEntity.latLonPoint = cloudItem.getLatLonPoint();
+                                mapFirendEntity.address = cloudItem.getSnippet();
+                                mapFirendEntity.title = cloudItem.getTitle();
+                                mapFirendEntity.id = mapFirendEntity.user_id;
+                                if (mapFirendEntitys.size() == 0) {
+                                    mapFirendEntitys.add(mapFirendEntity);
+                                }
+                                for (int n = 0; n < mapFirendEntitys.size(); n++) {
+                                    if (mapFirendEntitys.get(n).getId().equals(mapFirendEntity.id)) {
+                                        break;
+                                    }
+                                    if (mapFirendEntitys.size() == n + 1) {
+                                        mapFirendEntitys.add(mapFirendEntity);
+                                    }
+                                }
+                            } else if (type == type_order_scene) {
+                                MapOrderSceneEntity mapOrderSceneEntity = new MapOrderSceneEntity();
+                                mapOrderSceneEntity.is_spot = filld.get("is_spot");
+                                mapOrderSceneEntity.image = filld.get("image");
+                                mapOrderSceneEntity.title = filld.get("title");
+                                mapOrderSceneEntity.title_id = filld.get("title_id");
+                                mapOrderSceneEntity.latLonPoint = cloudItem.getLatLonPoint();
+                                mapOrderSceneEntity.address = cloudItem.getSnippet();
+                                mapOrderSceneEntity.id = mapOrderSceneEntity.title_id;
+                                if (mapOrderSceneEntitys.size() == 0) {
+                                    mapOrderSceneEntitys.add(mapOrderSceneEntity);
+                                }
+                                for (int n = 0; n < mapOrderSceneEntitys.size(); n++) {
+                                    if (mapOrderSceneEntitys.get(n).getId().equals(mapOrderSceneEntity.id)) {
+                                        break;
+                                    }
+                                    if (mapOrderSceneEntitys.size() == n + 1) {
+                                        mapOrderSceneEntitys.add(mapOrderSceneEntity);
+                                    }
+                                }
 
-            MapSceneEntity MerchantEntity2 = new MapSceneEntity();
-            MerchantEntity2.setId(2);
-            MerchantEntity2.lng = 117.397972;
-            aa.add(MerchantEntity2);
+                            } else if (type == type_scene) {
+                                MapSceneEntity mapSceneEntity = new MapSceneEntity();
+                                mapSceneEntity.latLonPoint = cloudItem.getLatLonPoint();
+                                mapSceneEntity.price = filld.get("price");
+                                mapSceneEntity.yjcount = filld.get("yjcount");
+                                mapSceneEntity.xjdes = filld.get("xjdes");
+                                mapSceneEntity.spot_id = filld.get("spot_id");
+                                mapSceneEntity.image = filld.get("image");
+                                mapSceneEntity.address = cloudItem.getSnippet();
+                                mapSceneEntity.title = cloudItem.getTitle();
+                                mapSceneEntity.id = mapSceneEntity.spot_id;
+                                if (mapSceneEntitys.size() == 0) {
+                                    mapSceneEntitys.add(mapSceneEntity);
+                                }
+                                for (int n = 0; n < mapSceneEntitys.size(); n++) {
+                                    if (mapSceneEntitys.get(n).getId().equals(mapSceneEntity.id)) {
+                                        break;
+                                    }
+                                    if (mapSceneEntitys.size() == n + 1) {
+                                        mapSceneEntitys.add(mapSceneEntity);
+                                    }
+                                }
+                            }
+                        }
+                        if (type == type_friend) {
+                            addMarker(mapFirendEntitys, type);
 
-            MapSceneEntity MerchantEntity3 = new MapSceneEntity();
-            MerchantEntity3.setId(3);
-            MerchantEntity3.lng = 118.397972;
-            aa.add(MerchantEntity3);
-            addMarker(aa, type);
 
-        } else if (type == type_order_scene) {
-            ArrayList<MapOrderSceneEntity> aa = new ArrayList<>();
-            for (int i = a; i < a + 4; i++) {
-                MapOrderSceneEntity MerchantEntity = new MapOrderSceneEntity();
-                MerchantEntity.setId(i);
-                MerchantEntity.lng = 116.397972 + a;
-                aa.add(MerchantEntity);
+                        } else if (type == type_order_scene) {
+                            addMarker(mapOrderSceneEntitys, type);
+
+                        } else if (type == type_scene) {
+                            addMarker(mapSceneEntitys, type);
+                        }
+
+                    } else {
+                        clearMapMarker();
+                    }
+                } else {
+                    clearMapMarker();
+
+                }
             }
-            addMarker(aa, type);
 
+            @Override
+            public void onCloudItemDetailSearched(CloudItemDetail cloudItemDetail, int i) {
+            }
+        });
+        CloudSearch.SearchBound bound = new CloudSearch.SearchBound(new LatLonPoint(
+                centerLatLng.latitude, centerLatLng.longitude), 10000);
+        try
+
+        {
+            String table = "";
+            if (type == type_friend) {
+                table = "58eb4c60afdf522b2822fda3";
+            } else if (type == type_order_scene) {
+                table = "5905996cafdf522b281639ab";
+            } else if (type == type_scene) {
+                table = "58e64edb2376c11620d5b2e7";
+            }
+            CloudSearch.Query mQuery = new CloudSearch.Query(table, "", bound);
+            if (type == type_friend) {
+                if (!sex.equals("")) {
+                    mQuery.addFilterString("sex", sex);
+                }
+            }
+            mCloudSearch.searchCloudAsyn(mQuery);
+
+        } catch (AMapException e)
+
+        {
+            Log.e("CloudSearch", "CloudSearch");
         }
     }
 
@@ -335,7 +437,7 @@ public class MapsFragment extends SupportMapFragment implements
             boolean equals = false;
             T merchantEntity3 = null;
             for (T merchantEntity2 : merchantEntitys) {
-                if (mmark.getId() == merchantEntity2.getId()) {
+                if (mmark.getId().equals(merchantEntity2.getId())) {
                     equals = true;
                     merchantEntity3 = merchantEntity2;
                 }
@@ -353,9 +455,9 @@ public class MapsFragment extends SupportMapFragment implements
                 merchantEntitys) {
             markers.add(new Mmark(merchantEntity, type));
         }
-        for (Mmark mmark : markers) {
-            Log.e("id", "" + mmark.getId());
-        }
+//        for (Mmark mmark : markers) {
+//            Log.e("id", "" + mmark.getId());
+//        }
     }
 
     public Bitmap convertViewToBitmap(View view) {
@@ -534,17 +636,38 @@ public class MapsFragment extends SupportMapFragment implements
         if (marker.getObject() == null) {
             return null;
         }
+        MapFriendEntity data = (MapFriendEntity) marker.getObject();
         View view = inflater.inflate(R.layout.pop_map_firend, null,
                 false);
         ImageView image = (ImageView) view.findViewById(R.id.image);
-
+        TextView tv_distance = (TextView) view.findViewById(R.id.tv_distance);
+        TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
+        tv_distance.setText(canculat(new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude())));
+        tv_title.setText(data.title);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToastUtil.showMessage("我2");
             }
         });
-        ImageLoadUtil.getInstance().loadImage(image,"http://img2.imgtn.bdimg.com/it/u=1025471167,1921781839&fm=27&gp=0.jpg",R.drawable.default_head,80,80);
+        GlideApp.with(MapsFragment.this)
+                .load(Urls.address + data.getImage())
+                .circleCrop()
+                .placeholder(R.drawable.icon17)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .error(R.drawable.icon17)
+                .into(image);
+
         return view;
     }
 
@@ -553,11 +676,11 @@ public class MapsFragment extends SupportMapFragment implements
         return null;
     }
 
-    public void toMyLocation() {
+    public void toMyLocation(float level) {
 
         if (mMyLocationPoint != null) {
             mAmap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude())));
-            mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
+            mAmap.moveCamera(CameraUpdateFactory.zoomTo(level));
         }
     }
 
@@ -568,7 +691,9 @@ public class MapsFragment extends SupportMapFragment implements
                 if (type != type_friend) {
                     type = type_friend;
                     btn_type_friend.setVisibility(View.VISIBLE);
+                    sex = "";
                     clearMapMarker();
+                    toMyLocation(16);
                     loadInfo();
                 }
                 break;
@@ -577,6 +702,7 @@ public class MapsFragment extends SupportMapFragment implements
                     type = type_order_scene;
                     btn_type_friend.setVisibility(View.GONE);
                     clearMapMarker();
+                    toMyLocation(12);
                     loadInfo();
                 }
                 break;
@@ -585,6 +711,7 @@ public class MapsFragment extends SupportMapFragment implements
                     type = type_scene;
                     btn_type_friend.setVisibility(View.GONE);
                     clearMapMarker();
+                    toMyLocation(12);
                     loadInfo();
                 }
                 break;
@@ -593,7 +720,9 @@ public class MapsFragment extends SupportMapFragment implements
                 playMenuAnimation();
                 break;
             case R.id.btn_location:
-                toMyLocation();
+                toMyLocation(13);
+                Intent intent = new Intent(getContext(), CircleFirendActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.btn_nai:
@@ -666,17 +795,41 @@ public class MapsFragment extends SupportMapFragment implements
     }
 
     public void showSexPop(View v) {
-        PopupWindow popupWindow = new PopupWindow(getContext());
-        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setFocusable(true);
-        popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-        TextView text2 = new TextView(getContext());
-        text2.setText("dsadsadsad");
-        text2.setBackgroundColor(getResources().getColor(R.color.white));
-        popupWindow.setContentView(text2);
-        popupWindow.showAsDropDown(v, 20, 0);
+//        Tools.getPopupWindow(getContext(),new String[]{"那是","那是2ad"});
+//        PopupWindow popupWindow = new PopupWindow(getContext());
+//        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+//        popupWindow.setOutsideTouchable(true);
+//        popupWindow.setFocusable(true);
+//        popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+//        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+//        TextView text2 = new TextView(getContext());
+//        text2.setText("dsadsadsad");
+//        text2.setBackgroundColor(getResources().getColor(R.color.white));
+//        popupWindow.setContentView(text2);
+        Tools.getPopupWindow(getContext(), new String[]{"全部用户", "只看女生", "只看男生"}, new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    if (!sex.equals("")) {
+                        sex = "";
+                        clearMapMarker();
+                        loadInfo();
+                    }
+                } else if (position == 1) {
+                    if (!sex.equals("0")) {
+                        sex = "0";
+                        clearMapMarker();
+                        loadInfo();
+                    }
+                } else if (position == 2) {
+                    if (!sex.equals("1")) {
+                        sex = "1";
+                        clearMapMarker();
+                        loadInfo();
+                    }
+                }
+            }
+        }, null).showAsDropDown(v, 20, 0);
     }
 
 
@@ -765,29 +918,29 @@ public class MapsFragment extends SupportMapFragment implements
                     }
                 });
                 animSeachbar.setDuration(500);
-//                    ObjectAnimator alpha = ObjectAnimator.ofFloat(menu, "alpha", 1);
-//                    alpha.setDuration(1500);
-//                    AnimatorSet animatorSet = new AnimatorSet();
-//                    //将所有动画加入到动画序列里面
-//                    animatorSet.playSequentially(animSeachbar, alpha);
-
                 animSeachbar.start();
             }
         }
     }
 
-    //    /**
-//     * 计算距离
-//     */
-//    private int canculat() {
-//        LatLng startLatlng = new LatLng(curLatitude, curLongitude);
-//        LatLng endLatlng = new LatLng(curDataBean.getLat(), curDataBean.getLng());
-//
-//        BigDecimal b = new BigDecimal(((double) distance) / 1000);
-//        float f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-//        this.distance.setText(f1 + "km");
-//        return (int) AMapUtils.calculateLineDistance(startLatlng, endLatlng);
-//    }
+    /**
+     * 计算距离
+     */
+    private String canculat(LatLng endLatlng) {
+        if (mMyLocationPoint == null) {
+            return "没有获取到您的位置！";
+        }
+        LatLng startLatlng = new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude());
+        float distance = AMapUtils.calculateLineDistance(startLatlng, endLatlng);
+        if (distance < 1000f) {
+            return distance + "m";
+        } else {
+            BigDecimal b = new BigDecimal(((double) distance) / 1000);
+            float f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+            return f1 + "km";
+        }
+    }
+
     class Mmark<T extends MerchantBaseEntity> {
         Marker marker;
         Marker fdmarker;
@@ -806,7 +959,7 @@ public class MapsFragment extends SupportMapFragment implements
             return merchantEntity;
         }
 
-        public int getId() {
+        public String getId() {
             return merchantEntity.getId();
         }
 
@@ -816,7 +969,7 @@ public class MapsFragment extends SupportMapFragment implements
                 public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
                     if (!remove) {
                         MarkerOptions markerOption = new MarkerOptions();
-                        markerOption.position(new LatLng(39.906901, merchantEntity.lng));
+                        markerOption.position(new LatLng(merchantEntity.getLatLonPoint().getLatitude(), merchantEntity.getLatLonPoint().getLongitude()));
                         markerOption.draggable(false);//设置Marker可拖动
                         View view = null;
                         if (Mmark.this.type == type_friend) {
@@ -824,12 +977,6 @@ public class MapsFragment extends SupportMapFragment implements
                                     false);
                             ImageView image = (ImageView) view.findViewById(R.id.image);
                             image.setImageDrawable(resource);
-                            view.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    ToastUtil.showMessage("我");
-                                }
-                            });
 
                         } else if (Mmark.this.type == type_order_scene) {
                             view = inflater.inflate(R.layout.mark_order_scene, null,
@@ -850,7 +997,7 @@ public class MapsFragment extends SupportMapFragment implements
                             ImageView image = (ImageView) view2.findViewById(R.id.image);
                             image.setImageDrawable(resource);
                             MarkerOptions markerOption2 = new MarkerOptions();
-                            markerOption2.position(new LatLng(39.906901, merchantEntity.lng));
+                            markerOption2.position(new LatLng(merchantEntity.getLatLonPoint().getLatitude(), merchantEntity.getLatLonPoint().getLongitude()));
                             markerOption2.draggable(false);//设置Marker可拖动
                             markerOption2.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view2)));
                             // 将Marker设置为贴地显示，可以双指下拉地图查看效果
@@ -866,9 +1013,8 @@ public class MapsFragment extends SupportMapFragment implements
                     }
                 }
             };
-
             GlideApp.with(MapsFragment.this)
-                    .load("http://pic.58pic.com/58pic/13/66/58/20258PICpDh_1024.png")
+                    .load(Urls.address + merchantEntity.getImage())
                     .circleCrop()
                     .placeholder(R.drawable.icon17)
                     .listener(new RequestListener<Drawable>() {
@@ -889,6 +1035,7 @@ public class MapsFragment extends SupportMapFragment implements
         }
 
         public void hiddenFd() {
+            T S = merchantEntity;
             if (fdmarker != null) {
                 fdmarker.setVisible(false);
 //                fdmarker.setZIndex(fdmarker.getZIndex() - 3);
@@ -897,11 +1044,13 @@ public class MapsFragment extends SupportMapFragment implements
         }
 
         public void showFd() {
+            T S = merchantEntity;
             if (fdmarker != null) {
                 marker.setVisible(false);
-                fdmarker.setToTop();
                 fdmarker.setZIndex(fdmarker.getZIndex() + 3);
+                fdmarker.setToTop();
                 fdmarker.setVisible(true);
+
             }
         }
 
