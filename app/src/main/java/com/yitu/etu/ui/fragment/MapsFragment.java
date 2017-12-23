@@ -37,11 +37,6 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.Poi;
-import com.amap.api.navi.AmapNaviPage;
-import com.amap.api.navi.AmapNaviParams;
-import com.amap.api.navi.AmapNaviType;
-import com.amap.api.navi.INaviInfoCallback;
-import com.amap.api.navi.model.AMapNaviLocation;
 import com.amap.api.services.cloud.CloudItem;
 import com.amap.api.services.cloud.CloudItemDetail;
 import com.amap.api.services.cloud.CloudResult;
@@ -72,7 +67,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @className:MapsFragment
@@ -121,6 +115,9 @@ public class MapsFragment extends SupportMapFragment implements
     private TextView tv_title;
     private TextView tv_address;
     private TextView tv_yj_num;
+    private View btn_nai;
+    private String city;
+    private String road;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -138,7 +135,7 @@ public class MapsFragment extends SupportMapFragment implements
         mButton = (ImageView) mRoot.findViewById(R.id.button);
         mButton.setOnClickListener(this);
         mRoot.findViewById(R.id.btn_location).setOnClickListener(this);
-        mRoot.findViewById(R.id.btn_nai).setOnClickListener(this);
+        btn_nai = mRoot.findViewById(R.id.btn_nai);
 
 
         menu = (ViewGroup) mRoot.findViewById(R.id.menu);
@@ -160,17 +157,20 @@ public class MapsFragment extends SupportMapFragment implements
     public void search() {
         Intent intent = new Intent(getContext(), MapSearchActivity.class);
         intent.putExtra("type", type);
-        intent.putExtra("lat",mAmap.getCameraPosition().target.latitude);
+        intent.putExtra("lat", mAmap.getCameraPosition().target.latitude);
 
-        intent.putExtra("lng",mAmap.getCameraPosition().target.longitude);
+        intent.putExtra("lng", mAmap.getCameraPosition().target.longitude);
         startActivity(intent);
     }
 
     <T extends MerchantBaseEntity> void showDialog(T merchantEntity, int type) {
         dialog.setVisibility(View.VISIBLE);
+        final Poi start = new Poi("三元桥", new LatLng(39.96087, 116.45798), "");
+        final Poi end = new Poi("北京站", new LatLng(39.904556, 116.427231), "B000A83M61");
+
         if (type == type_order_scene) {
 //            dialog_image.set
-            MapOrderSceneEntity data = (MapOrderSceneEntity) merchantEntity;
+            final MapOrderSceneEntity data = (MapOrderSceneEntity) merchantEntity;
             tv_title.setText(data.title);
             tv_address.setText(data.address);
             tv_yj_num.setVisibility(View.GONE);
@@ -179,9 +179,21 @@ public class MapsFragment extends SupportMapFragment implements
                     .centerCrop()
                     .placeholder(R.drawable.icon17).into(dialog_image);
 
+            btn_nai.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mMyLocationPoint != null) {
+                        Poi end = new Poi(data.title, new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude()), "");
+                        Poi start = new Poi(road, new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude()), "");
+                        Tools.navi(getContext(), start, end);
+                    } else {
+                        ToastUtil.showMessage("没有获取到你的位置信息");
+                    }
+                }
+            });
         } else if (type == type_scene) {
             tv_yj_num.setVisibility(View.VISIBLE);
-            MapSceneEntity data = (MapSceneEntity) merchantEntity;
+            final MapSceneEntity data = (MapSceneEntity) merchantEntity;
             tv_title.setText(data.title);
             tv_address.setText(data.address);
             tv_yj_num.setText(data.yjcount + "条游记");
@@ -190,6 +202,19 @@ public class MapsFragment extends SupportMapFragment implements
                     .centerCrop()
                     .placeholder(R.drawable.icon17).into(dialog_image);
 
+
+            btn_nai.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mMyLocationPoint != null) {
+                        Poi end = new Poi(data.title, new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude()), "");
+                        Poi start = new Poi(road, new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude()), "");
+                        Tools.navi(getContext(), start, end);
+                    } else {
+                        ToastUtil.showMessage("没有获取到你的位置信息");
+                    }
+                }
+            });
         }
     }
 
@@ -607,9 +632,9 @@ public class MapsFragment extends SupportMapFragment implements
                 amapLocation.getAddress();// 地址，如果option中设置isNeedAddress为false，则没有此结果
                 amapLocation.getCountry();// 国家信息
                 amapLocation.getProvince();// 省信息
-                amapLocation.getCity();// 城市信息
+                city = amapLocation.getCity();// 城市信息
                 amapLocation.getDistrict();// 城区信息
-                amapLocation.getRoad();// 街道信息
+                road = amapLocation.getRoad();// 街道信息
                 amapLocation.getCityCode();// 城市编码
                 amapLocation.getAdCode();// 地区编码
                 if (mMyLocationPoint == null) {
@@ -721,65 +746,19 @@ public class MapsFragment extends SupportMapFragment implements
                 break;
             case R.id.btn_location:
                 toMyLocation(13);
-                Intent intent = new Intent(getContext(), CircleFirendActivity.class);
-                startActivity(intent);
                 break;
 
             case R.id.btn_nai:
-                Poi start = new Poi("三元桥", new LatLng(39.96087, 116.45798), "");
-/**终点传入的是北京站坐标,但是POI的ID "B000A83M61"对应的是北京西站，所以实际算路以北京西站作为终点**/
-                Poi end = new Poi("北京站", new LatLng(39.904556, 116.427231), "B000A83M61");
-                List<Poi> wayList = new ArrayList();//途径点目前最多支持3个。
-                wayList.add(new Poi("团结湖", new LatLng(39.93413, 116.461676), ""));
-                wayList.add(new Poi("呼家楼", new LatLng(39.923484, 116.461327), ""));
-                wayList.add(new Poi("华润大厦", new LatLng(39.912914, 116.434247), ""));
-                AmapNaviPage.getInstance().showRouteActivity(getActivity(), new AmapNaviParams(start, null, end, AmapNaviType.DRIVER), new INaviInfoCallback() {
-                    @Override
-                    public void onInitNaviFailure() {
 
-                    }
-
-                    @Override
-                    public void onGetNavigationText(String s) {
-
-                    }
-
-                    @Override
-                    public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
-
-                    }
-
-                    @Override
-                    public void onArriveDestination(boolean b) {
-
-                    }
-
-                    @Override
-                    public void onStartNavi(int i) {
-
-                    }
-
-                    @Override
-                    public void onCalculateRouteSuccess(int[] ints) {
-
-                    }
-
-                    @Override
-                    public void onCalculateRouteFailure(int i) {
-
-                    }
-
-                    @Override
-                    public void onStopSpeaking() {
-
-                    }
-                });
 //                startActivity(new Intent(getContext(), NavActivity.class));
                 break;
             case R.id.btn_type_friend:
                 showSexPop(v);
                 break;
             case R.id.btn_province:
+
+                Intent intent = new Intent(getContext(), CircleFirendActivity.class);
+                startActivity(intent);
 //                showAreaDialog();
                 search();
                 break;
@@ -795,17 +774,6 @@ public class MapsFragment extends SupportMapFragment implements
     }
 
     public void showSexPop(View v) {
-//        Tools.getPopupWindow(getContext(),new String[]{"那是","那是2ad"});
-//        PopupWindow popupWindow = new PopupWindow(getContext());
-//        popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-//        popupWindow.setOutsideTouchable(true);
-//        popupWindow.setFocusable(true);
-//        popupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-//        popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-//        TextView text2 = new TextView(getContext());
-//        text2.setText("dsadsadsad");
-//        text2.setBackgroundColor(getResources().getColor(R.color.white));
-//        popupWindow.setContentView(text2);
         Tools.getPopupWindow(getContext(), new String[]{"全部用户", "只看女生", "只看男生"}, new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

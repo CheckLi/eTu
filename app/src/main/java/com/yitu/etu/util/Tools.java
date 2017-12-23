@@ -12,6 +12,12 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 
+import com.amap.api.maps.model.Poi;
+import com.amap.api.navi.AmapNaviPage;
+import com.amap.api.navi.AmapNaviParams;
+import com.amap.api.navi.AmapNaviType;
+import com.amap.api.navi.INaviInfoCallback;
+import com.amap.api.navi.model.AMapNaviLocation;
 import com.yitu.etu.R;
 
 import java.util.ArrayList;
@@ -64,5 +70,48 @@ public class Tools {
         popupWindow.setContentView(view);
         return popupWindow;
 
+    }
+    public static void navi(Context context, Poi start, Poi end){
+        AmapNaviPage.getInstance().showRouteActivity(context, new AmapNaviParams(start, null, end, AmapNaviType.DRIVER), new INaviInfoCallback() {
+            @Override
+            public void onInitNaviFailure() {
+
+            }
+
+            @Override
+            public void onGetNavigationText(String s) {
+
+            }
+
+            @Override
+            public void onLocationChange(AMapNaviLocation aMapNaviLocation) {
+
+            }
+
+            @Override
+            public void onArriveDestination(boolean b) {
+
+            }
+
+            @Override
+            public void onStartNavi(int i) {
+
+            }
+
+            @Override
+            public void onCalculateRouteSuccess(int[] ints) {
+
+            }
+
+            @Override
+            public void onCalculateRouteFailure(int i) {
+
+            }
+
+            @Override
+            public void onStopSpeaking() {
+
+            }
+        });
     }
 }
