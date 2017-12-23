@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.yitu.etu">
+    package="com.yitu.etu">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -281,6 +281,10 @@
         </activity>
         <activity android:name=".ui.activity.TravelsDetailActivity">
         </activity>
+        <activity android:name=".ui.activity.CircleFirendActivity" />
+        <activity android:name=".ui.activity.HairDynamicActivity" />
+        <activity android:name=".ui.activity.SearchResultUserActivity" />
+        <activity android:name=".ui.activity.SearchResultOrderSceneActivity"></activity>
     </application>
 
 </manifest>

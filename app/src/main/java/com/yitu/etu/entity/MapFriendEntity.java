@@ -7,8 +7,12 @@ import com.yitu.etu.ui.fragment.MapsFragment;
  * <p>
  * Created by deng meng on 2017/12/14.
  */
-public class MapFirendEntity extends MerchantBaseEntity{
+public class MapFriendEntity extends MerchantBaseEntity{
     {
         setType(MapsFragment.type_friend);
     }
+    public String title;
+    public String address;
+    public String sex;
+    public String user_id;
 }

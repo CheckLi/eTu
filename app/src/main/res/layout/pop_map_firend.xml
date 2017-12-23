@@ -24,6 +24,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="行走的攻略"
@@ -31,6 +32,8 @@
             android:textStyle="bold"/>
 
         <TextView
+
+            android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

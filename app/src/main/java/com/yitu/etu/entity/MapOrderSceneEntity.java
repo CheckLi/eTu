@@ -11,4 +11,10 @@ public class MapOrderSceneEntity extends MerchantBaseEntity{
     {
         setType(MapsFragment.type_order_scene);
     }
+
+    public String title;
+    public String address;
+    public String is_spot;
+    public String title_id;
+
 }

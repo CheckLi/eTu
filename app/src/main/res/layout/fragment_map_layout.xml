@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@android:color/black">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
 
     <com.amap.api.maps.MapView
 
@@ -10,7 +12,7 @@
 
         android:layout_width="match_parent"
 
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/btn_type_friend"
@@ -26,7 +28,7 @@
         android:text="全部用户"
         android:textColor="@color/color_333333"
         android:textSize="15sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +42,7 @@
             android:layout_height="50dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
-            android:src="@drawable/icon29"/>
+            android:src="@drawable/icon29" />
 
         <LinearLayout
             android:id="@+id/menu"
@@ -54,7 +56,7 @@
                 android:layout_height="50dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/icon70"/>
+                android:src="@drawable/icon70" />
 
             <ImageView
                 android:id="@+id/btn_friend"
@@ -63,7 +65,7 @@
                 android:layout_height="50dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/icon71"/>
+                android:src="@drawable/icon71" />
 
             <ImageView
 
@@ -72,7 +74,7 @@
                 android:layout_height="50dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/icon72"/>
+                android:src="@drawable/icon72" />
         </LinearLayout>
     </LinearLayout>
 
@@ -90,7 +92,7 @@
 
             android:layout_marginRight="15dp"
 
-            android:src="@drawable/icon68"/>
+            android:src="@drawable/icon68" />
 
         <ImageView
             android:id="@+id/btn_location"
@@ -98,7 +100,7 @@
             android:layout_height="40dp"
             android:layout_marginBottom="30dp"
             android:layout_marginTop="15dp"
-            android:src="@drawable/icon73"/>
+            android:src="@drawable/icon73" />
     </LinearLayout>
 
     <LinearLayout
@@ -110,14 +112,39 @@
         android:background="@drawable/round_white_10dp"
         android:clickable="true"
         android:focusable="true"
+        android:visibility="gone"
         android:focusableInTouchMode="true"
-        android:padding="10dp"
-        android:visibility="gone">
+        android:padding="10dp">
 
-        <ImageView
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:background="@drawable/icon16"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.yitu.etu.widget.image.RoundImageView
+                android:id="@+id/dialog_image"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/etu_default2"
+                app:x_radius="0dp"
+                app:y_radius="0dp" />
+
+            <TextView
+                android:id="@+id/tv_yj_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:background="@drawable/bq_bg2"
+                android:paddingBottom="2dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="2dp"
+                android:text="进度 0/20"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+        </FrameLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -126,14 +153,19 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="行走的攻略"
+                android:singleLine="true"
+                android:lines="1"
+                android:ellipsize="end"
                 android:textColor="@color/color_333333"
                 android:textSize="16sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -141,13 +173,13 @@
                 android:singleLine="true"
                 android:text="距离你376米"
                 android:textColor="@color/color_999999"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
 
-                android:background="@color/color_999999"/>
+                android:background="@color/color_999999" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -164,13 +196,13 @@
                     android:text="收藏活动"
                     android:textColor="@color/color_333333"
                     android:textSize="17sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
 
-                    android:background="@color/color_999999"/>
+                    android:background="@color/color_999999" />
 
                 <TextView
                     android:id="@+id/btn_nai"
@@ -183,7 +215,7 @@
                     android:text="导航过去"
                     android:textColor="@color/color_333333"
                     android:textSize="17sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </LinearLayout>

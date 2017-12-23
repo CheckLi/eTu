@@ -1,30 +1,43 @@
 package com.yitu.etu.entity;
 
+import com.amap.api.services.core.LatLonPoint;
+
 /**
  * TODO this class desription here
  * <p>
  * Created by deng meng on 2017/12/12.
  */
 public class MerchantBaseEntity {
-    int id;
-    public double lng;
     int type;
+    public String image;
+    public String id;
+    public LatLonPoint latLonPoint;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public double getLng() {
-        return lng;
+    public String getImage() {
+        return image;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
+    public void setImage(String image) {
+        this.image = image;
     }
+
+    public LatLonPoint getLatLonPoint() {
+        return latLonPoint;
+    }
+
+    public void setLatLonPoint(LatLonPoint latLonPoint) {
+        this.latLonPoint = latLonPoint;
+    }
+
+
 
     public int getType() {
         return type;

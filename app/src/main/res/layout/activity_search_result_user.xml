@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:orientation="vertical">
+
+    <com.yitu.etu.widget.image.CircleImageView
+        android:id="@+id/image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/icon17"
+        app:border_color="@color/white"
+        app:border_width="2dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="的撒多"
+            android:singleLine="true"
+            android:lines="1"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/icon2" />
+
+    </LinearLayout>
+
+</LinearLayout>

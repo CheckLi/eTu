@@ -7,8 +7,15 @@ import com.yitu.etu.ui.fragment.MapsFragment;
  * <p>
  * Created by deng meng on 2017/12/14.
  */
-public class MapSceneEntity extends MerchantBaseEntity{
+public class MapSceneEntity extends MerchantBaseEntity {
     {
         setType(MapsFragment.type_scene);
     }
+
+    public String spot_id;
+    public String xjdes;
+    public String yjcount;
+    public String price;
+    public String title;
+    public String address;
 }
