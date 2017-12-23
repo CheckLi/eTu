@@ -94,3 +94,4 @@ data class Product2(
 		@SerializedName("name") val name: String, //甜皮鸭
 		@SerializedName("count") val count: String //1
 )
+

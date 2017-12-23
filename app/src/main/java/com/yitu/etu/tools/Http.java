@@ -49,7 +49,7 @@ public class Http {
             }
         }
         if (BuildConfig.DEBUG) {
-            LogUtil.e("response:","请求参数"+params.toString()+"\n通用参数"+GeneralRequestParams.getParams().toString());
+            LogUtil.e("response:","\n请求链接"+url+"请求参数"+params.toString()+"\n通用参数"+GeneralRequestParams.getParams().toString());
         }
         RequestCall postFormRequest = postFormBuilder.build();
         postFormRequest.execute(callback);

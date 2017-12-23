@@ -57,3 +57,4 @@ data class RenZBean(
 data class ChatToken(
 		@SerializedName("token") val token: String //oRMa6ptbTrU2HBlCGrCiRweA30kxoEAEOTt+WC0cNJzLkt2gOSPDFXWlIfh07G9XZcsW/B1xOImLbXkCd6WbGw==
 )
+

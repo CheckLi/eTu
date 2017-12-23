@@ -66,6 +66,8 @@ object BuyCarUtil {
     fun saveBuyCar(buycar: MutableList<BuyCar>?) {
         if (buycar != null && buycar.size > 0) {
             PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buycar)
+        }else{
+            PrefrersUtil.getInstance().saveValue(AppConstant.PARAM_SAVE_BUY_CAR,"[]")
         }
     }
 }

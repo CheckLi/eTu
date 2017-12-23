@@ -22,6 +22,7 @@ public class Urls {
     public static final String paySms = address + "/user/getPaypwdSms";//获取支付密码验证码
     public static final String reSetPayPassword = address + "/user/forgetPaypwd";//重新设置支付密码
     public static final String URL_GET_USER_INFO = address + "/user/getinfo";//获取用户信息，包含钱包信息
+    public static final String URL_GET_USER_SHOP_DETAIL = address + "/shop/getShopInfo";//获取店铺信息
 
     /**
      * 订单相关
@@ -29,4 +30,10 @@ public class Urls {
     public static final String URL_ORDER_LIST_NOT_USE = address + "/shop/get_my_orderlist";//获取订单列表未使用
     public static final String URL_ORDER_LIST_USE = address + "/shop/get_my_order";//获取订单列表按类型type分 1未用，2使用
     public static final String URL_ORDER_DETAIL = address + "/shop/get_order_info";//获取订单详情
+    public static final String URL_MY_PUBLISH_ROUTE = address + "/action/getYdataList";//我发起的行程
+    public static final String URL_MY_ADD_ROUTE = address + "/action/getDataList";//我参与的行程
+    public static final String URL_MY_TRAVELS = address + "/title/getMyList";//我的游记
+    public static final String URL_MY_TRAVELS_DETAIL = address + "/title/info";//游记详情
+    public static final String URL_MY_COLLECT = address + "/collect/getlist";//我的收藏列表
+    public static final String URL_MY_COLLECT_DEL = address + "/collect/delete";//我的收藏列表删除
 }

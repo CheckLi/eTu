@@ -11,6 +11,7 @@
         style="@style/MyListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/fl_1"
         android:fillViewport="true">
 
         <LinearLayout
@@ -27,10 +28,12 @@
                 android:text="店铺名称"/>
 
             <EditText
+                android:id="@+id/et_shopname"
                 style="@style/shop_edit_style"
                 android:hint="输入店铺名称"/>
 
             <TextView
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -39,6 +42,7 @@
                 android:text="店铺介绍"/>
 
             <EditText
+                android:id="@+id/et_shop_info"
                 style="@style/shop_edit_style"
                 android:gravity="top"
                 android:hint="输入店铺介绍"
@@ -53,6 +57,7 @@
                 android:text="最低消费金额"/>
 
             <EditText
+                android:id="@+id/et_shop_price"
                 style="@style/shop_edit_style"
                 android:gravity="top"
                 android:hint="输入最低消费金额"
@@ -68,6 +73,7 @@
                 android:text="特色说明"/>
 
             <EditText
+                android:id="@+id/et_shop_tese_info"
                 style="@style/shop_edit_style"
                 android:gravity="top"
                 android:hint="输入特色说明"/>
@@ -88,11 +94,13 @@
                 android:orientation="horizontal">
 
                 <EditText
+                    android:id="@+id/et_shop_address"
                     style="@style/shop_edit_style"
                     android:layout_width="0dp"
                     android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
+                    android:maxLines="1"
                     android:gravity="top"
                     android:hint="输入地址及定位"
                     android:singleLine="true"/>
@@ -114,32 +122,57 @@
                 android:text="联系电话"/>
 
             <EditText
+                android:id="@+id/et_shop_phone"
                 style="@style/shop_edit_style"
                 android:gravity="top"
                 android:hint="输入联系电话"
                 android:inputType="phone"/>
-
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <Button
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content">
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:background="@drawable/round_24416b_5dp"
-                    android:text="订单管理"
-                    android:textColor="@color/white"/>
+                    android:layout_height="wrap_content"
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_gravity="right"
-                    android:background="@drawable/round_24416b_5dp"
-                    android:text="产品管理"
-                    android:textColor="@color/white"/>
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="商铺图片"/>
+                <ImageView
+                    android:id="@+id/iv_shop_img"
+                    android:layout_width="100dp"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
+                    android:layout_height="100dp"/>
             </FrameLayout>
+
+
+
         </LinearLayout>
     </ScrollView>
+    <FrameLayout
+        android:id="@+id/fl_1"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/round_24416b_5dp"
+            android:text="订单管理"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="right"
+            android:background="@drawable/round_24416b_5dp"
+            android:text="产品管理"
+            android:textColor="@color/white"/>
+    </FrameLayout>
 </RelativeLayout>

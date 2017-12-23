@@ -3,6 +3,7 @@ package com.yitu.etu.ui.activity
 import android.view.MotionEvent
 import android.view.View
 import com.yitu.etu.R
+import com.yitu.etu.entity.BuyCar
 import com.yitu.etu.ui.adapter.BuyCarAdapter
 import com.yitu.etu.util.BuyCarUtil
 import kotlinx.android.synthetic.main.activity_buy_car2.*
@@ -15,7 +16,17 @@ class BuyCarActivity : BaseActivity() {
 
     override fun initActionBar() {
         title = "购物车"
-
+        setRightText("商品添加模拟"){
+            val by=BuyCar()
+            BuyCarUtil.addBuyCar(by)
+            adapter.addItem(by)
+            if(adapter.count==0){
+                data_empty_view.visibility = View.VISIBLE
+            }else{
+                data_empty_view.visibility = View.GONE
+            }
+            listview.slideBack()
+        }
     }
 
     override fun initView() {
@@ -25,13 +36,18 @@ class BuyCarActivity : BaseActivity() {
 
     override fun getData() {
         showWaitDialog("获取中...")
+        initData()
+
+    }
+
+    private fun initData() {
         thread {
-            val list=BuyCarUtil.getAllBuyCar()
+            val list = BuyCarUtil.getAllBuyCar()
             runOnUiThread {
-                if(list==null||list.size==0){
-                    data_empty_view.visibility=View.VISIBLE
-                }else {
-                    data_empty_view.visibility=View.GONE
+                if (list == null || list.size == 0) {
+                    data_empty_view.visibility = View.VISIBLE
+                } else {
+                    data_empty_view.visibility = View.GONE
                     adapter.replaceAll(list)
                     initInfo()
                 }
@@ -39,7 +55,6 @@ class BuyCarActivity : BaseActivity() {
 
             }
         }
-
     }
 
     private fun initInfo() {
@@ -52,8 +67,13 @@ class BuyCarActivity : BaseActivity() {
         /**
          * 添加和删除
          */
-        adapter.setBuyCarListener({ select ->
-            if (!select) {
+        adapter.setBuyCarListener({ select,del ->
+            if(del){
+                if(adapter.count==0){
+                    data_empty_view.visibility = View.VISIBLE
+                }
+                listview.slideBack()
+            }else if (!select) {
                 cb_select_all.isChecked = false
             } else {
                 cb_select_all.isChecked = adapter.checkSelect()
@@ -85,7 +105,6 @@ class BuyCarActivity : BaseActivity() {
             }
             true
         }
-
     }
 
     override fun onPause() {

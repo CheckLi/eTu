@@ -27,7 +27,7 @@
         android:layout_height="4dp"
         android:background="@color/color_f5f5f5"/>
 
-    <android.support.v4.view.ViewPager
+    <com.yitu.etu.widget.NoScrollViewPage
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -40,8 +40,8 @@ class MyRouteActivity : BaseActivity() {
     class OrderFragmentAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> RouteFragment()
-                else -> RouteFragment()
+                0 -> RouteFragment.getInstance(1)
+                else -> RouteFragment.getInstance(2)
             }
         }
 

@@ -24,9 +24,9 @@ class BuyCarAdapter : MyBaseAdapter<BuyCar> {
             with(getItem(position)) {
                 cb_check.isChecked = isCheck
                 tv_count.text = count.toString()
-                tv_desc.text=des.Empty()
-                tv_name.text=name.Empty()
-                tv_price.text=price.toString()
+                tv_desc.text = des.Empty()
+                tv_name.text = name.Empty()
+                tv_price.text = price.toString()
                 iv_add.setOnClickListener {
                     count++
                     tv_count.text = count.toString()
@@ -48,13 +48,21 @@ class BuyCarAdapter : MyBaseAdapter<BuyCar> {
                             isCheck = !isCheck
                             cb_check.isChecked = isCheck
                             buyCarListener?.price(isCheck, count * price)
-                            buyCarListener?.select(isCheck)
+                            buyCarListener?.select(isCheck, false)
                         }
                     }
                     true
                 }
             }
 
+            /**
+             * 删除购物车商品
+             */
+            tvDelete.setOnClickListener {
+                remove(position)
+                buyCarListener?.select(false, true)
+                notifyDataSetChanged()
+            }
         }
         return convertView
     }
@@ -62,10 +70,10 @@ class BuyCarAdapter : MyBaseAdapter<BuyCar> {
     /**
      * 点击事件
      */
-    fun setBuyCarListener(onSelect:(select: Boolean)->Unit,onClick: (isAdd: Boolean, price: Float) -> Unit) {
+    fun setBuyCarListener(onSelect: (select: Boolean, isDel: Boolean) -> Unit, onClick: (isAdd: Boolean, price: Float) -> Unit) {
         buyCarListener = object : IBuyCarListener {
-            override fun select(select: Boolean) {
-               onSelect(select)
+            override fun select(select: Boolean, del: Boolean) {
+                onSelect(select, del)
             }
 
             override fun price(isAdd: Boolean, price: Float) {
@@ -105,7 +113,16 @@ class BuyCarAdapter : MyBaseAdapter<BuyCar> {
         notifyDataSetChanged()
     }
 
-    fun getList():MutableList<BuyCar>?{
+    fun getList(): MutableList<BuyCar>? {
         return data
+    }
+
+    fun addItem(buycar:BuyCar){
+        if(data.size==0){
+            data= arrayListOf(buycar)
+        }else {
+            data.add(buycar)
+        }
+        notifyDataSetChanged()
     }
 }

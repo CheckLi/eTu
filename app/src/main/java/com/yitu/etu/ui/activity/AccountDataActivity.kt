@@ -101,6 +101,11 @@ class AccountDataActivity : BaseActivity() {
         }else if(rg_sex.checkedRadioButtonId==R.id.rb_sex_boy&&userInfo().sex==0){
             params.put("sex", "1")
         }
+        if(rg_friend.checkedRadioButtonId==R.id.rg_friend_yes&&userInfo().nomap==1){
+            params.put("nomap", "0")
+        }else if(rg_friend.checkedRadioButtonId==R.id.rg_friend_no&&userInfo().sex==0){
+            params.put("nomap", "1")
+        }
         if(!postFileBase64.isNullOrBlank()){
             params.put("header",postFileBase64)
         }

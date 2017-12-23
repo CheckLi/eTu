@@ -8,7 +8,7 @@
     android:background="@color/color_f5f5f5"
     tools:context="com.yitu.etu.ui.activity.BuyCarActivity">
 
-    <ListView
+    <com.yitu.etu.widget.ListSlideView
         android:id="@+id/listview"
         style="@style/MyListView"
         android:layout_width="match_parent"
@@ -16,7 +16,8 @@
         android:layout_above="@+id/rl_content"
         android:divider="@color/transparent"
         android:dividerHeight="5dp"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        app:mode="right"/>
 
 
     <RelativeLayout

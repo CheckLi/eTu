@@ -8,5 +8,5 @@ package com.yitu.etu.Iinterface
  */
 interface IBuyCarListener{
     fun price(isAdd:Boolean,price:Float)
-    fun select(select:Boolean)
+    fun select(select:Boolean,del:Boolean)
 }
