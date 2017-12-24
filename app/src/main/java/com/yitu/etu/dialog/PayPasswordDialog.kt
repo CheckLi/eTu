@@ -3,6 +3,7 @@ package com.yitu.etu.dialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.view.View
 import com.jungly.gridpasswordview.GridPasswordView
 import com.yitu.etu.R
 import kotlinx.android.synthetic.main.pay_password_dialog.*
@@ -36,6 +37,18 @@ class PayPasswordDialog : Dialog {
 
     fun showDialog() {
         show()
+    }
+
+    /**
+     * 设置价格
+     */
+    fun setContent(price: String) {
+        tv_price.visibility=View.VISIBLE
+        tv_price.text = "￥$price"
+    }
+
+    fun clearPassword(){
+        grid_password.clearPassword()
     }
 
     /**

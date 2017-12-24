@@ -92,3 +92,27 @@ inline fun <reified T : Activity> Fragment.nextCheckLoginActivity() {
         activityUtil.nextActivity(this, LoginActivity::class.java, null, false)
     }
 }
+
+/**
+ * 进入下一个activity,需要检查是否登陆，如果未登录需要跳转到登陆界面
+ */
+inline fun <reified T : Activity> Fragment.nextCheckLoginActivity(vararg params: Pair<String, Any?>) {
+    if(isLogin()) {
+        val bundle = AnkoInternals.createIntent(this.activity, T::class.java, params).extras
+        activityUtil.nextActivity(this, T::class.java, bundle, false)
+    }else{
+        activityUtil.nextActivity(this, LoginActivity::class.java, null, false)
+    }
+}
+
+/**
+ * 进入下一个activity,需要检查是否登陆，如果未登录需要跳转到登陆界面
+ */
+inline fun <reified T : Activity> Context.nextCheckLoginActivity(vararg params: Pair<String, Any?>) {
+    if(isLogin()) {
+        val bundle = AnkoInternals.createIntent(this, T::class.java, params).extras
+        activityUtil.nextActivity(this, T::class.java, bundle, false)
+    }else{
+        activityUtil.nextActivity(this, LoginActivity::class.java, null, false)
+    }
+}

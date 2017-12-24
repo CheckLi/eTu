@@ -1,9 +1,12 @@
 package com.yitu.etu.ui.activity
 
 import com.huizhuang.zxsq.utils.nextActivity
+import com.yitu.etu.Iinterface.IDelListener
 import com.yitu.etu.R
 import com.yitu.etu.entity.ArrayBaseEntity
 import com.yitu.etu.entity.MyCollectBean
+import com.yitu.etu.entity.MyRouteBean
+import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.adapter.CollectAdapter
@@ -27,11 +30,11 @@ class MyCollectActivity : BaseActivity() {
 
 
     override fun getData() {
+        showWaitDialog("获取中...")
         refresh(true)
     }
 
     fun refresh(isRefresh: Boolean) {
-        showWaitDialog("获取中...")
         post(Urls.URL_MY_COLLECT, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyCollectBean>>() {
             override fun onResponse(response: ArrayBaseEntity<MyCollectBean>, id: Int) {
                 hideWaitDialog()
@@ -68,8 +71,42 @@ class MyCollectActivity : BaseActivity() {
             refresh(false)
         }
         listview.setOnItemClickListener { parent, view, position, id ->
-            nextActivity<TravelsDetailActivity>("travels_id" to adapter.getItem(position).id)
+//            type字段表示，0文章，1为文章，2为景点，3为出行活动，5为美食店铺，6为住宿店铺，7为游玩店铺
+            when(adapter.getItem(position).type){
+               2 ->nextActivity<SearchResultOrderSceneActivity>("detail_id" to adapter.getItem(position).id)
+                else ->showToast("开发中")
+            }
+
         }
+
+        adapter.setDelListener(object : IDelListener<MyCollectBean> {
+            override fun del(delPosition: Int, bean: MyCollectBean) {
+                delPost(delPosition,bean.id.toString())
+            }
+
+        })
     }
 
+
+    fun delPost(position:Int,id: String){
+        showWaitDialog("删除中...")
+        post(Urls.URL_MY_COLLECT_DEL, hashMapOf("id" to id), object : GsonCallback<ObjectBaseEntity<MyRouteBean>>() {
+            override fun onResponse(response: ObjectBaseEntity<MyRouteBean>, id: Int) {
+                hideWaitDialog()
+
+                if (response.success()) {
+                    showToast("删除成功")
+                    adapter.remove(position)
+                } else {
+                    showToast(response.message)
+                }
+            }
+
+            override fun onError(call: Call?, e: Exception?, id: Int) {
+                hideWaitDialog()
+                showToast("行程删除失败")
+            }
+
+        })
+    }
 }

@@ -2,6 +2,7 @@ package com.yitu.etu.ui.fragment
 
 import android.view.View
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
+import com.huizhuang.zxsq.utils.nextCheckLoginActivity
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.entity.UserInfo
@@ -44,12 +45,12 @@ class AccountFragment : BaseFragment() {
 
         EventBus.getDefault().register(this)
         initUserInfo(EtuApplication.getInstance().userInfo)
-        val location=EtuApplication.getInstance().location
-        if(location==null){
-            LocationUtil.getInstance().startLocation{
+        val location = EtuApplication.getInstance().location
+        if (location == null) {
+            LocationUtil.getInstance().startLocation {
                 tv_location.text = it?.city.Empty()
             }
-        }else{
+        } else {
             tv_location.text = location.city
         }
     }
@@ -63,40 +64,37 @@ class AccountFragment : BaseFragment() {
          * 登录和个人资料入口
          */
         ll_header.setOnClickListener {
-            if (isLogin()) {
-                nextActivityFromFragment<AccountDataActivity>()
-            } else {
-                nextActivityFromFragment<LoginActivity>()
-            }
+            nextCheckLoginActivity<AccountDataActivity>()
+
         }
         /**
          * 我的钱包
          */
         tv_my_wallet.setOnClickListener {
-            nextActivityFromFragment<MyWalletActivity>()
+            nextCheckLoginActivity<MyWalletActivity>()
         }
 
         /**
          * 我的订单
          */
         tv_my_order.setOnClickListener {
-            nextActivityFromFragment<MyOrderActivity>()
+            nextCheckLoginActivity<MyOrderActivity>()
         }
 
         /**
          * 购物车
          */
         tv_buy_car.setOnClickListener {
-            nextActivityFromFragment<BuyCarActivity>()
+            nextCheckLoginActivity<BuyCarActivity>()
         }
 
         /**
          * 我的店铺
          */
         tv_my_shop.setOnClickListener {
-            if(isLogin()&&userInfo().usertype!=0) {
-                nextActivityFromFragment<MyShopActivity>()
-            }else{
+            if (isLogin() && userInfo().usertype != 0) {
+                nextCheckLoginActivity<MyShopActivity>()
+            } else {
                 showToast("您还不是商家")
             }
         }
@@ -105,7 +103,7 @@ class AccountFragment : BaseFragment() {
          * 我的行程
          */
         tv_my_route.setOnClickListener {
-            nextActivityFromFragment<MyRouteActivity>()
+            nextCheckLoginActivity<MyRouteActivity>()
         }
 
         /**
@@ -119,14 +117,14 @@ class AccountFragment : BaseFragment() {
          * 我的游记
          */
         tv_my_travels.setOnClickListener {
-            nextActivityFromFragment<MyTravelsActivity>()
+            nextCheckLoginActivity<MyTravelsActivity>()
         }
 
         /**
          * 我的收藏
          */
         tv_my_collect.setOnClickListener {
-            nextActivityFromFragment<MyCollectActivity>()
+            nextCheckLoginActivity<MyCollectActivity>()
         }
 
         /**
@@ -140,14 +138,13 @@ class AccountFragment : BaseFragment() {
          * 福利中心
          */
         tv_boon_center.setOnClickListener {
-            nextActivityFromFragment<BoonActivity>()
+            nextCheckLoginActivity<MyBoonActivity>()
         }
 
         /**
          * 联系客服
          */
         tv_call_service.setOnClickListener {
-
             /**
              * 启动客户服聊天界面。
              *

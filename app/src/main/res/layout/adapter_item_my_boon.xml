@@ -5,6 +5,7 @@
               android:layout_height="wrap_content"
               android:gravity="center_vertical"
               android:orientation="horizontal"
+              android:background="@color/white"
               android:paddingRight="-90dp"
               android:weightSum="1">
 
@@ -14,11 +15,8 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:background="@color/activityBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
@@ -35,7 +33,6 @@
             android:lineSpacingExtra="2dp"
             android:singleLine="true"
             android:text="西蜀人家"
-            android:textColor="#3A4E7F"
             android:textSize="16sp"
             />
 
@@ -45,24 +42,22 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_price"
+                android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
-                android:textStyle="bold"
                 android:layout_gravity="right"
                 android:layout_marginRight="15dp"
                 android:layout_toRightOf="@+id/iv_head"
                 android:lineSpacingExtra="2dp"
-                android:text="￥90.00"
-                android:textColor="@color/color_D9414F"
-                android:textSize="18sp"
+                android:text="2017"
+                android:textSize="12sp"
                 />
 
-            <com.yitu.etu.widget.TextViewDelLine
-                android:id="@+id/tv_price_old"
+            <TextView
+                android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -73,9 +68,9 @@
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@+id/iv_head"
                 android:lineSpacingExtra="2dp"
-                android:text="老价格"
-                android:textColor="#3A4E7F"
-                android:textSize="14sp"
+                android:text="状态"
+                android:textColor="@color/color_D9414F"
+                android:textSize="15sp"
                 />
         </LinearLayout>
     </LinearLayout>

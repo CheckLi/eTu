@@ -105,21 +105,32 @@
         android:inputType="textPassword"
         android:padding="15dp"
         android:textSize="14sp"/>
-
-    <CheckBox
-        android:id="@+id/tv_forget_password"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/selector_regist_xy"
-        android:layout_marginLeft="16dp"
-        android:paddingTop="16dp"
-        android:checked="true"
-        android:paddingBottom="16dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:drawablePadding="10dp"
-        android:text="同意注册协议"
-        android:textColor="#D44041"/>
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:id="@+id/tv_forget_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/selector_regist_xy"
+            android:layout_marginLeft="16dp"
+            android:paddingTop="16dp"
+            android:checked="true"
+            android:paddingBottom="16dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:drawablePadding="10dp"
+            />
+        <TextView
+            android:id="@+id/tv_regist_xy"
+            android:layout_width="wrap_content"
+            android:text="同意注册协议"
+            android:gravity="center_vertical"
+            android:textColor="#D44041"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/btn_register"

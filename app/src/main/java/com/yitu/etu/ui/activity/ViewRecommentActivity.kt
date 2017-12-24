@@ -1,6 +1,6 @@
 package com.yitu.etu.ui.activity
 
-import android.graphics.PorterDuff
+import android.content.Intent
 import com.yitu.etu.R
 import kotlinx.android.synthetic.main.activity_view_recomment.*
 
@@ -23,7 +23,6 @@ class ViewRecommentActivity : BaseActivity() {
     }
 
     override fun initView() {
-        iv_add_image.setColorFilter(resources.getColor(R.color.color_999999),PorterDuff.Mode.SRC_ATOP)
     }
 
     override fun getData() {
@@ -32,4 +31,10 @@ class ViewRecommentActivity : BaseActivity() {
     override fun initListener() {
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(data!=null) {
+            image_select.onActivityResult(resultCode, requestCode, data)
+        }
+    }
 }

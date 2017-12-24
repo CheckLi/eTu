@@ -77,7 +77,6 @@ public class Http {
         String fileName;
         String path;
         String paramName;
-
         public PostFileParams(String fileName,
                               String paramName,
                               String path) {

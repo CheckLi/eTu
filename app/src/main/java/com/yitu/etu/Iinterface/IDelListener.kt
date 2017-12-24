@@ -8,6 +8,6 @@ package com.yitu.etu.Iinterface
  * @date:2017年12月23日 17:55
  *
  */
-interface IDelListener {
-    fun del(delPosition:Boolean)
+interface IDelListener<T> {
+    fun del(delPosition:Int,bean:T)
 }

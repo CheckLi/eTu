@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Handler
 import android.text.InputFilter
 import android.util.Log
+import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.tools.GsonCallback
@@ -52,6 +53,13 @@ class RegistActivity : BaseActivity() {
          */
         btn_register.setOnClickListener {
             register()
+        }
+
+        /**
+         * 协议
+         */
+        tv_regist_xy.setOnClickListener {
+            nextActivity<RegistXyActivity>("type" to if (rg_user_select.checkedRadioButtonId == rb_user.id) 0.toString() else 1.toString())
         }
     }
 

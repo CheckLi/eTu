@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.view.View;
 
 import com.yitu.etu.R;
-import com.yitu.etu.ui.adapter.ChooseImageAdapter;
 import com.yitu.etu.widget.MgridView;
+
+import java.util.List;
 
 public class HairDynamicActivity extends BaseActivity {
 
@@ -32,7 +33,18 @@ public class HairDynamicActivity extends BaseActivity {
     @Override
     public void initView() {
         gridView=(MgridView)findViewById(R.id.gridView);
-        gridView.setAdapter(new ChooseImageAdapter(this));
+
+
+    }
+
+    @Override
+    public void selectSuccess(String path) {
+        gridView.add(path);
+    }
+
+    @Override
+    public void selectSuccess(List<String> pathList) {
+        gridView.add(pathList.get(0));
     }
 
     @Override

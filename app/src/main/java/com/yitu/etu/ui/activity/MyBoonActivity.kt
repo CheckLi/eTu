@@ -3,29 +3,29 @@ package com.yitu.etu.ui.activity
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import com.yitu.etu.entity.ArrayBaseEntity
-import com.yitu.etu.entity.MyBoonBean
+import com.yitu.etu.entity.MyBoonListBean
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
-import com.yitu.etu.ui.adapter.BoonAdapter
+import com.yitu.etu.ui.adapter.MyBoonAdapter
 import com.yitu.etu.util.post
 import com.yitu.etu.widget.ListSlideView
-import kotlinx.android.synthetic.main.activity_my_travels.*
+import kotlinx.android.synthetic.main.activity_boon.*
 import okhttp3.Call
 import java.lang.Exception
 
-class BoonActivity : BaseActivity() {
+class MyBoonActivity : BaseActivity() {
 
-    lateinit var adapter: BoonAdapter
+    lateinit var adapter: MyBoonAdapter
 
-    override fun getLayout(): Int = R.layout.activity_boon
+    override fun getLayout(): Int = R.layout.activity_my_boon
 
     override fun initActionBar() {
-        title = "e途福利"
 
+            title = "福利中心"
     }
 
     override fun initView() {
-        adapter = BoonAdapter(listOf())
+        adapter = MyBoonAdapter(listOf())
         listview.adapter = adapter
         listview.setMode(ListSlideView.MODE_FORBID)
     }
@@ -36,8 +36,8 @@ class BoonActivity : BaseActivity() {
     }
 
     fun refresh(isRefresh: Boolean) {
-        post(Urls.URL_MY_BOON_LIST, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyBoonBean>>() {
-            override fun onResponse(response: ArrayBaseEntity<MyBoonBean>, id: Int) {
+        post(Urls.URL_MY_BOON_CENTER_LIST, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyBoonListBean>>() {
+            override fun onResponse(response: ArrayBaseEntity<MyBoonListBean>, id: Int) {
                 hideWaitDialog()
 
                 if (response.success() && response.data.size > 0) {
@@ -72,7 +72,7 @@ class BoonActivity : BaseActivity() {
             refresh(false)
         }
         listview.setOnItemClickListener { parent, view, position, id ->
-            nextActivity<BoonPayDetailActivity>("detail" to adapter.getItem(position))
+            nextActivity<BoonOrderDetailActivity>("order_id" to adapter.getItem(position).id.toString())
         }
     }
 

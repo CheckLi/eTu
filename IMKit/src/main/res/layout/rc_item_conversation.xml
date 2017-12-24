@@ -68,7 +68,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:background="@android:color/transparent"
-            app:RCCornerRadius="3dp"
+            app:RCCornerRadius="5dp"
             app:RCDefDrawable="@drawable/rc_default_portrait" />
 
         <FrameLayout

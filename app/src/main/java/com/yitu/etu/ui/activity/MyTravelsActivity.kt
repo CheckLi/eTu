@@ -1,9 +1,12 @@
 package com.yitu.etu.ui.activity
 
 import com.huizhuang.zxsq.utils.nextActivity
+import com.yitu.etu.Iinterface.IDelListener
 import com.yitu.etu.R
 import com.yitu.etu.entity.ArrayBaseEntity
+import com.yitu.etu.entity.MyRouteBean
 import com.yitu.etu.entity.MyTravels
+import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.adapter.TravelsAdapter
@@ -29,11 +32,11 @@ class MyTravelsActivity : BaseActivity() {
     }
 
     override fun getData() {
+        showWaitDialog("获取中...")
         refresh(true)
     }
 
      fun refresh(isRefresh:Boolean) {
-         showWaitDialog("获取中...")
         post(Urls.URL_MY_TRAVELS, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyTravels>>() {
             override fun onResponse(response: ArrayBaseEntity<MyTravels>, id: Int) {
                 hideWaitDialog()
@@ -72,6 +75,34 @@ class MyTravelsActivity : BaseActivity() {
         listview.setOnItemClickListener { parent, view, position, id ->
             nextActivity<TravelsDetailActivity>("travels_id" to adapter.getItem(position).id)
         }
+
+        adapter.setDelListener(object : IDelListener<MyTravels> {
+            override fun del(delPosition: Int, bean: MyTravels) {
+                delPost(delPosition,bean.id.toString())
+            }
+
+        })
     }
 
+    fun delPost(position:Int,id: String){
+        showWaitDialog("删除中...")
+        post(Urls.URL_MY_TRAVELS_DEL, hashMapOf("id" to id), object : GsonCallback<ObjectBaseEntity<MyRouteBean>>() {
+            override fun onResponse(response: ObjectBaseEntity<MyRouteBean>, id: Int) {
+                hideWaitDialog()
+
+                if (response.success()) {
+                    showToast("删除成功")
+                    adapter.remove(position)
+                } else {
+                    showToast(response.message)
+                }
+            }
+
+            override fun onError(call: Call?, e: Exception?, id: Int) {
+                hideWaitDialog()
+                showToast("游记删除失败")
+            }
+
+        })
+    }
 }

@@ -8,6 +8,7 @@ import com.yitu.etu.util.Empty
 import com.yitu.etu.util.addHost
 import com.yitu.etu.util.getTime
 import com.yitu.etu.util.imageLoad.ImageLoadUtil
+import com.yitu.etu.widget.ListSlideView
 import kotlinx.android.synthetic.main.adapter_item_route.view.*
 
 /**
@@ -26,6 +27,14 @@ class RouteAdapter(list: List<MyRouteBean>) : MyBaseAdapter<MyRouteBean>( list) 
                 ImageLoadUtil.getInstance().loadImage(icon,image.addHost(),50,50)
                 tv_time.text=startTime.getTime()
                 tv_status.text=status.Empty()
+                tvDelete.setOnClickListener {
+                    val  view=convertView.parent
+                    if(view is ListSlideView){
+                        view.slideBack()
+                    }
+                    delListener?.del(position,getItem(position))
+                }
+
             }
         }
         return convertView

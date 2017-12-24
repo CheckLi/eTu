@@ -240,4 +240,7 @@ public class ListSlideView extends ListView {
 		this.scrollBack();
 	}
 
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
 }

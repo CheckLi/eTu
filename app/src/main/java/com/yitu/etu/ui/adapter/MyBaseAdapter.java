@@ -4,11 +4,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.yitu.etu.Iinterface.IDelListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MyBaseAdapter<T> extends BaseAdapter {
-
+	private IDelListener mDelListener;
 	protected List<T> data;
 	private boolean isAnimation = true;
 
@@ -86,5 +88,13 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 	public void replaceAll(List<T> elem) {
 		data=new ArrayList<>(elem);
 		notifyDataSetChanged();
+	}
+
+	public void setDelListener(IDelListener<T> delListener) {
+		mDelListener = delListener;
+	}
+
+	public IDelListener getDelListener() {
+		return mDelListener;
 	}
 }

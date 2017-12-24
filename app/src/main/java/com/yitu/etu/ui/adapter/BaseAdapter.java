@@ -43,7 +43,22 @@ public abstract class BaseAdapter<T, E extends BaseAdapter.abstractViewHodler> e
             notifyDataSetChanged();
         }
     }
-
+    public void addData(T data) {
+        if (data == null) {
+            return;
+        }
+        initData();
+        this.data.add(data);
+        notifyDataSetChanged();
+    }
+    public void replace(int position,T data) {
+        if (data == null) {
+            return;
+        }
+        initData();
+        this.data.set(position,data);
+        notifyDataSetChanged();
+    }
     public void addData(List<T> data) {
         if (data == null) {
             return;

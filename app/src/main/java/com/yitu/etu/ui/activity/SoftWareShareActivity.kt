@@ -41,13 +41,13 @@ class SoftWareShareActivity : BaseActivity() {
                     override fun onError(p0: SHARE_MEDIA?, p1: Throwable?) {
                         when (p0) {
                             SHARE_MEDIA.WEIXIN -> {
-                                if (UMShareAPI.get(this@SoftWareShareActivity).isInstall(this@SoftWareShareActivity, SHARE_MEDIA.WEIXIN)) {
+                                if (!UMShareAPI.get(this@SoftWareShareActivity).isInstall(this@SoftWareShareActivity, SHARE_MEDIA.WEIXIN)) {
                                     showToast("请安装微信")
                                     return
                                 }
                             }
                             SHARE_MEDIA.QQ -> {
-                                if (UMShareAPI.get(this@SoftWareShareActivity).isInstall(this@SoftWareShareActivity, SHARE_MEDIA.QQ)) {
+                                if (!UMShareAPI.get(this@SoftWareShareActivity).isInstall(this@SoftWareShareActivity, SHARE_MEDIA.QQ)) {
                                     showToast("请安装QQ")
                                     return
                                 }

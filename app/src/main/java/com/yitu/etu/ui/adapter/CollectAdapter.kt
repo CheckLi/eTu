@@ -6,6 +6,7 @@ import com.yitu.etu.R
 import com.yitu.etu.entity.MyCollectBean
 import com.yitu.etu.util.addHost
 import com.yitu.etu.util.imageLoad.ImageLoadUtil
+import com.yitu.etu.widget.ListSlideView
 import kotlinx.android.synthetic.main.adapter_item_collect.view.*
 
 /**
@@ -22,6 +23,13 @@ class CollectAdapter(list: List<MyCollectBean>) : MyBaseAdapter<MyCollectBean>( 
                 ImageLoadUtil.getInstance().loadImage(icon,image.addHost(),50,50)
                 tv_name.text=name
                 tv_des.text=desc
+            }
+            tvDelete.setOnClickListener {
+                val  view=convertView.parent
+                if(view is ListSlideView){
+                    view.slideBack()
+                }
+                delListener?.del(position,getItem(position))
             }
         }
         return convertView

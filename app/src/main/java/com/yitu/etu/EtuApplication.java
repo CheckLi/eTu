@@ -1,6 +1,7 @@
 package com.yitu.etu;
 
 import android.app.Application;
+import android.net.Uri;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
@@ -10,9 +11,9 @@ import com.squareup.picasso.Picasso;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.yitu.etu.entity.AppConstant;
+import com.yitu.etu.entity.ChatToken;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.UserInfo;
-import com.yitu.etu.entity.ChatToken;
 import com.yitu.etu.eventBusItem.EventClearSuccess;
 import com.yitu.etu.eventBusItem.LoginSuccessEvent;
 import com.yitu.etu.tools.GsonCallback;
@@ -31,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.Conversation;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
@@ -177,6 +179,20 @@ public class EtuApplication extends Application {
         PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_BUY_CAR);
         EventBus.getDefault().post(new LoginSuccessEvent(null));
         RongIM.getInstance().logout();
+        RongIM.getInstance().clearConversations(
+                new RongIMClient.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object o) {
+
+                    }
+
+                    @Override
+                    public void onError(RongIMClient.ErrorCode errorCode) {
+
+                    }
+                }, Conversation.ConversationType.PRIVATE, Conversation.ConversationType.GROUP, Conversation.ConversationType.SYSTEM,
+                Conversation.ConversationType.APP_PUBLIC_SERVICE, Conversation.ConversationType.PUSH_SERVICE, Conversation.ConversationType.DISCUSSION,
+                Conversation.ConversationType.CUSTOMER_SERVICE, Conversation.ConversationType.CHATROOM);
     }
 
     public String getChatToken() {
@@ -264,5 +280,51 @@ public class EtuApplication extends Application {
                 LogUtil.e("chatConnect", "聊天链接失败" + errorCode.getMessage() + " " + errorCode.getValue());
             }
         });
+        /**
+         * 设置用户信息的提供者，供 RongIM 调用获取用户名称和头像信息。
+         *
+         * @param userInfoProvider 用户信息提供者。
+         * @param isCacheUserInfo  设置是否由 IMKit 来缓存用户信息。<br>
+         *                         如果 App 提供的 UserInfoProvider
+         *                         每次都需要通过网络请求用户数据，而不是将用户数据缓存到本地内存，会影响用户信息的加载速度；<br>
+         *                         此时最好将本参数设置为 true，由 IMKit 将用户信息缓存到本地内存中。
+         * @see UserInfoProvider
+         */
+       /* RongIM.setUserInfoProvider({ userId ->
+            UserInfo(userId,"小王子", Uri.parse("http://rongcloud-web.qiniudn.com/docs_demo_rongcloud_logo.png"))
+        }, true)*/
+        /**
+         * 设置用户信息的提供者，供 RongIM 调用获取用户名称和头像信息。
+         *
+         * @param userInfoProvider 用户信息提供者。
+         * @param isCacheUserInfo  设置是否由 IMKit 来缓存用户信息。<br>
+         *                         如果 App 提供的 UserInfoProvider
+         *                         每次都需要通过网络请求用户数据，而不是将用户数据缓存到本地内存，会影响用户信息的加载速度；<br>
+         *                         此时最好将本参数设置为 true，由 IMKit 将用户信息缓存到本地内存中。
+         * @see UserInfoProvider
+         */
+        RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
+            @Override
+            public io.rong.imlib.model.UserInfo getUserInfo(String s) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("user_id", s);
+                Http.post(Urls.URL_GET_ID_USER_INFO, map, new GsonCallback<ObjectBaseEntity<UserInfo>>() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(ObjectBaseEntity<UserInfo> response, int id) {
+                        if (response.success()) {
+                            UserInfo info = response.data;
+                            io.rong.imlib.model.UserInfo userInfo = new io.rong.imlib.model.UserInfo(String.valueOf(info.getId()), info.getName(), Uri.parse(Urls.address + info.getHeader()));
+                            RongIM.getInstance().refreshUserInfoCache(userInfo);
+                        }
+                    }
+                });
+                return null;
+            }
+        }, true);
     }
 }

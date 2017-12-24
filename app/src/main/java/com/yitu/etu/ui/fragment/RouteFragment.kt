@@ -1,14 +1,19 @@
 package com.yitu.etu.ui.fragment
 
 import android.os.Bundle
+import com.huizhuang.zxsq.utils.nextActivityFromFragment
+import com.yitu.etu.Iinterface.IDelListener
 import com.yitu.etu.R
 import com.yitu.etu.entity.ArrayBaseEntity
 import com.yitu.etu.entity.MyRouteBean
+import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.ui.activity.SearchResultOrderSceneActivity
 import com.yitu.etu.ui.adapter.RouteAdapter
 import com.yitu.etu.util.post
-import kotlinx.android.synthetic.main.fragment_order_layout.*
+import com.yitu.etu.widget.ListSlideView
+import kotlinx.android.synthetic.main.fragment_route_layout.*
 import okhttp3.Call
 import java.lang.Exception
 
@@ -43,14 +48,16 @@ class RouteFragment : BaseFragment() {
     }
 
     override fun getData() {
-        if(type==1){
+        if (type == 1) {
             showWaitDialog("获取中...")
         }
         when (type) {
             1 -> {
+                listView_order.setMode(ListSlideView.MODE_FORBID)
                 postData(Urls.URL_MY_ADD_ROUTE, true)
             }
             2 -> {
+                listView_order.setMode(ListSlideView.MODE_RIGHT)
                 postData(Urls.URL_MY_PUBLISH_ROUTE, true)
             }
         }
@@ -85,6 +92,28 @@ class RouteFragment : BaseFragment() {
         })
     }
 
+    fun delPost(position:Int,id: String){
+        showWaitDialog("删除中...")
+        post(Urls.URL_MY_PUBLISH_ROUTE_DEL, hashMapOf("action_id" to id), object : GsonCallback<ObjectBaseEntity<MyRouteBean>>() {
+            override fun onResponse(response: ObjectBaseEntity<MyRouteBean>, id: Int) {
+                hideWaitDialog()
+
+                if (response.success()) {
+                    showToast("删除成功")
+                    adapter.remove(position)
+                } else {
+                    showToast(response.message)
+                }
+            }
+
+            override fun onError(call: Call?, e: Exception?, id: Int) {
+                hideWaitDialog()
+                showToast("行程删除失败")
+            }
+
+        })
+    }
+
     override fun initListener() {
         layout_refresh.setOnRefreshListener {
             when (type) {
@@ -108,6 +137,14 @@ class RouteFragment : BaseFragment() {
             }
         }
         listView_order.setOnItemClickListener { parent, view, position, id ->
+            nextActivityFromFragment<SearchResultOrderSceneActivity>()
         }
+
+        adapter.setDelListener(object : IDelListener<MyRouteBean>{
+            override fun del(delPosition: Int, bean: MyRouteBean) {
+                delPost(delPosition,bean.id.toString())
+            }
+
+        })
     }
 }

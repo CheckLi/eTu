@@ -14,7 +14,12 @@ import com.amap.api.maps.model.BitmapDescriptorFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MarkerOptions
 import com.amap.api.maps.model.MyLocationStyle
+import com.amap.api.services.geocoder.GeocodeQuery
+import com.amap.api.services.geocoder.GeocodeResult
+import com.amap.api.services.geocoder.GeocodeSearch
+import com.amap.api.services.geocoder.RegeocodeResult
 import com.yitu.etu.R
+import com.yitu.etu.util.LogUtil
 import kotlinx.android.synthetic.main.activity_map_select.*
 
 
@@ -97,6 +102,25 @@ class MapSelectActivity : BaseActivity() {
         mLocationClient?.setLocationOption(mLocationOption)
         // 启动定位
         mLocationClient?.startLocation()
+
+
+        //构造 GeocodeSearch 对象，并设置监听。
+        val geocodeSearch = GeocodeSearch(this);
+        geocodeSearch.setOnGeocodeSearchListener(object : GeocodeSearch.OnGeocodeSearchListener {
+            override fun onRegeocodeSearched(p0: RegeocodeResult?, p1: Int) {
+                LogUtil.e("onRegeocodeSearched",p0.toString())
+            }
+
+            override fun onGeocodeSearched(p0: GeocodeResult?, p1: Int) {
+                LogUtil.e("onRegeocodeSearched",p0.toString())
+            }
+
+        });
+//通过GeocodeQuery设置查询参数,调用getFromLocationNameAsyn(GeocodeQuery geocodeQuery) 方法发起请求。
+//address表示地址，第二个参数表示查询城市，中文或者中文全拼，citycode、adcode都ok
+        val query = GeocodeQuery("朝阳区", "北京市")
+        geocodeSearch.getFromLocationNameAsyn(query)
+
     }
 
     /**
@@ -104,7 +128,7 @@ class MapSelectActivity : BaseActivity() {
      */
     fun addMarker() {
         val latLng = LatLng(mLocation?.latitude ?: 0.0, mLocation?.longitude ?: 0.0)
-        val latLng2 = LatLng(mLocation?.latitude ?: 0.0, (mLocation?.longitude ?: 0.0)+0.001111)
+        val latLng2 = LatLng(mLocation?.latitude ?: 0.0, (mLocation?.longitude ?: 0.0) + 0.001111)
         val view2 = layoutInflater.inflate(R.layout.mark_fd, null,
                 false)
         val view1 = layoutInflater.inflate(R.layout.mark_fd, null,
@@ -112,8 +136,8 @@ class MapSelectActivity : BaseActivity() {
 
         val marker = aMap?.addMarker(MarkerOptions().
                 icons(arrayListOf(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(resources,R.drawable.icon11)),BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(resources,R.drawable.icon12))))
+                        .decodeResource(resources, R.drawable.icon11)), BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        .decodeResource(resources, R.drawable.icon12))))
                 .position(latLng)
                 .setFlat(true))
 
