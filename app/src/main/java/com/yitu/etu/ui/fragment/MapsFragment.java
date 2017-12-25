@@ -178,7 +178,8 @@ public class MapsFragment extends SupportMapFragment implements
             GlideApp.with(MapsFragment.this)
                     .load(address + data.getImage())
                     .centerCrop()
-                    .placeholder(R.drawable.icon17).into(dialog_image);
+                    .error(R.drawable.etu_default)
+                    .placeholder(R.drawable.etu_default).into(dialog_image);
 
             btn_nai.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -201,7 +202,8 @@ public class MapsFragment extends SupportMapFragment implements
             GlideApp.with(MapsFragment.this)
                     .load(address + data.getImage())
                     .centerCrop()
-                    .placeholder(R.drawable.icon17).into(dialog_image);
+                    .error(R.drawable.etu_default)
+                    .placeholder(R.drawable.etu_default).into(dialog_image);
 
 
             btn_nai.setOnClickListener(new View.OnClickListener() {

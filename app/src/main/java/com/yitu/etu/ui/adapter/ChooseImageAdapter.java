@@ -65,7 +65,7 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
             int px = Tools.dp2px(getContext(), 0.5f);
             convertView.setPadding(px, px, px, px);
 
-            viewHolder.imageView.setImageResource(R.drawable.etu_default2);
+            viewHolder.imageView.setImageResource(R.drawable.etu_default);
             ImageLoadUtil.getInstance().loadImage(viewHolder.imageView, getItem(position), 100, 100);
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override

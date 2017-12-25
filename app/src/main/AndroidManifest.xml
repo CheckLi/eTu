@@ -347,7 +347,9 @@
             android:name=".ui.activity.ImageShowActivity"
             android:screenOrientation="portrait"
             android:theme="@style/transparentActivity"></activity>
-
+        <activity
+            android:name=".ui.activity.MapSearchInputActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

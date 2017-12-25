@@ -53,7 +53,8 @@ public class MapOrderSceneSearchAdapter extends BaseAdapter<MapOrderSceneEntity,
         GlideApp.with(getContext())
                 .load(Urls.address + data.getImage())
                 .centerCrop()
-                .placeholder(R.drawable.icon17).into(viewHolder.image);
+                .error(R.drawable.etu_default)
+                .placeholder(R.drawable.etu_default).into(viewHolder.image);
         viewHolder.tv_price.setVisibility(View.INVISIBLE);
     }
 

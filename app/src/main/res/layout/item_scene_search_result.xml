@@ -56,7 +56,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/etu_default2"
+            android:src="@drawable/etu_default"
             app:x_radius="8dp"
             app:y_radius="8dp" />
     </LinearLayout>

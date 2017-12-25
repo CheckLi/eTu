@@ -51,9 +51,12 @@ public class MapSceneSearchAdapter extends BaseAdapter<MapSceneEntity, MapSceneS
         MapSceneEntity data = getItem(position);
         viewHolder.tv_title.setText(data.title);
         viewHolder.tv_address.setText(data.address);
+        viewHolder.tv_price.setText("人均："+data.price+"￥");
         GlideApp.with(getContext())
                 .load(Urls.address + data.getImage())
                 .centerCrop()
+                .error(R.drawable.etu_default)
+                .placeholder(R.drawable.etu_default)
                 .placeholder(R.drawable.icon17).into(viewHolder.image);
 
     }
