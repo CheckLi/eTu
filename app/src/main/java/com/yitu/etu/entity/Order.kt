@@ -95,3 +95,12 @@ data class Product2(
 		@SerializedName("count") val count: String //1
 )
 
+
+
+data class HistoryPanBean(
+		@SerializedName("image") val image: String = "", ///assets/data/20171113/15105394904552.jpg
+		@SerializedName("desc") val desc: String = "", //余额支付购买门票
+		@SerializedName("name") val name: String = "", //0.01
+		@SerializedName("created") val created: String = "", //2017-12-24 19:32:16
+		@SerializedName("status") val status: String = "" //已成功
+)

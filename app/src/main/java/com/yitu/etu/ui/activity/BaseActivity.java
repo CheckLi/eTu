@@ -38,6 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public int page = 1;
     public int size = 10;
     public boolean add = true;
+    public String className;
     private LoadingDialog mWaitDialog;
     public static final int REQUEST_LIST_CODE = 0;
     public static final int REQUEST_CAMERA_CODE = 1;
@@ -46,6 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        className=getClass().getSimpleName();
         setContentView(getLayout());
         getIntentExtra(getIntent());
         MyActivityManager.getInstance().addActivity(this);

@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import com.yitu.etu.R
 import com.yitu.etu.tools.InputFilterHelper
 import com.yitu.etu.util.showToast
@@ -55,11 +56,31 @@ class InputPriceDialog : Dialog {
         }
     }
 
+    fun setRightBtn(content: String,tips:String, onClick: (price:Float) -> Unit) {
+        btn_yes.text = content
+        btn_yes.setOnClickListener {
+            if (!tv_input_price.text.isNullOrBlank()) {
+                onClick(tv_input_price.text.toString().toFloat())
+            } else {
+                context.showToast(tips)
+            }
+        }
+    }
+
     fun setLeftBtn(content: String, onClick: (v: View) -> Unit) {
         btn_yes.text = content
         btn_yes.setOnClickListener {
             onClick(it)
             dismiss()
         }
+    }
+
+    fun setHint(content:String,showXy:Boolean){
+        tv_input_price.hint = content
+        tv_input_price.inputType= EditorInfo.TYPE_CLASS_NUMBER
+        if(!showXy) {
+            tv_buy_xy.visibility = View.GONE
+        }
+
     }
 }

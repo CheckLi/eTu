@@ -42,7 +42,20 @@ public class Urls {
     public static final String URL_MY_COLLECT_DEL = address + "/collect/delete";//我的收藏列表删除
     public static final String URL_MY_BOON_LIST = address + "/ticket/get_list";//福利列表
     public static final String URL_MY_BOON_CENTER_LIST = address + "/ticket/get_my_order";//我的福利中心
-    public static final String URL_MY_BOON_CREATE = address + "/ticket/create_order";//我的福利中心
+    public static final String URL_MY_BOON_CREATE = address + "/ticket/create_order";//购买福利
     public static final String URL_MY_BOON_ORDER_DETAIL = address + "/ticket/get_order_info";//我的福利中心
     public static final String URL_PRODUCT_LIST = address + "/product/getlist";//产品列表
+    public static final String URL_HISTORY_YU_E = address + "/user/accountLog";//余额记录
+    public static final String URL_HISTORY_P_AN = address + "/product/safe_orderlist";//平安符记录
+    /**
+     * 类型rechargetype（0为余额充
+     值、1为平安符购买、2为活动参
+     与）、⽀付类型paytype（0为余额
+     ⽀付、1为⽀付宝、2为微信）、⽀
+     付密码paypwd（当为余额⽀付时
+     传⼊）、活动ID action_id（当为
+     活动参与时传⼊）、⽀付⾦额
+     money
+     */
+    public static final String URL_BUY_P_AN = address + "/action/join";
 }

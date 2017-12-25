@@ -1,12 +1,9 @@
 package com.yitu.etu.ui.activity
 
-import android.content.Intent
 import android.os.Handler
+import android.view.View
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
-import com.yitu.etu.util.LogUtil
-import io.rong.imkit.RongIM
-import io.rong.imlib.RongIMClient
 
 class SplashActivity : BaseActivity() {
     private var mHandler = Handler()
@@ -18,6 +15,7 @@ class SplashActivity : BaseActivity() {
 
     override fun initActionBar() {
         mActionBarView.hideLeftImage()
+        mActionBarView.visibility = View.GONE
     }
 
     override fun initView() {

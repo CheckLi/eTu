@@ -61,7 +61,8 @@
             android:name=".ui.activity.SplashActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="standard"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -352,11 +353,13 @@
         <activity
             android:name=".ui.activity.ImageShowActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/transparentActivity"></activity>
+            android:theme="@style/transparentActivity"/>
         <activity
             android:name=".ui.activity.MapSearchInputActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateVisible"></activity>
+            android:windowSoftInputMode="adjustPan|stateVisible"/>
+        <activity android:name=".ui.activity.MyWalletHistoryActivity">
+        </activity>
     </application>
 
 </manifest>

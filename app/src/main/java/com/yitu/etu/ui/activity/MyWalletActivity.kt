@@ -6,11 +6,16 @@ import com.yitu.etu.dialog.InputPriceDialog
 import com.yitu.etu.dialog.WithdrawDialog
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
+import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.util.pay.BuyType
+import com.yitu.etu.util.pay.PayUtil
 import com.yitu.etu.util.post
 import kotlinx.android.synthetic.main.activity_my_wallet.*
 import okhttp3.Call
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.lang.Exception
 
 /**
@@ -24,11 +29,12 @@ class MyWalletActivity : BaseActivity() {
     override fun initActionBar() {
         title = "我的钱包"
         setRightText("记录") {
-            showToast("钱包记录")
+            nextActivity<MyWalletHistoryActivity>()
         }
     }
 
     override fun initView() {
+        EventBus.getDefault().register(this)
         dialog = InputPriceDialog(this, "余额充值")
         withdrawDialog = WithdrawDialog(this, "申请提现")
     }
@@ -78,7 +84,14 @@ class MyWalletActivity : BaseActivity() {
          * 商品购买按钮
          */
         tv_buy.setOnClickListener {
-            nextActivity<ProductListActivity>()
+            val dialog = InputPriceDialog(this, "请输入购买数量")
+            dialog.setHint("请输入购买数量", false)
+            dialog.show()
+            dialog.setRightBtn("确认", "请输入数量") {
+                PayUtil.getInstance(-1, it, "平安符购买", 1, BuyType.TYPE_BUY_P_AN)
+                        .toPayActivity(this)
+                dialog.dismiss()
+            }
         }
 
         /**
@@ -98,5 +111,15 @@ class MyWalletActivity : BaseActivity() {
         }
     }
 
+    @Subscribe
+    fun onEventRefresh(refresh:EventRefresh){
+        if(refresh.classname==className){
+            getData()
+        }
+    }
 
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
 }

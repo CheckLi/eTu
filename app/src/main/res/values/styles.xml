@@ -133,4 +133,8 @@
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/black</item>
     </style>
+    <style name="FullScreenActivity" parent="@style/AppTheme">
+        <item name="android:windowFullscreen">true</item>
+
+    </style>
 </resources>

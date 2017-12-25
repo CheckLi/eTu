@@ -137,3 +137,5 @@ data class Ticket(
 		@SerializedName("created") val created: Int = 0, //1513592543
 		@SerializedName("updated") val updated: Int = 0 //1514093617
 ): Serializable
+
+data class PayBean(var id:Int,var price:Float,var desc:String,var rechargetype: Int,var classname: String,var buyType: Int):Serializable

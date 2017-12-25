@@ -1,8 +1,9 @@
 package com.yitu.etu.ui.activity
 
-import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import com.yitu.etu.entity.MyBoonBean
+import com.yitu.etu.util.pay.BuyType
+import com.yitu.etu.util.pay.PayUtil
 import kotlinx.android.synthetic.main.activity_boon_pay_detail.*
 
 class BoonPayDetailActivity : BaseActivity() {
@@ -27,7 +28,8 @@ class BoonPayDetailActivity : BaseActivity() {
         }
 
         tv_pay.setOnClickListener {
-            nextActivity<PayOrderActivity>("detail" to bean)
+            PayUtil.getInstance(bean.id,bean.price.toFloat(),"购买门票：${bean.name}",BuyType.TYPE_BUY_TICKET)
+                    .toPayActivity(this)
         }
     }
 

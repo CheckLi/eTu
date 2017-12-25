@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.yitu.etu.widget.NoScrollViewPage
+    <com.yitu.etu.widget.NoScrollAndNoAnimViewPage
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
