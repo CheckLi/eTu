@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment
 import android.view.View
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.entity.UserInfo
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 /**
  *
@@ -85,5 +87,13 @@ fun Fragment.userInfo():UserInfo{
  */
 fun Long.getTime(format:String?=null):String{
     return DateUtil.getTime(this.toString(),format)
+}
 
+/**
+ * 格式化金额
+ */
+fun Float.formatPrice():String{
+    val mDfScore = DecimalFormat("#.00")
+    mDfScore.roundingMode = RoundingMode.DOWN
+    return mDfScore.format(this)
 }

@@ -43,7 +43,7 @@ public class ToastUtil {
      * 获取toast
      */
     public static Toast getToast() {
-        Toast toast = Toast.makeText(EtuApplication.getInstance(),"",Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(EtuApplication.getInstance(),"",Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         return toast;
     }

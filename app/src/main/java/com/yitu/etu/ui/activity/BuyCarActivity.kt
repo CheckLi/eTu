@@ -6,7 +6,11 @@ import com.yitu.etu.R
 import com.yitu.etu.entity.BuyCar
 import com.yitu.etu.ui.adapter.BuyCarAdapter
 import com.yitu.etu.util.BuyCarUtil
+import com.yitu.etu.util.formatPrice
 import kotlinx.android.synthetic.main.activity_buy_car2.*
+import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.util.*
 import kotlin.concurrent.thread
 
 class BuyCarActivity : BaseActivity() {
@@ -18,6 +22,10 @@ class BuyCarActivity : BaseActivity() {
         title = "购物车"
         setRightText("商品添加模拟"){
             val by=BuyCar()
+            val mDfScore = DecimalFormat("#.00")
+            mDfScore.roundingMode = RoundingMode.DOWN
+            by.setpPrice(mDfScore.format(Random().nextFloat()*10).toFloat())
+
             BuyCarUtil.addBuyCar(by)
             adapter.addItem(by)
             if(adapter.count==0){
@@ -60,7 +68,7 @@ class BuyCarActivity : BaseActivity() {
     private fun initInfo() {
         totalPrice = adapter.getTotalPrice()
         cb_select_all.isChecked = adapter.checkSelect()
-        tv_total_price.setSpanText("合计：%￥$totalPrice%")
+        initTotalPrice()
     }
 
     override fun initListener() {
@@ -84,7 +92,7 @@ class BuyCarActivity : BaseActivity() {
             } else {
                 totalPrice.minus(price)
             }
-            tv_total_price.setSpanText("合计：%￥$totalPrice%")
+            initTotalPrice()
         })
 
         /**
@@ -99,12 +107,16 @@ class BuyCarActivity : BaseActivity() {
                         initInfo()
                     } else {
                         totalPrice = 0.00f
-                        tv_total_price.setSpanText("合计：%￥$totalPrice%")
+                        initTotalPrice()
                     }
                 }
             }
             true
         }
+    }
+
+    private fun initTotalPrice() {
+        tv_total_price.setSpanText("合计：%￥${totalPrice.formatPrice()}%")
     }
 
     override fun onPause() {

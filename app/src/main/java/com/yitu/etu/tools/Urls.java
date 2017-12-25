@@ -44,4 +44,5 @@ public class Urls {
     public static final String URL_MY_BOON_CENTER_LIST = address + "/ticket/get_my_order";//我的福利中心
     public static final String URL_MY_BOON_CREATE = address + "/ticket/create_order";//我的福利中心
     public static final String URL_MY_BOON_ORDER_DETAIL = address + "/ticket/get_order_info";//我的福利中心
+    public static final String URL_PRODUCT_LIST = address + "/product/getlist";//产品列表
 }

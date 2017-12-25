@@ -115,13 +115,16 @@ public class MapSearchActivity extends BaseActivity {
     }
 
     public void refresh(final boolean isRefresh) {
+        if(isRefresh){
+            showWaitDialog("搜索中...");
+        }
         CloudSearch mCloudSearch = new CloudSearch(this);// 初始化查询类
         mCloudSearch.setOnCloudSearchListener(new CloudSearch.OnCloudSearchListener() {
 
             @Override
             public void onCloudSearched(CloudResult cloudResult, int i) {
                 Log.e("CloudSearch", "CloudSearch");
-
+                hideWaitDialog();
                 if (isRefresh) {
                     if (type == MapsFragment.type_friend) {
                         mapFriendSearchAdapter.clearAll();

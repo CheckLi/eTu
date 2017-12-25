@@ -215,7 +215,7 @@ public class ListSlideView extends ListView {
 	 */
 	private void scrollBack() {
 		isSlided = false;
-		if(scroller!=null) {
+		if(scroller!=null&&itemView!=null) {
 			scroller.startScroll(itemView.getScrollX(), 0, -itemView.getScrollX(),
 					0, Math.abs(itemView.getScrollX()));
 			postInvalidate(); // 刷新itemView

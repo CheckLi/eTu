@@ -28,7 +28,7 @@ public class MapSearchInputActivity extends BaseActivity {
         type = getIntent().getIntExtra("type", MapsFragment.type_scene);
 
         ed_search = (EditText) findViewById(R.id.ed_search);
-
+        ed_search.setSelection(ed_search.getText().length());
     }
 
     @Override

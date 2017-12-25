@@ -6,6 +6,7 @@ import com.huizhuang.zxsq.utils.nextCheckLoginActivity
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.dialog.PayPasswordDialog
+import com.yitu.etu.dialog.TipsDialog
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.eventBusItem.EventClearSuccess
 import com.yitu.etu.tools.GsonCallback
@@ -114,8 +115,13 @@ class AccountManageActivity : BaseActivity() {
          * 退出登陆
          */
         login_out.setOnClickListener {
-            EtuApplication.getInstance().loginOut()
-            finish()
+            val dialog=TipsDialog(this,"温馨提示")
+            dialog.setMessage("确认要退出登陆吗？")
+            dialog.setRightBtn("确认"){
+                EtuApplication.getInstance().loginOut()
+                finish()
+            }
+            dialog.show()
         }
 
     }

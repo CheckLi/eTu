@@ -719,7 +719,7 @@ public class MapsFragment extends SupportMapFragment implements
     public void showNoSceneDialog() {
         if (!hasShowNoScene && type == type_scene) {
             hasShowNoScene = true;
-            ToastUtil.showMessage("无");
+//            ToastUtil.showMessage("无");
         }
     }
 

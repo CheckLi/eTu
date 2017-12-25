@@ -1,10 +1,13 @@
 package com.yitu.etu.ui.fragment
 
 import android.net.Uri
+import com.huizhuang.zxsq.utils.nextCheckLoginActivity
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
+import com.yitu.etu.ui.activity.CircleFirendActivity
 import io.rong.imkit.fragment.ConversationListFragment
 import io.rong.imlib.model.Conversation
+import kotlinx.android.synthetic.main.ly_head.*
 
 /**
  * @className:LYFragment
@@ -50,6 +53,8 @@ class LYFragment : BaseFragment() {
     }
 
     override fun initListener() {
-
+        ll_ly.setOnClickListener {
+            nextCheckLoginActivity<CircleFirendActivity>()
+        }
     }
 }

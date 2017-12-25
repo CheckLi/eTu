@@ -18,19 +18,24 @@ object BuyCarUtil {
         var buys = PrefrersUtil.getInstance().getListClass(AppConstant.PARAM_SAVE_BUY_CAR, BuyCar::class.java)
         if (buys == null || buys.size == 0) {
             buys = arrayListOf(buycar)
+            PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buys)
         } else {
             val temp = arrayListOf(buycar)
             temp.clear()
             buys.forEachIndexed { index, Car ->
                 if (Car.id != buycar.id) {
                     temp.add(buycar)
+                    buys.addAll(temp)
+                    PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buys)
+                    return
                 } else {
                     Car.count++
+                    PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buys)
+                    return
                 }
             }
-            buys.addAll(temp)
         }
-        PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buys)
+
     }
 
 

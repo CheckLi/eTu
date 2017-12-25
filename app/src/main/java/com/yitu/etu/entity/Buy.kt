@@ -19,11 +19,14 @@ data class BuyCar(
         @SerializedName("fxdes") val fxdes: String="",
         @SerializedName("des") val des: String="", //川味鸭子
         @SerializedName("salecount") val salecount: Int=0, //-1
-        @SerializedName("price") val price: Float=0.0f, //1.00
+        @SerializedName("price") var price: Float=0.0f, //1.00
         @SerializedName("is_del") val isDel: Int=-1, //0
         @SerializedName("created") val created: Int=0, //1512541751
         @SerializedName("updated") val updated: Int=0 //1513179321
 ){
     var isCheck: Boolean=true //选中状态
     var count: Int=1 //产品数量
+    fun setpPrice(price:Float){
+        this.price=price
+    }
 }

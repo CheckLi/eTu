@@ -42,7 +42,12 @@ public class ImageShowActivity extends BaseActivity {
                 .placeholder(R.drawable.ic_default_image)
                  .error(R.drawable.ic_default_image)
                 .placeholder(R.drawable.icon17).into(imageView);
-
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 
@@ -54,5 +59,11 @@ public class ImageShowActivity extends BaseActivity {
     @Override
     public void initListener() {
 
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(-1, -1);
     }
 }
