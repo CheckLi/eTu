@@ -36,6 +36,7 @@ import java.util.List;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     public int page = 1;
+    public int size = 10;
     public boolean add = true;
     private LoadingDialog mWaitDialog;
     public static final int REQUEST_LIST_CODE = 0;

@@ -8,9 +8,8 @@ import android.widget.TextView;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.MapOrderSceneEntity;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.util.Tools;
 import com.yitu.etu.widget.GlideApp;
-
-import java.util.List;
 
 /**
  * TODO this class desription here
@@ -20,8 +19,12 @@ import java.util.List;
 public class MapOrderSceneSearchAdapter extends BaseAdapter<MapOrderSceneEntity, MapOrderSceneSearchAdapter.ViewHolder> {
 
 
-    public MapOrderSceneSearchAdapter(Context context, List<MapOrderSceneEntity> data) {
-        super(context, data);
+    private final int px;
+
+    public MapOrderSceneSearchAdapter(Context context) {
+        super(context);
+        px = Tools.dp2px(context, 7);
+
     }
 
     @Override
@@ -39,7 +42,11 @@ public class MapOrderSceneSearchAdapter extends BaseAdapter<MapOrderSceneEntity,
 
     @Override
     public void bindData(int position, View convertView, ViewHolder viewHolder) {
-//        if (type == MapsFragment.type_scene) {
+        if (position == 0) {
+            convertView.setPadding(px, px, px, px);
+        } else {
+            convertView.setPadding(px, 0, px, px);
+        }
         MapOrderSceneEntity data = getItem(position);
         viewHolder.tv_title.setText(data.title);
         viewHolder.tv_address.setText(data.address);
@@ -47,16 +54,7 @@ public class MapOrderSceneSearchAdapter extends BaseAdapter<MapOrderSceneEntity,
                 .load(Urls.address + data.getImage())
                 .centerCrop()
                 .placeholder(R.drawable.icon17).into(viewHolder.image);
-//        } else if (type == MapsFragment.type_friend) {
-//            MapFirendEntity mapFirendEntity = (MapFirendEntity) getItem(position);
-//            viewHolder.tv_title.setText(mapFirendEntity.title);
-//
-//            viewHolder.tv_address.setText(mapFirendEntity.address);
-//        } else if (type == MapsFragment.type_order_scene) {
-//            MapOrderSceneEntity mapOrderSceneEntity = (MapOrderSceneEntity) getItem(position);
-//            viewHolder.tv_title.setText(mapOrderSceneEntity.title);
-//            viewHolder.tv_address.setText(mapOrderSceneEntity.address);
-//        }
+        viewHolder.tv_price.setVisibility(View.INVISIBLE);
     }
 
 

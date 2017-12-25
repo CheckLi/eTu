@@ -8,9 +8,8 @@ import android.widget.TextView;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.MapFriendEntity;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.util.Tools;
 import com.yitu.etu.widget.GlideApp;
-
-import java.util.List;
 
 /**
  * TODO this class desription here
@@ -20,8 +19,12 @@ import java.util.List;
 public class MapFriendSearchAdapter extends BaseAdapter<MapFriendEntity, MapFriendSearchAdapter.ViewHolder> {
 
 
-    public MapFriendSearchAdapter(Context context, List<MapFriendEntity> data) {
-        super(context, data);
+    private final int px;
+
+    public MapFriendSearchAdapter(Context context) {
+        super(context);
+        px = Tools.dp2px(context, 7);
+
     }
 
     @Override
@@ -40,7 +43,12 @@ public class MapFriendSearchAdapter extends BaseAdapter<MapFriendEntity, MapFrie
 
     @Override
     public void bindData(int position, View convertView, ViewHolder viewHolder) {
-//        if (type == MapsFragment.type_scene) {
+        if (position == 0) {
+            convertView.setPadding(px, px, px, px);
+        } else {
+            convertView.setPadding(px, 0, px, px);
+
+        }
         MapFriendEntity data = getItem(position);
         viewHolder.tv_title.setText(data.title);
         viewHolder.tv_address.setText(data.address);
@@ -49,22 +57,14 @@ public class MapFriendSearchAdapter extends BaseAdapter<MapFriendEntity, MapFrie
                 .load(Urls.address + data.getImage())
                 .centerCrop()
                 .placeholder(R.drawable.icon17).into(viewHolder.image);
-//        } else if (type == MapsFragment.type_friend) {
-//            MapFirendEntity mapFirendEntity = (MapFirendEntity) getItem(position);
-//            viewHolder.tv_title.setText(mapFirendEntity.title);
-//
-//            viewHolder.tv_address.setText(mapFirendEntity.address);
-//        } else if (type == MapsFragment.type_order_scene) {
-//            MapOrderSceneEntity mapOrderSceneEntity = (MapOrderSceneEntity) getItem(position);
-//            viewHolder.tv_title.setText(mapOrderSceneEntity.title);
-//            viewHolder.tv_address.setText(mapOrderSceneEntity.address);
-//        }
+        viewHolder.tv_price.setVisibility(View.INVISIBLE);
     }
 
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {
-        TextView tv_title, tv_address,tv_price;
+        TextView tv_title, tv_address, tv_price;
         ImageView image;
+
         @Override
         int getItemLayoutID(int type) {
             return R.layout.item_scene_search_result;

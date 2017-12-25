@@ -2,19 +2,24 @@ package com.yitu.etu.ui.activity;
 
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yitu.etu.R;
 import com.yitu.etu.ui.adapter.CircleFirendAdapter;
 import com.yitu.etu.util.Tools;
+import com.yitu.etu.widget.ListSlideView;
 
 public class SearchResultUserActivity extends BaseActivity {
 
-    private ListView listView;
+    private ListSlideView listView;
+    private SmartRefreshLayout layout_refresh;
 
     @Override
     public int getLayout() {
-        return R.layout.list;
+        return R.layout.activity_circle_firend2;
     }
 
     @Override
@@ -36,13 +41,29 @@ public class SearchResultUserActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        listView = (ListView) findViewById(R.id.listView);
-        int px = Tools.dp2px(this, 10);
-        listView.setPadding(px, 0, px, 0);
-        listView.addHeaderView(getLayoutInflater().inflate(R.layout.activity_search_result_user, null));
+        listView=(ListSlideView) findViewById(R.id.listView);
         listView.setAdapter(new CircleFirendAdapter(this));
-    }
+        listView.addHeaderView(getLayoutInflater().inflate(R.layout.activity_search_result_user, null));
 
+        layout_refresh = (SmartRefreshLayout) findViewById(R.id.layout_refresh);
+        layout_refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                page = 1;
+                refresh(true);
+            }
+        });
+        layout_refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                refresh(false);
+            }
+        });
+    }
+    public void refresh(final boolean isRefresh) {
+        RefreshSuccess(layout_refresh, isRefresh, 10);
+
+    }
     @Override
     public void getData() {
 

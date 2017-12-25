@@ -43,6 +43,10 @@ import com.amap.api.services.cloud.CloudResult;
 import com.amap.api.services.cloud.CloudSearch;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeQuery;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -54,19 +58,21 @@ import com.yitu.etu.entity.MapFriendEntity;
 import com.yitu.etu.entity.MapOrderSceneEntity;
 import com.yitu.etu.entity.MapSceneEntity;
 import com.yitu.etu.entity.MerchantBaseEntity;
-import com.yitu.etu.tools.Urls;
-import com.yitu.etu.ui.activity.CircleFirendActivity;
-import com.yitu.etu.ui.activity.MapSearchActivity;
+import com.yitu.etu.ui.activity.MapSearchInputActivity;
+import com.yitu.etu.ui.adapter.ChooseAreaAdapter;
 import com.yitu.etu.util.PermissionUtil;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.widget.MListView;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import static com.yitu.etu.tools.Urls.address;
 
 /**
  * @className:MapsFragment
@@ -116,7 +122,7 @@ public class MapsFragment extends SupportMapFragment implements
     private TextView tv_address;
     private TextView tv_yj_num;
     private View btn_nai;
-    private String city;
+    private String city = "成都";
     private String road;
 
     @Override
@@ -155,27 +161,22 @@ public class MapsFragment extends SupportMapFragment implements
     }
 
     public void search() {
-        Intent intent = new Intent(getContext(), MapSearchActivity.class);
+        Intent intent = new Intent(getContext(), MapSearchInputActivity.class);
         intent.putExtra("type", type);
-        intent.putExtra("lat", mAmap.getCameraPosition().target.latitude);
-
-        intent.putExtra("lng", mAmap.getCameraPosition().target.longitude);
+        intent.putExtra("city", city);
         startActivity(intent);
+
     }
 
     <T extends MerchantBaseEntity> void showDialog(T merchantEntity, int type) {
         dialog.setVisibility(View.VISIBLE);
-        final Poi start = new Poi("三元桥", new LatLng(39.96087, 116.45798), "");
-        final Poi end = new Poi("北京站", new LatLng(39.904556, 116.427231), "B000A83M61");
-
         if (type == type_order_scene) {
-//            dialog_image.set
             final MapOrderSceneEntity data = (MapOrderSceneEntity) merchantEntity;
             tv_title.setText(data.title);
             tv_address.setText(data.address);
             tv_yj_num.setVisibility(View.GONE);
             GlideApp.with(MapsFragment.this)
-                    .load(Urls.address + data.getImage())
+                    .load(address + data.getImage())
                     .centerCrop()
                     .placeholder(R.drawable.icon17).into(dialog_image);
 
@@ -198,7 +199,7 @@ public class MapsFragment extends SupportMapFragment implements
             tv_address.setText(data.address);
             tv_yj_num.setText(data.yjcount + "条游记");
             GlideApp.with(MapsFragment.this)
-                    .load(Urls.address + data.getImage())
+                    .load(address + data.getImage())
                     .centerCrop()
                     .placeholder(R.drawable.icon17).into(dialog_image);
 
@@ -414,10 +415,11 @@ public class MapsFragment extends SupportMapFragment implements
 
                     } else {
                         clearMapMarker();
+                        showNoSceneDialog();
                     }
                 } else {
                     clearMapMarker();
-
+                    showNoSceneDialog();
                 }
             }
 
@@ -632,7 +634,7 @@ public class MapsFragment extends SupportMapFragment implements
                 amapLocation.getAddress();// 地址，如果option中设置isNeedAddress为false，则没有此结果
                 amapLocation.getCountry();// 国家信息
                 amapLocation.getProvince();// 省信息
-                city = amapLocation.getCity();// 城市信息
+                amapLocation.getCity();// 城市信息
                 amapLocation.getDistrict();// 城区信息
                 road = amapLocation.getRoad();// 街道信息
                 amapLocation.getCityCode();// 城市编码
@@ -676,7 +678,7 @@ public class MapsFragment extends SupportMapFragment implements
             }
         });
         GlideApp.with(MapsFragment.this)
-                .load(Urls.address + data.getImage())
+                .load(address + data.getImage())
                 .circleCrop()
                 .placeholder(R.drawable.icon17)
                 .listener(new RequestListener<Drawable>() {
@@ -709,68 +711,14 @@ public class MapsFragment extends SupportMapFragment implements
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_friend:
-                if (type != type_friend) {
-                    type = type_friend;
-                    btn_type_friend.setVisibility(View.VISIBLE);
-                    sex = "";
-                    clearMapMarker();
-                    toMyLocation(16);
-                    loadInfo();
-                }
-                break;
-            case R.id.btn_order_scene:
-                if (type != type_order_scene) {
-                    type = type_order_scene;
-                    btn_type_friend.setVisibility(View.GONE);
-                    clearMapMarker();
-                    toMyLocation(12);
-                    loadInfo();
-                }
-                break;
-            case R.id.btn_scene:
-                if (type != type_scene) {
-                    type = type_scene;
-                    btn_type_friend.setVisibility(View.GONE);
-                    clearMapMarker();
-                    toMyLocation(12);
-                    loadInfo();
-                }
-                break;
 
-            case R.id.button:
-                playMenuAnimation();
-                break;
-            case R.id.btn_location:
-                toMyLocation(13);
-                break;
-
-            case R.id.btn_nai:
-
-//                startActivity(new Intent(getContext(), NavActivity.class));
-                break;
-            case R.id.btn_type_friend:
-                showSexPop(v);
-                break;
-            case R.id.btn_province:
-
-                Intent intent = new Intent(getContext(), CircleFirendActivity.class);
-                startActivity(intent);
-//                showAreaDialog();
-                search();
-                break;
-
-
-            default:
-                break;
-        }
-    }
+    boolean hasShowNoScene = false;
 
     public void showNoSceneDialog() {
-
+        if (!hasShowNoScene && type == type_scene) {
+            hasShowNoScene = true;
+            ToastUtil.showMessage("无");
+        }
     }
 
     public void showSexPop(View v) {
@@ -797,16 +745,34 @@ public class MapsFragment extends SupportMapFragment implements
                     }
                 }
             }
-        }, null).showAsDropDown(v, 20, 0);
+        }, "left").showAsDropDown(v, 20, 0);
     }
 
 
     public void showAreaDialog() {
+        //构造 GeocodeSearch 对象，并设置监听。
+        GeocodeSearch geocodeSearch = new GeocodeSearch(getContext());
+        geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+            @Override
+            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+
+            }
+
+            @Override
+            public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
+            }
+        });
+//通过GeocodeQuery设置查询参数,调用getFromLocationNameAsyn(GeocodeQuery geocodeQuery) 方法发起请求。
+//address表示地址，第二个参数表示查询城市，中文或者中文全拼，citycode、adcode都ok
+        GeocodeQuery query = new GeocodeQuery(address, "成都");
+        geocodeSearch.getFromLocationNameAsyn(query);
+
         Dialog dialog = new Dialog(getContext(), R.style.LoadingDialog);
-        TextView text = new TextView(getContext());
-        text.setText("dsadsadsad");
-        text.setBackgroundColor(getResources().getColor(R.color.white));
-        dialog.setContentView(text);
+        View view = inflater.inflate(R.layout.dialog_list, null);
+        MListView listView = (MListView) view.findViewById(R.id.listView);
+        listView.setAdapter(new ChooseAreaAdapter(getContext()));
+        dialog.setContentView(view);
         dialog.show();
     }
 
@@ -982,7 +948,7 @@ public class MapsFragment extends SupportMapFragment implements
                 }
             };
             GlideApp.with(MapsFragment.this)
-                    .load(Urls.address + merchantEntity.getImage())
+                    .load(address + merchantEntity.getImage())
                     .circleCrop()
                     .placeholder(R.drawable.icon17)
                     .listener(new RequestListener<Drawable>() {
@@ -1032,6 +998,59 @@ public class MapsFragment extends SupportMapFragment implements
                 fdmarker.destroy();
             }
             simpleTarget.onStop();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_friend:
+                if (type != type_friend) {
+                    type = type_friend;
+                    btn_type_friend.setVisibility(View.VISIBLE);
+                    sex = "";
+                    clearMapMarker();
+                    toMyLocation(16);
+                    loadInfo();
+                }
+                break;
+            case R.id.btn_order_scene:
+                if (type != type_order_scene) {
+                    type = type_order_scene;
+                    btn_type_friend.setVisibility(View.GONE);
+                    clearMapMarker();
+                    toMyLocation(12);
+                    loadInfo();
+                }
+                break;
+            case R.id.btn_scene:
+                if (type != type_scene) {
+                    type = type_scene;
+                    btn_type_friend.setVisibility(View.GONE);
+                    clearMapMarker();
+                    toMyLocation(12);
+                    loadInfo();
+                }
+                break;
+
+            case R.id.button:
+                playMenuAnimation();
+                break;
+            case R.id.btn_location:
+                toMyLocation(13);
+                break;
+            case R.id.btn_type_friend:
+                showSexPop(v);
+                break;
+            case R.id.btn_province:
+//                Intent intent = new Intent(getContext(), CircleFirendActivity.class);
+//                startActivity(intent);
+                showAreaDialog();
+                break;
+
+
+            default:
+                break;
         }
     }
 }
