@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.yitu.etu.Iinterface.ImageSelectListener;
 import com.yitu.etu.R;
+import com.yitu.etu.util.FileUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 
@@ -88,5 +89,11 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
         }
     }
 
-
+    public String getPutString(){
+        StringBuffer buffer=new StringBuffer("");
+        for (String s : data) {
+            buffer.append(FileUtil.GetImageStr(s)+"|");
+        }
+        return buffer.length()>0?buffer.toString().substring(0,buffer.length()-1):"";
+    }
 }

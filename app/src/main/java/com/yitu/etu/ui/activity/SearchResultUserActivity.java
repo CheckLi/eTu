@@ -85,6 +85,7 @@ public class SearchResultUserActivity extends BaseActivity {
         }
         listView.addHeaderView(view);
         layout_refresh = (SmartRefreshLayout) findViewById(R.id.layout_refresh);
+        layout_refresh.setEnableLoadmore(false);
         layout_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
@@ -118,6 +119,7 @@ public class SearchResultUserActivity extends BaseActivity {
             @Override
             public void onError(Call call, Exception e, int i) {
                 hideWaitDialog();
+                layout_refresh.finishRefresh();
             }
 
             @Override

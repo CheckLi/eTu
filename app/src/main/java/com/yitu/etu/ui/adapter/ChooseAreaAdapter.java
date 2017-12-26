@@ -29,12 +29,7 @@ public class ChooseAreaAdapter extends BaseAdapter<String,ChooseAreaAdapter.View
 
     @Override
     public void bindData(int position, View convertView, ViewHolder viewHolder) {
-        viewHolder.text.setText("dsad"+position);
-    }
-
-    @Override
-    public int getCount() {
-        return 2;
+        viewHolder.text.setText(getItem(position));
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {

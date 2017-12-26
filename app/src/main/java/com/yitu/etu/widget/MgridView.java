@@ -53,6 +53,8 @@ public class MgridView extends GridView {
                 curPosition = position;
                 if (position < adapter.getCount() - 1) {
                     isRepleace = true;
+                }else{
+                    isRepleace=false;
                 }
                 ((BaseActivity) getContext()).Single(false);
             }
@@ -89,5 +91,9 @@ public class MgridView extends GridView {
             String path = data.getStringExtra("result");
             add(path);
         }
+    }
+
+    public String getImagePutString() {
+        return adapter.getPutString();
     }
 }

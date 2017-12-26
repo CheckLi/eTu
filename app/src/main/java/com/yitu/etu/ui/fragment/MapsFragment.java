@@ -70,8 +70,6 @@ import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
-import com.yitu.etu.ui.activity.BaseActivity;
-import com.yitu.etu.ui.activity.CircleFirendActivity;
 import com.yitu.etu.ui.activity.MapSearchInputActivity;
 import com.yitu.etu.ui.adapter.ChooseAreaAdapter;
 import com.yitu.etu.util.GsonUtil;
@@ -187,8 +185,8 @@ public class MapsFragment extends SupportMapFragment implements
         if (bundle != null) {
             isChooseScene = bundle.getBoolean("isChooseScene", false);
             if (isChooseScene) {
-                mRoot.findViewById(R.id.btn_province).setVisibility(View.GONE);
-                mRoot.findViewById(R.id.btn_location).setVisibility(View.GONE);
+//                mRoot.findViewById(R.id.btn_province).setVisibility(View.GONE);
+//                mRoot.findViewById(R.id.btn_location).setVisibility(View.GONE);
                 mRoot.findViewById(R.id.btn_menu).setVisibility(View.GONE);
             }
         }
@@ -198,7 +196,8 @@ public class MapsFragment extends SupportMapFragment implements
     public void chooseResult(MapSceneEntity data) {
         Intent intent = new Intent();
         intent.putExtra("data", data);
-        ((BaseActivity) getContext()).setResult(Activity.RESULT_OK, intent);
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
     }
 
     public void search() {
@@ -1266,8 +1265,6 @@ public class MapsFragment extends SupportMapFragment implements
                 showSexPop(v);
                 break;
             case R.id.btn_province:
-                Intent intent = new Intent(getContext(), CircleFirendActivity.class);
-                startActivity(intent);
                 showAreaDialog();
                 break;
             default:

@@ -33,6 +33,7 @@ public class HairDynamicActivity extends BaseActivity {
     @Override
     public void initActionBar() {
         setTitle("发布动态");
+
         mActionBarView.setRightText("发布", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,18 +41,21 @@ public class HairDynamicActivity extends BaseActivity {
                     showToast("请填写内容");
                     return;
                 }
+                showWaitDialog("发布中...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put("text", text.getText().toString().trim());
-                params.put("images", "");
+                params.put("images", gridView.getImagePutString());
                 Http.post(Urls.CIRCLE_ADD, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity.CircleBean>>() {
                     @Override
                     public void onError(Call call, Exception e, int i) {
+                        hideWaitDialog();
                         Log.e("s", "ds");
-
+                        showToast("发布失败");
                     }
 
                     @Override
                     public void onResponse(ObjectBaseEntity<CircleFirendEntity.CircleBean> response, int i) {
+                        hideWaitDialog();
                         if (response.success()) {
                             CircleFirendEntity.UserBean userBean = new CircleFirendEntity.UserBean();
                             UserInfo userInfo = EtuApplication.getInstance().getUserInfo();

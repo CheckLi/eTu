@@ -31,6 +31,7 @@
                 android:minLines="8"/>
 
             <TextView
+                android:id="@+id/tv_address"
                 style="@style/recomment_edit_style"
                 android:gravity="top"
                 android:hint="景区地址   点击定位"

@@ -1,6 +1,7 @@
 package com.yitu.etu.ui.activity
 
 import android.content.Intent
+import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import kotlinx.android.synthetic.main.activity_view_recomment.*
 
@@ -29,6 +30,9 @@ class ViewRecommentActivity : BaseActivity() {
     }
 
     override fun initListener() {
+        tv_address.setOnClickListener {
+            nextActivity<MapSelectActivity>(1001)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
