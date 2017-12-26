@@ -5,7 +5,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.yitu.etu.R;
+import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.Tools;
+import com.yitu.etu.widget.GlideApp;
 
 import java.util.List;
 
@@ -30,13 +32,19 @@ public class ImageAdapter extends BaseAdapter<String, ImageAdapter.ViewHolder> {
     }
 
     @Override
-    public void bindData(int position, View convertView, final ViewHolder viewHolder) {
+    public void bindData(final int position, View convertView, final ViewHolder viewHolder) {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Tools.showImage(getContext(), "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=4166721891,1503444760&fm=27&gp=0.jpg", viewHolder.imageView);
+                Tools.showImage(getContext(), Urls.address+getItem(position), viewHolder.imageView);
             }
         });
+        GlideApp.with(getContext())
+                .load(Urls.address+getItem(position))
+                .placeholder(R.drawable.ic_default_image)
+                .error(R.drawable.ic_default_image)
+                .into(viewHolder.imageView);
+
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {

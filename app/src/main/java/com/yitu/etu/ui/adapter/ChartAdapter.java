@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.huizhuang.zxsq.widget.textview.SpanTextView;
 import com.yitu.etu.R;
+import com.yitu.etu.entity.CircleFirendEntity;
 
 import java.util.List;
 
@@ -13,8 +14,8 @@ import java.util.List;
  * <p>
  * Created by deng meng on 2017/12/21.
  */
-public class ChartAdapter extends BaseAdapter<String, ChartAdapter.ViewHolder> {
-    public ChartAdapter(Context context, List<String> data) {
+public class ChartAdapter extends BaseAdapter<CircleFirendEntity.CommentBean, ChartAdapter.ViewHolder> {
+    public ChartAdapter(Context context, List<CircleFirendEntity.CommentBean> data) {
         super(context, data);
     }
 
@@ -30,7 +31,9 @@ public class ChartAdapter extends BaseAdapter<String, ChartAdapter.ViewHolder> {
 
     @Override
     public void bindData(int position, View convertView, ViewHolder viewHolder) {
-        viewHolder.text.setSpanText("%1321321:%我们");
+        CircleFirendEntity.CommentBean data=getItem(position);
+        String name=data.getUser().getName();
+        viewHolder.text.setSpanText("%"+name+":%"+data.getText());
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {

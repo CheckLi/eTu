@@ -58,4 +58,13 @@ public class Urls {
      money
      */
     public static final String URL_BUY_P_AN = address + "/action/join";
+    public static final String ACTION_COLLECT = address + "/action/collect";//活动收藏
+    public static final String ACTION_INFO=address + "/action/info";//活动详情
+    public static final String CIRCLE_USER_INDEX=address + "/circle/userindex";
+    public static final String CIRCLE_GET_LIST=address + "/circle/getList";
+    public static final String CIRCLE_DELETE=address+"/circle/delCircle";
+    public static final String CIRCLE_ADD_GOOD=address+"/circle/addGood";
+    public static final String CIRCLE_ADD_COMMENT=address+"/circle/addComment";
+    public static final String CIRCLE_ADD=address+"/circle/upCircle";
+
 }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,9 +13,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,24 +57,41 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.gson.reflect.TypeToken;
+import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
+import com.yitu.etu.entity.AreaEntity;
+import com.yitu.etu.entity.CityEntity;
 import com.yitu.etu.entity.MapFriendEntity;
 import com.yitu.etu.entity.MapOrderSceneEntity;
 import com.yitu.etu.entity.MapSceneEntity;
 import com.yitu.etu.entity.MerchantBaseEntity;
+import com.yitu.etu.entity.ObjectBaseEntity;
+import com.yitu.etu.tools.GsonCallback;
+import com.yitu.etu.tools.Http;
+import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.activity.BaseActivity;
+import com.yitu.etu.ui.activity.CircleFirendActivity;
 import com.yitu.etu.ui.activity.MapSearchInputActivity;
 import com.yitu.etu.ui.adapter.ChooseAreaAdapter;
+import com.yitu.etu.util.GsonUtil;
 import com.yitu.etu.util.PermissionUtil;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.widget.GlideApp;
 import com.yitu.etu.widget.MListView;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.Call;
 
 import static com.yitu.etu.tools.Urls.address;
 
@@ -124,6 +145,8 @@ public class MapsFragment extends SupportMapFragment implements
     private View btn_nai;
     private String city = "成都";
     private String road;
+    Boolean isChooseScene = false;
+    private TextView btn_collect;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -137,6 +160,9 @@ public class MapsFragment extends SupportMapFragment implements
         mRoot.findViewById(R.id.btn_order_scene).setOnClickListener(this);
         mRoot.findViewById(R.id.btn_scene).setOnClickListener(this);
         mRoot.findViewById(R.id.btn_province).setOnClickListener(this);
+        btn_collect = (TextView) mRoot.findViewById(R.id.btn_collect);
+
+
         btn_type_friend.setOnClickListener(this);
         mButton = (ImageView) mRoot.findViewById(R.id.button);
         mButton.setOnClickListener(this);
@@ -157,7 +183,22 @@ public class MapsFragment extends SupportMapFragment implements
             PermissionUtil.requestPermissions(this, 100, Manifest.permission.ACCESS_COARSE_LOCATION);
         }
         initMap();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            isChooseScene = bundle.getBoolean("isChooseScene", false);
+            if (isChooseScene) {
+                mRoot.findViewById(R.id.btn_province).setVisibility(View.GONE);
+                mRoot.findViewById(R.id.btn_location).setVisibility(View.GONE);
+                mRoot.findViewById(R.id.btn_menu).setVisibility(View.GONE);
+            }
+        }
         return mRoot;
+    }
+
+    public void chooseResult(MapSceneEntity data) {
+        Intent intent = new Intent();
+        intent.putExtra("data", data);
+        ((BaseActivity) getContext()).setResult(Activity.RESULT_OK, intent);
     }
 
     public void search() {
@@ -193,6 +234,12 @@ public class MapsFragment extends SupportMapFragment implements
                     }
                 }
             });
+            btn_collect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActionCollect(data.title_id);
+                }
+            });
         } else if (type == type_scene) {
             tv_yj_num.setVisibility(View.VISIBLE);
             final MapSceneEntity data = (MapSceneEntity) merchantEntity;
@@ -218,6 +265,32 @@ public class MapsFragment extends SupportMapFragment implements
                     }
                 }
             });
+        }
+    }
+
+    //活动收藏
+    public void ActionCollect(String id) {
+        if (EtuApplication.getInstance().isLogin()) {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("action_id", id);
+            Http.post(Urls.ACTION_COLLECT, params, new GsonCallback<ObjectBaseEntity<MerchantBaseEntity>>() {
+                @Override
+                public void onError(Call call, Exception e, int i) {
+                }
+
+                @Override
+                public void onResponse(ObjectBaseEntity<MerchantBaseEntity> response, int i) {
+                    if (response.success()) {
+                        ToastUtil.showMessage("收藏成功");
+                    } else {
+                        ToastUtil.showMessage(response.getMessage());
+                    }
+                }
+            });
+        }
+
+        else{
+            ToastUtil.showMessage("请登录");
         }
     }
 
@@ -262,6 +335,10 @@ public class MapsFragment extends SupportMapFragment implements
 
 
                     if (marker.getObject() == null) {
+                        return true;
+                    }
+                    if (isChooseScene) {
+                        chooseResult((MapSceneEntity) marker.getObject());
                         return true;
                     }
                     markerClick = marker;
@@ -639,6 +716,9 @@ public class MapsFragment extends SupportMapFragment implements
                 amapLocation.getCity();// 城市信息
                 amapLocation.getDistrict();// 城区信息
                 road = amapLocation.getRoad();// 街道信息
+                if (road == null) {
+                    road = "";
+                }
                 amapLocation.getCityCode();// 城市编码
                 amapLocation.getAdCode();// 地区编码
                 if (mMyLocationPoint == null) {
@@ -719,7 +799,7 @@ public class MapsFragment extends SupportMapFragment implements
     public void showNoSceneDialog() {
         if (!hasShowNoScene && type == type_scene) {
             hasShowNoScene = true;
-//            ToastUtil.showMessage("无");
+            ToastUtil.showMessage("无");
         }
     }
 
@@ -750,31 +830,175 @@ public class MapsFragment extends SupportMapFragment implements
         }, "left").showAsDropDown(v, 20, 0);
     }
 
-
-    public void showAreaDialog() {
-        //构造 GeocodeSearch 对象，并设置监听。
+    public void getArealatlng(String address, final String city) {
         GeocodeSearch geocodeSearch = new GeocodeSearch(getContext());
         geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
             public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-
+                Log.e("onRegeocodeSearched: ", "ds");
             }
 
             @Override
             public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+                Log.e("onRegeocodeSearched: ", "ds");
+                MapsFragment.this.city = city;
+                if (geocodeResult != null && geocodeResult.getGeocodeAddressList() != null && geocodeResult.getGeocodeAddressList().size() > 0) {
+                    LatLonPoint latLonPoint = geocodeResult.getGeocodeAddressList().get(0).getLatLonPoint();
+                    mAmap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(latLonPoint.getLatitude(), latLonPoint.getLongitude())));
+                    mAmap.moveCamera(CameraUpdateFactory.zoomTo(12));
+                }
+            }
+        });
+        GeocodeQuery query = new GeocodeQuery(address, city);
+        geocodeSearch.getFromLocationNameAsyn(query);
+    }
+
+    ArrayList<AreaEntity> areaEntitys;
+
+    public void showAreaDialog() {
+        //构造 GeocodeSearch 对象，并设置监听。
+        try {
+            if (areaEntitys == null) {
+                InputStream is = getResources().getAssets().open("city.json");
+                InputStreamReader streamReader = new InputStreamReader(is);
+                BufferedReader reader = new BufferedReader(streamReader);
+                String line;
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                areaEntitys = GsonUtil.gson().fromJson(stringBuilder.toString(), new TypeToken<ArrayList<AreaEntity>>() {
+                }.getType());
+                reader.close();
+                reader.close();
+                is.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        final Dialog dialog = new Dialog(getContext(), R.style.LoadingDialog);
+        View view = inflater.inflate(R.layout.dialog_list, null);
+        TextView dialog_title = (TextView) view.findViewById(R.id.tv_title);
+        MListView listView = (MListView) view.findViewById(R.id.listView);
+        ChooseAreaAdapter chooseAreaAdapter = new ChooseAreaAdapter(getContext());
+        listView.setAdapter(chooseAreaAdapter);
+        List<String> data = new ArrayList<>();
+        for (AreaEntity areaEntity :
+                areaEntitys) {
+            data.add(areaEntity.getName());
+        }
+        dialog_title.setText("选择省");
+        chooseAreaAdapter.addData(data);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.dismiss();
+                showCityDialog(position);
 
             }
         });
-//通过GeocodeQuery设置查询参数,调用getFromLocationNameAsyn(GeocodeQuery geocodeQuery) 方法发起请求。
-//address表示地址，第二个参数表示查询城市，中文或者中文全拼，citycode、adcode都ok
-        GeocodeQuery query = new GeocodeQuery(address, "成都");
-        geocodeSearch.getFromLocationNameAsyn(query);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        Window window = dialog.getWindow();
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        window.setGravity(Gravity.CENTER);
+        dialog.setContentView(view);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.FILL_PARENT;
+        lp.height = WindowManager.LayoutParams.FILL_PARENT;
+        window.setAttributes(lp);
 
-        Dialog dialog = new Dialog(getContext(), R.style.LoadingDialog);
+        dialog.show();
+    }
+
+    public void showCityDialog(int position) {
+        final List<CityEntity> city = areaEntitys.get(position).getCity();
+        final Dialog dialog = new Dialog(getContext(), R.style.LoadingDialog);
+        final View view = inflater.inflate(R.layout.dialog_list, null);
+        MListView listView = (MListView) view.findViewById(R.id.listView);
+        TextView dialog_title = (TextView) view.findViewById(R.id.tv_title);
+
+        ChooseAreaAdapter chooseAreaAdapter = new ChooseAreaAdapter(getContext());
+        listView.setAdapter(chooseAreaAdapter);
+        List<String> data = new ArrayList<>();
+        for (CityEntity cityEntity :
+                city) {
+            if (!cityEntity.getName().equals("其他") && !cityEntity.getName().equals("其它")) {
+                data.add(cityEntity.getName());
+            }
+        }
+        chooseAreaAdapter.addData(data);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.dismiss();
+                CityEntity cityEntity = city.get(position);
+                if (cityEntity.getArea() != null && cityEntity.getArea().size() > 0) {
+                    showCountyDialog(cityEntity);
+                } else {
+                    getArealatlng(cityEntity.getName(), cityEntity.getName());
+                }
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog_title.setText("选择市");
+        Window window = dialog.getWindow();
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        window.setGravity(Gravity.CENTER);
+        dialog.setContentView(view);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.FILL_PARENT;
+        lp.height = WindowManager.LayoutParams.FILL_PARENT;
+        window.setAttributes(lp);
+        dialog.show();
+    }
+
+    public void showCountyDialog(final CityEntity cityEntity) {
+        final Dialog dialog = new Dialog(getContext(), R.style.LoadingDialog);
         View view = inflater.inflate(R.layout.dialog_list, null);
         MListView listView = (MListView) view.findViewById(R.id.listView);
-        listView.setAdapter(new ChooseAreaAdapter(getContext()));
+        TextView dialog_title = (TextView) view.findViewById(R.id.tv_title);
+        dialog_title.setText("选择县");
+        ChooseAreaAdapter chooseAreaAdapter = new ChooseAreaAdapter(getContext());
+        listView.setAdapter(chooseAreaAdapter);
+        List<String> data = new ArrayList<>();
+        for (String mdata :
+                cityEntity.getArea()) {
+            if (!cityEntity.getName().equals("其他") && !cityEntity.getName().equals("其它")) {
+                data.add(mdata);
+            }
+        }
+        chooseAreaAdapter.addData(data);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.dismiss();
+                getArealatlng(cityEntity.getArea().get(position), cityEntity.getName());
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        Window window = dialog.getWindow();
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        window.setGravity(Gravity.CENTER);
         dialog.setContentView(view);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.FILL_PARENT;
+        lp.height = WindowManager.LayoutParams.FILL_PARENT;
+        window.setAttributes(lp);
         dialog.show();
     }
 
@@ -971,7 +1195,6 @@ public class MapsFragment extends SupportMapFragment implements
         }
 
         public void hiddenFd() {
-            T S = merchantEntity;
             if (fdmarker != null) {
                 fdmarker.setVisible(false);
 //                fdmarker.setZIndex(fdmarker.getZIndex() - 3);
@@ -980,7 +1203,6 @@ public class MapsFragment extends SupportMapFragment implements
         }
 
         public void showFd() {
-            T S = merchantEntity;
             if (fdmarker != null) {
                 marker.setVisible(false);
                 fdmarker.setZIndex(fdmarker.getZIndex() + 3);
@@ -1034,7 +1256,6 @@ public class MapsFragment extends SupportMapFragment implements
                     loadInfo();
                 }
                 break;
-
             case R.id.button:
                 playMenuAnimation();
                 break;
@@ -1045,12 +1266,10 @@ public class MapsFragment extends SupportMapFragment implements
                 showSexPop(v);
                 break;
             case R.id.btn_province:
-//                Intent intent = new Intent(getContext(), CircleFirendActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getContext(), CircleFirendActivity.class);
+                startActivity(intent);
                 showAreaDialog();
                 break;
-
-
             default:
                 break;
         }

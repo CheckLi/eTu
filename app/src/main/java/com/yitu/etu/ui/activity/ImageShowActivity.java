@@ -41,7 +41,7 @@ public class ImageShowActivity extends BaseActivity {
                 .load(path)
                 .placeholder(R.drawable.ic_default_image)
                  .error(R.drawable.ic_default_image)
-                .placeholder(R.drawable.icon17).into(imageView);
+                .into(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

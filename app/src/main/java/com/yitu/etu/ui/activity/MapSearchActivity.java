@@ -93,9 +93,19 @@ public class MapSearchActivity extends BaseActivity {
                 if (type == MapsFragment.type_scene) {
                     setTitle("dsad");
                 } else if (type == MapsFragment.type_friend) {
-                    startActivity(new Intent(MapSearchActivity.this, SearchResultUserActivity.class));
+                    MapFriendEntity data=   mapFriendSearchAdapter.getData().get(position-1);
+                    Intent intent =new Intent(MapSearchActivity.this, SearchResultUserActivity.class);
+                    intent.putExtra("user_id",data.user_id);
+                    intent.putExtra("image",data.image);
+                    intent.putExtra("sex",data.sex);
+                    intent.putExtra("title",data.title);
+                    startActivity(intent);
                 } else if (type == MapsFragment.type_order_scene) {
-                    startActivity(new Intent(MapSearchActivity.this, SearchResultOrderSceneActivity.class));
+                    MapOrderSceneEntity data = mapOrderSceneSearchAdapter.getItem(position-1);
+                    Intent intent = new Intent(MapSearchActivity.this, SearchResultOrderSceneActivity.class);
+                    intent.putExtra("title", data.title);
+                    intent.putExtra("id", data.title_id);
+                    startActivity(intent);
                 }
 
             }
@@ -115,7 +125,7 @@ public class MapSearchActivity extends BaseActivity {
     }
 
     public void refresh(final boolean isRefresh) {
-        if(isRefresh){
+        if (isRefresh) {
             showWaitDialog("搜索中...");
         }
         CloudSearch mCloudSearch = new CloudSearch(this);// 初始化查询类
@@ -163,8 +173,6 @@ public class MapSearchActivity extends BaseActivity {
                                 mapOrderSceneEntity.address = cloudItem.getSnippet();
                                 mapOrderSceneEntity.id = mapOrderSceneEntity.title_id;
                                 mapOrderSceneEntitys.add(mapOrderSceneEntity);
-
-
                             } else if (type == MapsFragment.type_scene) {
                                 MapSceneEntity mapSceneEntity = new MapSceneEntity();
                                 mapSceneEntity.latLonPoint = cloudItem.getLatLonPoint();
