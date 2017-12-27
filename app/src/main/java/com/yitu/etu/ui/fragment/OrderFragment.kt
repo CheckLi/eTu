@@ -52,6 +52,9 @@ class OrderFragment :BaseFragment(){
     }
 
     private fun refresh(isRefresh:Boolean) {
+        if(isRefresh){
+            RefreshSuccessInit(layout_refresh, isRefresh)
+        }
         post(Urls.URL_ORDER_LIST_USE, hashMapOf("page" to page.toString(), "type" to type.toString()), object : GsonCallback<ArrayBaseEntity<OrderList>>() {
             override fun onResponse(response: ArrayBaseEntity<OrderList>, id: Int) {
                 hideWaitDialog()
@@ -73,7 +76,7 @@ class OrderFragment :BaseFragment(){
 
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 hideWaitDialog()
-                RefreshSuccess(layout_refresh,isRefresh,0)
+                RefreshSuccessInit(layout_refresh, isRefresh)
                 showToast("订单获取失败")
             }
 

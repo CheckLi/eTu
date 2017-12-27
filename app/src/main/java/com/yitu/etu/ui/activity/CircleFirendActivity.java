@@ -84,6 +84,7 @@ public class CircleFirendActivity extends BaseActivity {
         if (isRefresh) {
             showWaitDialog("加载中...");
             page = 1;
+            RefreshSuccessInit(layout_refresh,isRefresh);
         }
         HashMap<String, String> params = new HashMap<>();
         params.put("page", page + "");

@@ -64,6 +64,9 @@ class RouteFragment : BaseFragment() {
     }
 
     fun postData(url: String, isRefresh: Boolean) {
+        if(isRefresh){
+            RefreshSuccessInit(layout_refresh, isRefresh)
+        }
         post(url, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyRouteBean>>() {
             override fun onResponse(response: ArrayBaseEntity<MyRouteBean>, id: Int) {
                 hideWaitDialog()
@@ -85,7 +88,7 @@ class RouteFragment : BaseFragment() {
 
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 hideWaitDialog()
-                RefreshSuccess(layout_refresh, isRefresh, 0)
+                RefreshSuccessInit(layout_refresh, isRefresh)
                 showToast("行程获取失败")
             }
 

@@ -89,6 +89,7 @@ public class SearchResultUserActivity extends BaseActivity {
         layout_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
+                RefreshSuccessInit(layout_refresh,true);
                 getUserIndex();
             }
         });
@@ -96,6 +97,9 @@ public class SearchResultUserActivity extends BaseActivity {
     }
 
     public void refresh(final boolean isRefresh) {
+        if(isRefresh) {
+            RefreshSuccessInit(layout_refresh, isRefresh);
+        }
         RefreshSuccess(layout_refresh, isRefresh, 10);
 
     }

@@ -133,4 +133,16 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
+    /**
+     * 初始化刷新状态
+     * @param smart
+     */
+    public void RefreshSuccessInit(SmartRefreshLayout smart,boolean isRefresh){
+        smart.finishRefresh();
+        smart.finishLoadmore();
+        if(isRefresh) {
+            page = 1;
+            add = true;
+        }
+    }
 }

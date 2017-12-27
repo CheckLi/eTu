@@ -36,6 +36,9 @@ class BoonActivity : BaseActivity() {
     }
 
     fun refresh(isRefresh: Boolean) {
+        if(isRefresh){
+            RefreshSuccessInit(layout_refresh,isRefresh)
+        }
         post(Urls.URL_MY_BOON_LIST, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyBoonBean>>() {
             override fun onResponse(response: ArrayBaseEntity<MyBoonBean>, id: Int) {
                 hideWaitDialog()
@@ -57,7 +60,7 @@ class BoonActivity : BaseActivity() {
 
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 hideWaitDialog()
-                RefreshSuccess(layout_refresh, isRefresh, 0)
+                RefreshSuccessInit(layout_refresh,isRefresh)
                 showToast("福利获取失败")
             }
 

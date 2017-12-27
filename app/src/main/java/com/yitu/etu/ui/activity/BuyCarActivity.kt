@@ -34,6 +34,7 @@ class BuyCarActivity : BaseActivity() {
                 data_empty_view.visibility = View.GONE
             }
             listview.slideBack()
+            initInfo()
         }
     }
 

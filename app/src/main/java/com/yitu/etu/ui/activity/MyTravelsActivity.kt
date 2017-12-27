@@ -37,6 +37,9 @@ class MyTravelsActivity : BaseActivity() {
     }
 
      fun refresh(isRefresh:Boolean) {
+         if (isRefresh) {
+             RefreshSuccessInit(layout_refresh,isRefresh)
+         }
         post(Urls.URL_MY_TRAVELS, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyTravels>>() {
             override fun onResponse(response: ArrayBaseEntity<MyTravels>, id: Int) {
                 hideWaitDialog()
@@ -58,7 +61,7 @@ class MyTravelsActivity : BaseActivity() {
 
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 hideWaitDialog()
-                RefreshSuccess(layout_refresh, isRefresh, 0)
+                RefreshSuccessInit(layout_refresh,isRefresh)
                 showToast("游记获取失败")
             }
 

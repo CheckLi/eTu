@@ -130,9 +130,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (requestCode == REQUEST_LIST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> pathList = data.getStringArrayListExtra("result");
             selectSuccess(pathList);
+            if(pathList.size()>0){
+                imageResult(pathList.get(0));
+            }
         } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK && data != null) {
             String path = data.getStringExtra("result");
             selectSuccess(path);
+            imageResult(path);
         }
     }
 
@@ -194,6 +198,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mWaitDialog != null) {
             mWaitDialog.hideDialog();
         }
+    }
+
+    public void imageResult(String path){
+
     }
 
     public void selectSuccess(String path) {
@@ -321,5 +329,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         smart.setEnableLoadmore(add);
 
+    }
+
+    /**
+     * 初始化刷新状态
+     * @param smart
+     */
+    public void RefreshSuccessInit(SmartRefreshLayout smart,boolean isRefresh){
+        smart.finishRefresh();
+        smart.finishLoadmore();
+        if(isRefresh) {
+            page = 1;
+            add = true;
+        }
     }
 }

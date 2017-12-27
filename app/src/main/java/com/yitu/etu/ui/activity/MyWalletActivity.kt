@@ -67,8 +67,10 @@ class MyWalletActivity : BaseActivity() {
          * 充值
          */
         tv_wallet_recharge.setOnClickListener {
-            dialog.setRightBtn("确认") {
-                showToast("充值")
+            dialog.setRightBtn("确认","请输入充值金额") {
+                PayUtil.getInstance(-1, it, "余额充值", 0, BuyType.TYPE_BUY_P_AN)
+                        .toPayActivity(this)
+                dialog.dismiss()
             }
             dialog.show()
         }

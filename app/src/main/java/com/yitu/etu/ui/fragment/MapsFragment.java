@@ -292,6 +292,7 @@ public class MapsFragment extends SupportMapFragment implements
             ToastUtil.showMessage("请登录");
         }
     }
+
     //活动收藏
     public void ActionCollect(String id) {
         if (EtuApplication.getInstance().isLogin()) {
@@ -311,9 +312,7 @@ public class MapsFragment extends SupportMapFragment implements
                     }
                 }
             });
-        }
-
-        else{
+        } else {
             ToastUtil.showMessage("请登录");
         }
     }
@@ -639,6 +638,8 @@ public class MapsFragment extends SupportMapFragment implements
 
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
+
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.user_position));
         mAmap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
 //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
         mAmap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
@@ -821,7 +822,7 @@ public class MapsFragment extends SupportMapFragment implements
     boolean hasShowNoScene = false;
 
     public void showNoSceneDialog() {
-        if ((!isChooseScene)&&(!hasShowNoScene)&& type == type_scene) {
+        if ((!isChooseScene) && (!hasShowNoScene) && type == type_scene) {
             hasShowNoScene = true;
             ToastUtil.showMessage("无");
         }

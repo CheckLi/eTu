@@ -49,6 +49,9 @@ class HistoryPAnFragment : BaseFragment() {
     }
 
     private fun refresh(isRefresh: Boolean) {
+        if(isRefresh) {
+            RefreshSuccessInit(layout_refresh, isRefresh)
+        }
         post(if(type==0) Urls.URL_HISTORY_P_AN else Urls.URL_HISTORY_YU_E, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<HistoryPanBean>>() {
             override fun onResponse(response: ArrayBaseEntity<HistoryPanBean>, id: Int) {
                 hideWaitDialog()
@@ -70,7 +73,7 @@ class HistoryPAnFragment : BaseFragment() {
 
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 hideWaitDialog()
-                RefreshSuccess(layout_refresh, isRefresh, 0)
+                RefreshSuccessInit(layout_refresh, isRefresh)
                 showToast("记录取失败")
             }
 

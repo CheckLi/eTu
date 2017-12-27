@@ -75,7 +75,7 @@ class MyCertificationActivity : BaseActivity() {
          */
         fl_card_front.setOnClickListener {
             position = 0
-            Single(true)
+            Single(false)
         }
 
         /**

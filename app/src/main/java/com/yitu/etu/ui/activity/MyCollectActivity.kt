@@ -35,6 +35,9 @@ class MyCollectActivity : BaseActivity() {
     }
 
     fun refresh(isRefresh: Boolean) {
+        if(isRefresh){
+            RefreshSuccessInit(layout_refresh,isRefresh)
+        }
         post(Urls.URL_MY_COLLECT, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyCollectBean>>() {
             override fun onResponse(response: ArrayBaseEntity<MyCollectBean>, id: Int) {
                 hideWaitDialog()
@@ -56,7 +59,7 @@ class MyCollectActivity : BaseActivity() {
 
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 hideWaitDialog()
-                RefreshSuccess(layout_refresh, isRefresh, 0)
+                RefreshSuccessInit(layout_refresh,isRefresh)
                 showToast("收藏获取失败")
             }
 

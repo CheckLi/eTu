@@ -30,6 +30,9 @@ class ProductListActivity : BaseActivity() {
     }
 
     fun refresh(isRefresh: Boolean) {
+        if(isRefresh){
+            RefreshSuccessInit(layout_refresh,isRefresh)
+        }
         post(Urls.URL_PRODUCT_LIST, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<ProductListBean>>() {
             override fun onResponse(response: ArrayBaseEntity<ProductListBean>, id: Int) {
                 hideWaitDialog()
@@ -51,7 +54,7 @@ class ProductListActivity : BaseActivity() {
 
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 hideWaitDialog()
-                RefreshSuccess(layout_refresh, isRefresh, 0)
+                RefreshSuccessInit(layout_refresh, isRefresh)
                 showToast("收藏获取失败")
             }
 

@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.DialogInterface
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import com.yitu.etu.tools.InputFilterHelper
+import com.yitu.etu.ui.activity.RegistXyActivity
 import com.yitu.etu.util.showToast
 import kotlinx.android.synthetic.main.input_price_dialog.*
 
@@ -25,7 +27,7 @@ class InputPriceDialog : Dialog {
             dismiss()
         }
         tv_buy_xy.setOnClickListener {
-            context.showToast("没有找到接口")
+            context.nextActivity<RegistXyActivity>("type" to "2")
         }
         tv_input_price.filters = arrayOf(InputFilterHelper.getNumberInputFilter(10))
         setCancelable(true)
