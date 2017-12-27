@@ -62,6 +62,7 @@ import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.AreaEntity;
 import com.yitu.etu.entity.CityEntity;
+import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.MapFriendEntity;
 import com.yitu.etu.entity.MapOrderSceneEntity;
 import com.yitu.etu.entity.MapSceneEntity;
@@ -251,6 +252,12 @@ public class MapsFragment extends SupportMapFragment implements
                     .error(R.drawable.etu_default)
                     .placeholder(R.drawable.etu_default).into(dialog_image);
 
+            btn_collect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    spotCollect(data.spot_id);
+                }
+            });
 
             btn_nai.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -267,6 +274,24 @@ public class MapsFragment extends SupportMapFragment implements
         }
     }
 
+    public void spotCollect(String id) {
+        if (EtuApplication.getInstance().isLogin()) {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("spot_id", id);
+            Http.post(Urls.SPOT_COLLECT, params, new GsonCallback<HttpStateEntity>() {
+                @Override
+                public void onError(Call call, Exception e, int i) {
+                }
+
+                @Override
+                public void onResponse(HttpStateEntity response, int i) {
+                    ToastUtil.showMessage(response.getMessage());
+                }
+            });
+        } else {
+            ToastUtil.showMessage("请登录");
+        }
+    }
     //活动收藏
     public void ActionCollect(String id) {
         if (EtuApplication.getInstance().isLogin()) {
@@ -796,7 +821,7 @@ public class MapsFragment extends SupportMapFragment implements
     boolean hasShowNoScene = false;
 
     public void showNoSceneDialog() {
-        if (!hasShowNoScene && type == type_scene) {
+        if ((!isChooseScene)&&(!hasShowNoScene)&& type == type_scene) {
             hasShowNoScene = true;
             ToastUtil.showMessage("无");
         }

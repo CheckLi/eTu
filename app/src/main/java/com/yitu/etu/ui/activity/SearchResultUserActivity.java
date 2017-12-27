@@ -112,7 +112,7 @@ public class SearchResultUserActivity extends BaseActivity {
 
     //活动收藏
     public void getUserIndex() {
-        showWaitDialog("加载中...");
+        showWaitDialog("收藏中...");
         HashMap<String, String> params = new HashMap<>();
         params.put("user_id", data.user_id);
         Http.post(Urls.CIRCLE_USER_INDEX, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity>>() {

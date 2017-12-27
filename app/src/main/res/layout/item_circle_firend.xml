@@ -101,11 +101,12 @@
 
                 <ImageView
                     android:id="@+id/img_pl"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/icon79" />
+                    android:layout_width="32dp"
+                    android:layout_height="27dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon79" />
             </LinearLayout>
 
             <com.yitu.etu.widget.MgridView

@@ -67,4 +67,10 @@ public class Urls {
     public static final String CIRCLE_ADD_COMMENT=address+"/circle/addComment";
     public static final String CIRCLE_ADD=address+"/circle/upCircle";
 
+    public static final String SPOT_INFO=address+"/spot/info";
+    public static final String SPOT_GET_COMMENT=address+"/spot/getComment";
+    public static final String SPOT_ADD_GOOD=address+"/spot/addGood";
+    public static final String SPOT_ADD_COMMENT=address+"/spot/addComment";
+    public static final String SPOT_COLLECT=address+"/spot/collect";
+
 }

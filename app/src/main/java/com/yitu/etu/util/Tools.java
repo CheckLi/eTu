@@ -53,7 +53,7 @@ public class Tools {
         ((BaseActivity)context).overridePendingTransition(0, 0);
     }
 
-    public static PopupWindow getPopupWindow(Context context, String[] strings, AdapterView.OnItemClickListener onItemClick, String bgType) {
+    public static PopupWindow getPopupWindow(Context context, String[] strings, final AdapterView.OnItemClickListener onItemClick, String bgType) {
         ArrayList list = new ArrayList();
 
         TextPaint newPaint = new TextPaint();
@@ -67,7 +67,7 @@ public class Tools {
             maxLength = Math.max((int) newPaint.measureText(str), maxLength);
             list.add(map);
         }
-        PopupWindow popupWindow = new PopupWindow(context);
+        final PopupWindow popupWindow = new PopupWindow(context);
         popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);
@@ -82,7 +82,13 @@ public class Tools {
         ListView listView = (ListView) view.findViewById(R.id.listView);
         listView.setLayoutParams(new LinearLayout.LayoutParams(maxLength + dp2px(context, 3), LinearLayout.LayoutParams.WRAP_CONTENT));
         listView.setAdapter(new SimpleAdapter(context, list, R.layout.item_pop, new String[]{"data"}, new int[]{R.id.text}));
-        listView.setOnItemClickListener(onItemClick);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onItemClick.onItemClick(parent,view,position,id);
+                popupWindow.dismiss();
+            }
+        });
         popupWindow.setContentView(view);
         return popupWindow;
 

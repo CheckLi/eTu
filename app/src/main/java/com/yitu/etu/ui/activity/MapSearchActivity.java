@@ -90,24 +90,27 @@ public class MapSearchActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (type == MapsFragment.type_scene) {
-                    setTitle("dsad");
-                } else if (type == MapsFragment.type_friend) {
-                    MapFriendEntity data=   mapFriendSearchAdapter.getData().get(position-1);
-                    Intent intent =new Intent(MapSearchActivity.this, SearchResultUserActivity.class);
-                    intent.putExtra("user_id",data.user_id);
-                    intent.putExtra("image",data.image);
-                    intent.putExtra("sex",data.sex);
-                    intent.putExtra("title",data.title);
-                    startActivity(intent);
-                } else if (type == MapsFragment.type_order_scene) {
-                    MapOrderSceneEntity data = mapOrderSceneSearchAdapter.getItem(position-1);
-                    Intent intent = new Intent(MapSearchActivity.this, SearchResultOrderSceneActivity.class);
-                    intent.putExtra("title", data.title);
-                    intent.putExtra("id", data.title_id);
-                    startActivity(intent);
+                if (position != 0) {
+                    if (type == MapsFragment.type_scene) {
+                        Intent intent = new Intent(MapSearchActivity.this, SearchResultSceneActivity.class);
+                        intent.putExtra("id", mapSceneSearchAdapter.getItem(position - 1).spot_id);
+                        startActivity(intent);
+                    } else if (type == MapsFragment.type_friend) {
+                        MapFriendEntity data = mapFriendSearchAdapter.getData().get(position - 1);
+                        Intent intent = new Intent(MapSearchActivity.this, SearchResultUserActivity.class);
+                        intent.putExtra("user_id", data.user_id);
+                        intent.putExtra("image", data.image);
+                        intent.putExtra("sex", data.sex);
+                        intent.putExtra("title", data.title);
+                        startActivity(intent);
+                    } else if (type == MapsFragment.type_order_scene) {
+                        MapOrderSceneEntity data = mapOrderSceneSearchAdapter.getItem(position - 1);
+                        Intent intent = new Intent(MapSearchActivity.this, SearchResultOrderSceneActivity.class);
+                        intent.putExtra("title", data.title);
+                        intent.putExtra("id", data.title_id);
+                        startActivity(intent);
+                    }
                 }
-
             }
         });
         refresh(true);
