@@ -88,7 +88,7 @@ class MyShopActivity : BaseActivity() {
             }
         }
         showWaitDialog("保存中...")
-        post(Urls.URL_GET_USER_SHOP_DETAIL, params, object : GsonCallback<ObjectBaseEntity<Shop>>() {
+        post(Urls.URL_SAVE_USER_SHOP_DETAIL, params, object : GsonCallback<ObjectBaseEntity<Shop>>() {
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 showToast("保存失败")
                 hideWaitDialog()
