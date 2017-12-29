@@ -7,14 +7,18 @@ import com.yitu.etu.R
 import com.yitu.etu.entity.ArrayBaseEntity
 import com.yitu.etu.entity.MyRouteBean
 import com.yitu.etu.entity.ObjectBaseEntity
+import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.ui.activity.RelaseTravelActivity
 import com.yitu.etu.ui.activity.SearchResultOrderSceneActivity
 import com.yitu.etu.ui.adapter.RouteAdapter
 import com.yitu.etu.util.post
 import com.yitu.etu.widget.ListSlideView
 import kotlinx.android.synthetic.main.fragment_route_layout.*
 import okhttp3.Call
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.lang.Exception
 
 /**
@@ -42,6 +46,7 @@ class RouteFragment : BaseFragment() {
     override fun getLayout(): Int = R.layout.fragment_route_layout
 
     override fun initView() {
+        EventBus.getDefault().register(this)
         type = arguments.getInt("type")
         adapter = RouteAdapter(listOf())
         listView_order.adapter = adapter
@@ -64,7 +69,7 @@ class RouteFragment : BaseFragment() {
     }
 
     fun postData(url: String, isRefresh: Boolean) {
-        if(isRefresh){
+        if (isRefresh) {
             RefreshSuccessInit(layout_refresh, isRefresh)
         }
         post(url, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyRouteBean>>() {
@@ -95,7 +100,7 @@ class RouteFragment : BaseFragment() {
         })
     }
 
-    fun delPost(position:Int,id: String){
+    fun delPost(position: Int, id: String) {
         showWaitDialog("删除中...")
         post(Urls.URL_MY_PUBLISH_ROUTE_DEL, hashMapOf("action_id" to id), object : GsonCallback<ObjectBaseEntity<MyRouteBean>>() {
             override fun onResponse(response: ObjectBaseEntity<MyRouteBean>, id: Int) {
@@ -140,14 +145,29 @@ class RouteFragment : BaseFragment() {
             }
         }
         listView_order.setOnItemClickListener { parent, view, position, id ->
-            nextActivityFromFragment<SearchResultOrderSceneActivity>()
+            nextActivityFromFragment<SearchResultOrderSceneActivity>(
+                    "id" to adapter.getItem(position).id.toString(),
+                    "title" to adapter.getItem(position).name,
+                    "isFrom" to true)
         }
 
-        adapter.setDelListener(object : IDelListener<MyRouteBean>{
+        adapter.setDelListener(object : IDelListener<MyRouteBean> {
             override fun del(delPosition: Int, bean: MyRouteBean) {
-                delPost(delPosition,bean.id.toString())
+                delPost(delPosition, bean.id.toString())
             }
 
         })
+    }
+
+    override fun onDestroyView() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroyView()
+    }
+
+    @Subscribe
+    fun onEventRrefresh(event: EventRefresh) {
+        if (event.classname == RelaseTravelActivity::class.java.simpleName) {
+            getData()
+        }
     }
 }

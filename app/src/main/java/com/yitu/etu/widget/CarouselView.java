@@ -53,6 +53,13 @@ public class CarouselView extends FrameLayout {
                         return new LocalImageHolderView();
                     }
                 }, paths);
+        if(paths.size()>1) {
+            convenientBanner
+                    //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+                    .setPageIndicator(new int[]{R.drawable.ic_page_indicator, R.drawable.ic_page_indicator_focused})
+                    //设置指示器的方向
+                    .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
+        }
 
     }
 
@@ -69,11 +76,7 @@ public class CarouselView extends FrameLayout {
         int width = getResources().getDisplayMetrics().widthPixels;
         convenientBanner.setLayoutParams(new FrameLayout.LayoutParams(width, width * 2 / 3));
         addView(convenientBanner);
-        convenientBanner
-                //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
-                .setPageIndicator(new int[]{R.drawable.ic_page_indicator, R.drawable.ic_page_indicator_focused})
-                //设置指示器的方向
-                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
+
         //设置翻页的效果，不需要翻页效果可用不设
         //.setPageTransformer(Transformer.DefaultTransformer);    集成特效之后会有白屏现象，新版已经分离，如果要集成特效的例子可以看Demo的点击响应。
 //        convenientBanner.setManualPageable(false);//设置不能手动影响

@@ -11,12 +11,15 @@ import com.codbking.widget.bean.DateType;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.SceneEntity;
+import com.yitu.etu.eventBusItem.EventRefresh;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.ui.adapter.ShowImagAdapter2;
 import com.yitu.etu.util.TextUtils;
 import com.yitu.etu.widget.MgridView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -163,6 +166,7 @@ public class RelaseTravelActivity extends BaseActivity {
                         public void onResponse(HttpStateEntity response, int i) {
                             hideWaitDialog();
                             if (response.success()) {
+                                EventBus.getDefault().post(new EventRefresh(className));
                             }
                             showToast(response.getMessage());
 
@@ -232,7 +236,8 @@ public class RelaseTravelActivity extends BaseActivity {
             LatLng latLng = (LatLng) data.getParcelableExtra("latLng");
             lat = latLng.latitude + "";
             lng = latLng.longitude + "";
-            tv_address.setText(data.getStringExtra("address"));
+            address=data.getStringExtra("address");
+            tv_address.setText(address);
         }
         if (requestCode == 112 && resultCode == RESULT_OK) {
             SceneEntity mapSceneEntity = (SceneEntity) data.getSerializableExtra("data");

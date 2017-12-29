@@ -23,7 +23,7 @@ public abstract class BaseFragment extends Fragment {
     public int page = 1;
     public boolean add = true;
     private LoadingDialog mWaitDialog;
-
+    public String className=getClass().getSimpleName();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -3,6 +3,7 @@ package com.yitu.etu.ui.activity
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import com.yitu.etu.ui.fragment.RouteFragment
 import kotlinx.android.synthetic.main.activity_my_order.*
@@ -21,7 +22,7 @@ class MyRouteActivity : BaseActivity() {
     override fun initActionBar() {
         title = "我的行程"
         setRightText("发起预约"){
-            showToast("发起预约")
+            nextActivity<RelaseTravelActivity>()
         }
     }
 

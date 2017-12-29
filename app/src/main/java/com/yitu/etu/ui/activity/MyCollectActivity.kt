@@ -24,7 +24,7 @@ class MyCollectActivity : BaseActivity() {
     }
 
     override fun initView() {
-        adapter=CollectAdapter(listOf())
+        adapter = CollectAdapter(listOf())
         listview.adapter = adapter
     }
 
@@ -35,8 +35,8 @@ class MyCollectActivity : BaseActivity() {
     }
 
     fun refresh(isRefresh: Boolean) {
-        if(isRefresh){
-            RefreshSuccessInit(layout_refresh,isRefresh)
+        if (isRefresh) {
+            RefreshSuccessInit(layout_refresh, isRefresh)
         }
         post(Urls.URL_MY_COLLECT, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<MyCollectBean>>() {
             override fun onResponse(response: ArrayBaseEntity<MyCollectBean>, id: Int) {
@@ -59,7 +59,7 @@ class MyCollectActivity : BaseActivity() {
 
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 hideWaitDialog()
-                RefreshSuccessInit(layout_refresh,isRefresh)
+                RefreshSuccessInit(layout_refresh, isRefresh)
                 showToast("收藏获取失败")
             }
 
@@ -74,24 +74,25 @@ class MyCollectActivity : BaseActivity() {
             refresh(false)
         }
         listview.setOnItemClickListener { parent, view, position, id ->
-//            type字段表示，0文章，1为文章，2为景点，3为出行活动，5为美食店铺，6为住宿店铺，7为游玩店铺
-            when(adapter.getItem(position).type){
-               2 ->nextActivity<SearchResultOrderSceneActivity>("detail_id" to adapter.getItem(position).id)
-                else ->showToast("开发中")
+            //            type字段表示，0文章，1为文章，2为景点，3为出行活动，5为美食店铺，6为住宿店铺，7为游玩店铺
+            when (adapter.getItem(position).type) {
+                2 -> nextActivity<SearchResultSceneActivity>("id" to adapter.getItem(position).pid.toString())
+                3 -> nextActivity<SearchResultOrderSceneActivity>("id" to adapter.getItem(position).pid.toString(), "title" to adapter.getItem(position).name)
+                else -> showToast("开发中")
             }
 
         }
 
         adapter.setDelListener(object : IDelListener<MyCollectBean> {
             override fun del(delPosition: Int, bean: MyCollectBean) {
-                delPost(delPosition,bean.id.toString())
+                delPost(delPosition, bean.id.toString())
             }
 
         })
     }
 
 
-    fun delPost(position:Int,id: String){
+    fun delPost(position: Int, id: String) {
         showWaitDialog("删除中...")
         post(Urls.URL_MY_COLLECT_DEL, hashMapOf("id" to id), object : GsonCallback<ObjectBaseEntity<MyRouteBean>>() {
             override fun onResponse(response: ObjectBaseEntity<MyRouteBean>, id: Int) {

@@ -1,5 +1,10 @@
 package com.yitu.etu.ui.activity
 
+import android.app.Activity
+import android.content.Intent
+import android.os.Parcelable
+import com.amap.api.maps.model.LatLng
+import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.Shop
@@ -10,6 +15,7 @@ import com.yitu.etu.util.addHost
 import com.yitu.etu.util.imageLoad.ImageLoadUtil
 import com.yitu.etu.util.post
 import kotlinx.android.synthetic.main.activity_my_order_shop.*
+import kotlinx.android.synthetic.main.activity_view_recomment.*
 import okhttp3.Call
 import java.lang.Exception
 
@@ -48,6 +54,7 @@ class MyShopActivity : BaseActivity() {
                         et_shop_address.setText(address)
                         et_shop_phone.setText(phone)
                         ImageLoadUtil.getInstance().loadImage(iv_shop_img, image.addHost(), 100, 100)
+                        latLng = LatLng(addressLat, addressLng)
                     }
                 } else {
                     showToast(response.message)
@@ -63,24 +70,24 @@ class MyShopActivity : BaseActivity() {
     fun saveData() {
         val params = hashMapOf("id" to shop?.id.toString())
         shop?.run {
-            if (!et_shopname.text.isNullOrBlank() && et_shopname.text.toString() != name) {
+            if (!et_shopname.text.isNullOrBlank()) {
                 params.put("name", et_shopname.text.toString())
             }
-            if (!et_shop_info.text.isNullOrBlank() && et_shop_info.text.toString() != des) {
+            if (!et_shop_info.text.isNullOrBlank()) {
                 params.put("des", et_shop_info.text.toString())
             }
-            if (!et_shop_price.text.isNullOrBlank() && et_shop_price.text.toString() != price.toString()) {
+            if (!et_shop_price.text.isNullOrBlank()) {
                 params.put("price", et_shop_price.text.toString())
             }
-            if (!et_shop_tese_info.text.isNullOrBlank() && et_shop_tese_info.text.toString() != tese) {
+            if (!et_shop_tese_info.text.isNullOrBlank()) {
                 params.put("tese", et_shop_tese_info.text.toString())
             }
-            if (!et_shop_address.text.isNullOrBlank() && et_shop_address.text.toString() != address) {
+            if (!et_shop_address.text.isNullOrBlank()) {
                 params.put("address", et_shop_address.text.toString())
-                params.put("address_lat", "0")
-                params.put("address_lng", "")
+                params.put("address_lat", latLng?.latitude?.toString() ?: "")
+                params.put("address_lng", latLng?.longitude?.toString() ?: "")
             }
-            if (!et_shop_phone.text.isNullOrBlank() && et_shop_phone.text.toString() != phone) {
+            if (!et_shop_phone.text.isNullOrBlank()) {
                 params.put("phone", et_shop_phone.text.toString())
             }
             if (iv_shop_img.tag != null) {
@@ -110,10 +117,26 @@ class MyShopActivity : BaseActivity() {
         iv_shop_img.setOnClickListener {
             Single()
         }
+
+        btn_location.setOnClickListener {
+            nextActivity<MapActivity>(1001)
+        }
     }
 
     override fun imageResult(path: String?) {
         iv_shop_img.tag = FileUtil.GetImageStr(path)
         ImageLoadUtil.getInstance().loadImage(iv_shop_img, path, 100, 100)
+    }
+
+    private var latLng: LatLng? = null
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null) {
+            if (1001 == requestCode && resultCode == Activity.RESULT_OK) {
+                latLng = data.getParcelableExtra<Parcelable>("latLng") as LatLng
+                val address = data.getStringExtra("address")
+                tv_address.text = address
+            }
+        }
     }
 }
