@@ -86,9 +86,11 @@ dependencies {
     implementation files('libs/Msc.jar')
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation files('libs/zxing-3.3.0.jar')
-//    密码输入框
+    //    密码输入框
     implementation 'com.jungly:gridPasswordView:0.3'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-4'
+    implementation project(':timepicker')
+    implementation 'com.bigkoo:convenientbanner:2.0.5'
 }
 
 task showMeCache << {

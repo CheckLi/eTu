@@ -1,6 +1,7 @@
 package com.yitu.etu.ui.activity;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -10,6 +11,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.ArrayBaseEntity;
 import com.yitu.etu.entity.CircleFirendEntity;
+import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
@@ -41,7 +43,18 @@ public class CircleFirendActivity extends BaseActivity {
                 startActivityForResult(new Intent(CircleFirendActivity.this, HairDynamicActivity.class), 100);
             }
         });
+        HashMap<String, String> hashMap = new HashMap<>();
+        Http.post(Urls.CIRCLE_ALLOW_CIRCLE, hashMap, new GsonCallback<HttpStateEntity>() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
 
+            }
+
+            @Override
+            public void onResponse(HttpStateEntity response, int id) {
+                Log.e("tag",response.message);
+            }
+        });
     }
 
     @Override

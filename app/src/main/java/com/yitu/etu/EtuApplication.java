@@ -1,10 +1,12 @@
 package com.yitu.etu;
 
 import android.app.Application;
+import android.content.Intent;
 import android.net.Uri;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.model.Poi;
 import com.autonavi.amap.mapcore.FileUtil;
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
@@ -16,6 +18,7 @@ import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.UserInfo;
 import com.yitu.etu.eventBusItem.EventClearSuccess;
 import com.yitu.etu.eventBusItem.LoginSuccessEvent;
+import com.yitu.etu.service.UpdateLocationService;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
@@ -47,6 +50,7 @@ public class EtuApplication extends Application {
     private UserInfo userInfo;
     private String chatToken;
     private AMapLocation mLocation;
+    public Poi myLocationPoi;//导航起点
 
     public static EtuApplication getInstance() {
         return mInstance;
@@ -57,6 +61,9 @@ public class EtuApplication extends Application {
         super.onCreate();
         mInstance = this;
         readUserInfo();//读取个人登陆信息
+        if (isLogin()) {
+            startUpLocationService();
+        }
         /**
          * 异常代理
          */
@@ -150,6 +157,7 @@ public class EtuApplication extends Application {
      * @param userInfo
      */
     public void setUserInfo(UserInfo userInfo) {
+        startUpLocationService();
         if (userInfo != null && userInfo.getId() != 0 && !TextUtils.isEmpty(userInfo.getToken())) {
             this.userInfo = userInfo;
             //存储登陆信息，第二次进入直接读取
@@ -172,6 +180,7 @@ public class EtuApplication extends Application {
      * 退出登陆
      */
     public void loginOut() {
+        stopUpLocationService();
         setUserInfo(null);
         setChatToken(null);
         PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_USER_INFO);
@@ -326,5 +335,21 @@ public class EtuApplication extends Application {
                 return null;
             }
         }, true);
+    }
+
+    public void stopUpLocationService() {
+        if (service != null) {
+            stopService(service);
+            service = null;
+        }
+    }
+
+    Intent service;
+
+    public void startUpLocationService() {
+        if (service == null) {
+            service = new Intent(getApplicationContext(), UpdateLocationService.class);
+            startService(service);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.yitu.etu.ui.adapter;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.yitu.etu.Iinterface.ImageSelectListener;
@@ -20,6 +21,15 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
 
     public ChooseImageAdapter(Context context) {
         super(context);
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ChooseImageAdapter.ViewHolder viewHolder = onCreateViewHolder(position);
+        convertView = getLayoutInflater().inflate(viewHolder.getItemLayoutID(getItemViewType(position)), null);
+        initItemView(position, convertView, viewHolder);
+        bindData(position, convertView, viewHolder);
+        return convertView;
     }
 
     public ImageSelectListener getListener() {
@@ -89,11 +99,11 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
         }
     }
 
-    public String getPutString(){
-        StringBuffer buffer=new StringBuffer("");
+    public String getPutString() {
+        StringBuffer buffer = new StringBuffer("");
         for (String s : data) {
-            buffer.append(FileUtil.GetImageStr(s)+"|");
+            buffer.append(FileUtil.GetImageStr(s) + "|");
         }
-        return buffer.length()>0?buffer.toString().substring(0,buffer.length()-1):"";
+        return buffer.length() > 0 ? buffer.toString().substring(0, buffer.length() - 1) : "";
     }
 }

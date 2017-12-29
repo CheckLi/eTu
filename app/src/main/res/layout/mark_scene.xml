@@ -10,7 +10,7 @@
         android:id="@+id/image"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/icon17"
+        android:src="@color/white"
         android:layout_margin="10dp"
         app:border_color="@color/white"
         app:border_width="2dp"/>

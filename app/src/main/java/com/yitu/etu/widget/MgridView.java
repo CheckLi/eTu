@@ -60,7 +60,9 @@ public class MgridView extends GridView {
             }
         });
     }
-
+    public ChooseImageAdapter getChooseImageAdapter(){
+            return adapter;
+    }
     public void add(String path) {
         if (!isRepleace) {
             adapter.addData(path);

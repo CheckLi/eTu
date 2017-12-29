@@ -74,4 +74,10 @@ public class Urls {
     public static final String SPOT_ADD_COMMENT=address+"/spot/addComment";
     public static final String SPOT_COLLECT=address+"/spot/collect";
 
+    public static final String ACTION_ADD=address+"/action/addAction";
+    public static final String SPOT_UP_ERROR=address+"/spot/uperror";
+    public static final String USER_LOCATION=address+"/user/location";
+    public static final String CIRCLE_ALLOW_CIRCLE=address+"/circle/allowcircle";
+
+
 }

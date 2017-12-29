@@ -20,6 +20,7 @@ import com.amap.api.navi.AmapNaviParams;
 import com.amap.api.navi.AmapNaviType;
 import com.amap.api.navi.INaviInfoCallback;
 import com.amap.api.navi.model.AMapNaviLocation;
+import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
 import com.yitu.etu.ui.activity.BaseActivity;
 import com.yitu.etu.ui.activity.ImageShowActivity;
@@ -94,8 +95,12 @@ public class Tools {
 
     }
 
-    public static void navi(Context context, Poi start, Poi end) {
-        AmapNaviPage.getInstance().showRouteActivity(context, new AmapNaviParams(start, null, end, AmapNaviType.DRIVER), new INaviInfoCallback() {
+    public static void navi(Context context, Poi end) {
+        if(EtuApplication.getInstance().myLocationPoi==null){
+            ToastUtil.showMessage("没有获取到你的位置信息");
+            return;
+        }
+        AmapNaviPage.getInstance().showRouteActivity(context, new AmapNaviParams(EtuApplication.getInstance().myLocationPoi, null, end, AmapNaviType.DRIVER), new INaviInfoCallback() {
             @Override
             public void onInitNaviFailure() {
 

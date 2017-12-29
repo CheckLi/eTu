@@ -37,41 +37,46 @@ public class HairDynamicActivity extends BaseActivity {
         mActionBarView.setRightText("发布", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (text.getText().toString().trim().equals("")) {
-                    showToast("请填写内容");
+                if (text.getText().toString().trim().equals("") && gridView.getAdapter().getCount() == 1) {
+                    showToast("请填写内容或选择图片");
                     return;
                 }
                 showWaitDialog("发布中...");
-                HashMap<String, String> params = new HashMap<>();
+                final HashMap<String, String> params = new HashMap<>();
                 params.put("text", text.getText().toString().trim());
-                params.put("images", gridView.getImagePutString());
-                Http.post(Urls.CIRCLE_ADD, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity.CircleBean>>() {
+                new Thread(new Runnable() {
                     @Override
-                    public void onError(Call call, Exception e, int i) {
-                        hideWaitDialog();
-                        Log.e("s", "ds");
-                        showToast("发布失败");
+                    public void run() {
+                        params.put("images", gridView.getImagePutString());
+                        Http.post(Urls.CIRCLE_ADD, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity.CircleBean>>() {
+                            @Override
+                            public void onError(Call call, Exception e, int i) {
+                                hideWaitDialog();
+                                Log.e("s", "ds");
+                                showToast("发布失败");
+                            }
+
+                            @Override
+                            public void onResponse(ObjectBaseEntity<CircleFirendEntity.CircleBean> response, int i) {
+                                hideWaitDialog();
+                                if (response.success()) {
+                                    CircleFirendEntity.UserBean userBean = new CircleFirendEntity.UserBean();
+                                    UserInfo userInfo = EtuApplication.getInstance().getUserInfo();
+                                    userBean.setId(userInfo.getId());
+                                    userBean.setName(userInfo.getName());
+                                    userBean.setHeader(userInfo.getHeader());
+                                    response.getData().setUser(userBean);
+                                    Intent intent = new Intent();
+                                    intent.putExtra("data", response.getData());
+                                    intent.putExtra("data2", "ds");
+
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                }
+                            }
+                        });
                     }
-
-                    @Override
-                    public void onResponse(ObjectBaseEntity<CircleFirendEntity.CircleBean> response, int i) {
-                        hideWaitDialog();
-                        if (response.success()) {
-                            CircleFirendEntity.UserBean userBean = new CircleFirendEntity.UserBean();
-                            UserInfo userInfo = EtuApplication.getInstance().getUserInfo();
-                            userBean.setName(userInfo.getName());
-                            userBean.setHeader(userInfo.getHeader());
-                            response.getData().setUser(userBean);
-                            Intent intent = new Intent();
-                            intent.putExtra("data", response.getData());
-                            intent.putExtra("data2", "ds");
-
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    }
-                });
-
+                }).start();
             }
         });
     }

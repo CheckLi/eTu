@@ -1,5 +1,6 @@
 package com.yitu.etu.ui.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -13,9 +14,11 @@ import com.yitu.etu.entity.OrderSceneEntity;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.util.DateUtil;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
+import com.yitu.etu.widget.CarouselView;
 
 import java.util.HashMap;
 
@@ -35,6 +38,7 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
     private TextView tv_jd;
     private TextView tv_state;
     private TextView tv_need_money;
+    private CarouselView carouselView;
 
     @Override
     public int getLayout() {
@@ -49,9 +53,18 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
                 Tools.getPopupWindow(SearchResultOrderSceneActivity.this, new String[]{"发布出行", "分享给朋友"}, new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (position == 0) {
+                            if (EtuApplication.getInstance().isLogin()) {
+                                startActivity(new Intent(SearchResultOrderSceneActivity.this, RelaseTravelActivity.class));
+                            } else {
+                                ToastUtil.showMessage("请登录");
+                            }
+                        }
 
                     }
-                }, null).showAsDropDown(v);
+                }, null).
+
+                        showAsDropDown(v);
 
             }
         });
@@ -59,6 +72,8 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        carouselView = (CarouselView) findViewById(R.id.carouselView);
+
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_collect = (TextView) findViewById(R.id.tv_collect);
 
@@ -68,8 +83,9 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
         tv_jd = (TextView) findViewById(R.id.tv_jd);
         text = (TextView) findViewById(R.id.text);
         image = (ImageView) findViewById(R.id.image);
-        tv_state=(TextView) findViewById(R.id.tv_state);
-        tv_need_money=(TextView) findViewById(R.id.tv_need_money);
+        tv_state = (TextView) findViewById(R.id.tv_state);
+        tv_need_money = (TextView) findViewById(R.id.tv_need_money);
+        carouselView.setTopRadius(Tools.dp2px(this, 5));
     }
 
     @Override
@@ -86,6 +102,7 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
     }
 
     //活动收藏
+
     public void ActionCollect() {
         if (EtuApplication.getInstance().isLogin()) {
             HashMap<String, String> params = new HashMap<>();
@@ -105,40 +122,39 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
                     }
                 }
             });
-        }
-        else{
+        } else {
             ToastUtil.showMessage("请登录");
         }
     }
 
     //活动详情
     public void ActionInfo() {
-        if (EtuApplication.getInstance().isLogin()) {
-            HashMap<String, String> params = new HashMap<>();
-            params.put("id", id);
-            Http.post(Urls.ACTION_INFO, params, new GsonCallback<ObjectBaseEntity<OrderSceneEntity>>() {
-                @Override
-                public void onError(Call call, Exception e, int i) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("id", id);
+        Http.post(Urls.ACTION_INFO, params, new GsonCallback<ObjectBaseEntity<OrderSceneEntity>>() {
+            @Override
+            public void onError(Call call, Exception e, int i) {
+
+            }
+
+            @Override
+            public void onResponse(ObjectBaseEntity<OrderSceneEntity> response, int i) {
+                if (response.success()) {
+                    OrderSceneEntity data = response.getData();
+                    tv_address.setText("地址：" + data.getAddress());
+                    tv_cy_time.setText("参与时间：" + DateUtil.getTime(data.getJoin_starttime() + "", "yyyy-MM-dd HH:mm") + "至" + DateUtil.getTime(data.getJoin_endtime() + "", "yyyy-MM-dd HH:mm"));
+                    tv_xj_time.setText("行程时间：" + DateUtil.getTime(data.getStart_time() + "", "yyyy-MM-dd HH:mm") + "至" + DateUtil.getTime(data.getEnd_time() + "", "yyyy-MM-dd HH:mm"));
+                    tv_state.setText("结束");
+                    tv_jd.setText("进度 1/20");
+                    carouselView.setPath(data.getImages());
+                    text.setText(data.getText());
+                    tv_need_money.setText("dsad");
+                    ImageLoadUtil.getInstance().loadImage(image, Urls.address + data.getUser().getHeader(), 200, 200);
 
                 }
+            }
+        });
 
-                @Override
-                public void onResponse(ObjectBaseEntity<OrderSceneEntity> response, int i) {
-                    if (response.success()) {
-                        OrderSceneEntity data = response.getData();
-                        tv_address.setText("地址：" + data.getAddress());
-                        tv_cy_time.setText("参与时间：");
-                        tv_xj_time.setText("行程时间：");
-                        tv_state.setText("结束");
-                        tv_jd.setText("进度 1/20");
-                        text.setText(data.getText());
-                        tv_need_money.setText("dsad");
-                        ImageLoadUtil.getInstance().loadImage(image, Urls.address + data.getUser().getHeader(), 200, 200);
-
-                    }
-                }
-            });
-        }
     }
 
     public void onClick(View v) {

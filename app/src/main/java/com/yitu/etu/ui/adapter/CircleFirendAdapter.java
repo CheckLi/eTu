@@ -1,7 +1,11 @@
 package com.yitu.etu.ui.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +23,7 @@ import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.MgridView;
+import com.yitu.etu.widget.SendMsgView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +70,11 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
     public void bindData(final int position, View convertView, ViewHolder viewHolder) {
         final CircleFirendEntity.CircleBean data = getItem(position);
         ArrayList<String> imageUrl = new ArrayList<String>();
+        if (data.getUser().getId() == myId) {
+            viewHolder.tv_delete.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.tv_delete.setVisibility(View.GONE);
+        }
         for (String img : data.getImages()) {
             imageUrl.add(img);
         }
@@ -147,33 +157,52 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
             viewHolder.img_pl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("circle_id", data.getId() + "");
-                    params.put("puser_id", myId + "");
-                    params.put("text", "DSAS");
-                    Http.post(Urls.CIRCLE_ADD_COMMENT, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity.CommentBean>>() {
+                    final Dialog dialog = new Dialog(getContext(), R.style.transparentDialog);
+                    View view=getLayoutInflater().inflate(R.layout.dialog_send_msg,null);
+                    Window window = dialog.getWindow();
+                    SendMsgView sendMsgView = ( SendMsgView)view.findViewById(R.id.send_msg);
+                    sendMsgView.setSendMsg(new SendMsgView.SendMsgListener() {
                         @Override
-                        public void onError(Call call, Exception e, int i) {
+                        public void send(String text) {
+                            HashMap<String, String> params = new HashMap<>();
+                            params.put("circle_id", data.getId() + "");
+                            params.put("puser_id", myId + "");
+                            params.put("text", text);
+                            Http.post(Urls.CIRCLE_ADD_COMMENT, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity.CommentBean>>() {
+                                @Override
+                                public void onError(Call call, Exception e, int i) {
 
-                        }
-
-                        @Override
-                        public void onResponse(ObjectBaseEntity<CircleFirendEntity.CommentBean> response, int i) {
-                            if (response.success()) {
-                                CircleFirendEntity.UserBean user = new CircleFirendEntity.UserBean();
-                                user.setName(EtuApplication.getInstance().getUserInfo().getName());
-                                response.getData().setUser(user);
-                                if(data.getComment()==null){
-                                    data.setComment(new ArrayList<CircleFirendEntity.CommentBean>());
                                 }
-                                data.getComment().add(response.getData());
-                                notifyDataSetChanged();
-                            } else {
-                                ToastUtil.showMessage(response.getMessage());
-                            }
+
+                                @Override
+                                public void onResponse(ObjectBaseEntity<CircleFirendEntity.CommentBean> response, int i) {
+                                    if (response.success()) {
+                                        CircleFirendEntity.UserBean user = new CircleFirendEntity.UserBean();
+                                        user.setName(EtuApplication.getInstance().getUserInfo().getName());
+                                        response.getData().setUser(user);
+                                        if (data.getComment() == null) {
+                                            data.setComment(new ArrayList<CircleFirendEntity.CommentBean>());
+                                        }
+                                        data.getComment().add(response.getData());
+                                        notifyDataSetChanged();
+                                    } else {
+                                        ToastUtil.showMessage(response.getMessage());
+                                    }
+
+                                }
+                            });
 
                         }
                     });
+                    window.getDecorView().setPadding(0, 0, 0, 0);
+                    window.setGravity(Gravity.BOTTOM);
+                    dialog.setContentView(view);
+                    WindowManager.LayoutParams lp = window.getAttributes();
+                    lp.width = WindowManager.LayoutParams.FILL_PARENT;
+                    lp.height = WindowManager.LayoutParams.FILL_PARENT;
+                    window.setAttributes(lp);
+                    dialog.show();
+
 
                 }
             });

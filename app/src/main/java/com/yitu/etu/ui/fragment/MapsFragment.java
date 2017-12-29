@@ -68,10 +68,15 @@ import com.yitu.etu.entity.MapOrderSceneEntity;
 import com.yitu.etu.entity.MapSceneEntity;
 import com.yitu.etu.entity.MerchantBaseEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
+import com.yitu.etu.entity.SceneEntity;
+import com.yitu.etu.eventBusItem.MLatLng;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.activity.BaseActivity;
 import com.yitu.etu.ui.activity.MapSearchInputActivity;
+import com.yitu.etu.ui.activity.SearchResultOrderSceneActivity;
+import com.yitu.etu.ui.activity.SearchResultSceneActivity;
 import com.yitu.etu.ui.adapter.ChooseAreaAdapter;
 import com.yitu.etu.util.GsonUtil;
 import com.yitu.etu.util.PermissionUtil;
@@ -79,6 +84,8 @@ import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.widget.GlideApp;
 import com.yitu.etu.widget.MListView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -128,7 +135,7 @@ public class MapsFragment extends SupportMapFragment implements
     public static final int type_scene = 2;
     View btn_type_friend;
     int type = type_scene;
-    LatLng centerLatLng;
+    LatLng centerLatLng = new LatLng(30.65744085004935, 104.06583130359651);
     private Mmark fd_mark;
     private View dialog;
     private ViewGroup menu;
@@ -146,6 +153,7 @@ public class MapsFragment extends SupportMapFragment implements
     private String road;
     Boolean isChooseScene = false;
     private TextView btn_collect;
+    Poi myLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -195,10 +203,27 @@ public class MapsFragment extends SupportMapFragment implements
     }
 
     public void chooseResult(MapSceneEntity data) {
-        Intent intent = new Intent();
-        intent.putExtra("data", data);
-        getActivity().setResult(Activity.RESULT_OK, intent);
-        getActivity().finish();
+        ((BaseActivity) getContext()).showWaitDialog("加载中...");
+        HashMap<String, String> params = new HashMap<>();
+        params.put("id", data.spot_id);
+        Http.post(Urls.SPOT_INFO, params, new GsonCallback<ObjectBaseEntity<SceneEntity>>() {
+            @Override
+            public void onError(Call call, Exception e, int i) {
+                ((BaseActivity) getContext()).hideWaitDialog();
+            }
+
+            @Override
+            public void onResponse(ObjectBaseEntity<SceneEntity> response, int i) {
+                ((BaseActivity) getContext()).hideWaitDialog();
+                if (response.success()) {
+                    Intent intent = new Intent();
+                    intent.putExtra("data", response.getData());
+                    getActivity().setResult(Activity.RESULT_OK, intent);
+                    getActivity().finish();
+                }
+            }
+        });
+
     }
 
     public void search() {
@@ -228,7 +253,7 @@ public class MapsFragment extends SupportMapFragment implements
                     if (mMyLocationPoint != null) {
                         Poi end = new Poi(data.title, new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude()), "");
                         Poi start = new Poi(road, new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude()), "");
-                        Tools.navi(getContext(), start, end);
+                        Tools.navi(getContext(), end);
                     } else {
                         ToastUtil.showMessage("没有获取到你的位置信息");
                     }
@@ -240,6 +265,17 @@ public class MapsFragment extends SupportMapFragment implements
                     ActionCollect(data.title_id);
                 }
             });
+
+            dialog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), SearchResultOrderSceneActivity.class);
+                    intent.putExtra("title", data.title);
+                    intent.putExtra("id", data.title_id);
+                    startActivity(intent);
+                }
+            });
+
         } else if (type == type_scene) {
             tv_yj_num.setVisibility(View.VISIBLE);
             final MapSceneEntity data = (MapSceneEntity) merchantEntity;
@@ -265,9 +301,23 @@ public class MapsFragment extends SupportMapFragment implements
                     if (mMyLocationPoint != null) {
                         Poi end = new Poi(data.title, new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude()), "");
                         Poi start = new Poi(road, new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude()), "");
-                        Tools.navi(getContext(), start, end);
+                        Tools.navi(getContext(), end);
                     } else {
                         ToastUtil.showMessage("没有获取到你的位置信息");
+                    }
+                }
+            });
+
+            dialog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isChooseScene) {
+                        chooseResult(data);
+                    }
+                    else{
+                        Intent intent = new Intent(getContext(), SearchResultSceneActivity.class);
+                        intent.putExtra("id", data.spot_id);
+                        startActivity(intent);
                     }
                 }
             });
@@ -329,6 +379,7 @@ public class MapsFragment extends SupportMapFragment implements
     private void initMap() {
         if (mAmap == null) {
             mAmap = mMapView.getMap();
+            mAmap.moveCamera(CameraUpdateFactory.changeLatLng(centerLatLng));
             mAmap.setInfoWindowAdapter(this);
             mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
             //监听地图相机移动
@@ -358,10 +409,6 @@ public class MapsFragment extends SupportMapFragment implements
 
 
                     if (marker.getObject() == null) {
-                        return true;
-                    }
-                    if (isChooseScene) {
-                        chooseResult((MapSceneEntity) marker.getObject());
                         return true;
                     }
                     markerClick = marker;
@@ -424,11 +471,17 @@ public class MapsFragment extends SupportMapFragment implements
 
     public void loadInfo() {
         hiddenDialog();
+        if (centerLatLng == null) {
+            return;
+        }
         CloudSearch mCloudSearch = new CloudSearch(getContext());// 初始化查询类
         mCloudSearch.setOnCloudSearchListener(new CloudSearch.OnCloudSearchListener() {
             @Override
             public void onCloudSearched(CloudResult cloudResult, int i) {
                 Log.e("CloudSearch", "CloudSearch");
+                if (i != 1000) {
+                    return;
+                }
                 if (cloudResult != null) {
                     ArrayList<CloudItem> cloudItems = cloudResult.getClouds();
                     if (cloudItems != null && cloudItems.size() > 0) {
@@ -744,6 +797,7 @@ public class MapsFragment extends SupportMapFragment implements
                 if (road == null) {
                     road = "";
                 }
+
                 amapLocation.getCityCode();// 城市编码
                 amapLocation.getAdCode();// 地区编码
                 if (mMyLocationPoint == null) {
@@ -753,7 +807,9 @@ public class MapsFragment extends SupportMapFragment implements
                         mAmap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude())));
                     }
                 }
+                EventBus.getDefault().post(new MLatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude()));
                 mMyLocationPoint = amapLocation;
+                EtuApplication.getInstance().myLocationPoi = new Poi(road, new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude()), "");
                 mLocationChangeListener.onLocationChanged(mMyLocationPoint);
             } else {
                 // 显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
@@ -860,12 +916,10 @@ public class MapsFragment extends SupportMapFragment implements
         geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
             public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                Log.e("onRegeocodeSearched: ", "ds");
             }
 
             @Override
             public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-                Log.e("onRegeocodeSearched: ", "ds");
                 MapsFragment.this.city = city;
                 if (geocodeResult != null && geocodeResult.getGeocodeAddressList() != null && geocodeResult.getGeocodeAddressList().size() > 0) {
                     LatLonPoint latLonPoint = geocodeResult.getGeocodeAddressList().get(0).getLatLonPoint();
@@ -1118,11 +1172,11 @@ public class MapsFragment extends SupportMapFragment implements
         LatLng startLatlng = new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude());
         float distance = AMapUtils.calculateLineDistance(startLatlng, endLatlng);
         if (distance < 1000f) {
-            return distance + "m";
+            return "距离你"+distance + "m";
         } else {
             BigDecimal b = new BigDecimal(((double) distance) / 1000);
             float f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-            return f1 + "km";
+            return "距离你"+f1 + "km";
         }
     }
 

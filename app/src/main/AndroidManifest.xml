@@ -54,7 +54,7 @@
         <!-- 友盟 -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5a38eb90a40fa35071000080"></meta-data>
+            android:value="5a38eb90a40fa35071000080" />
 
         <activity
             android:name=".ui.activity.SplashActivity"
@@ -83,7 +83,7 @@
             android:name=".ui.activity.MainActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <!-- 聊天界面 -->
         <activity
             android:name=".ui.activity.ChatActivity"
@@ -120,7 +120,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
             android:launchMode="singleTask"
@@ -156,96 +156,96 @@
         <activity
             android:name=".ui.activity.MyWalletActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MyOrderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ShopListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.amap.api.navi.AmapRouteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/NoTitleBar" />
         <activity
             android:name=".ui.activity.NavActivity"
-            android:theme="@style/NoTitleBar"></activity>
+            android:theme="@style/NoTitleBar" />
         <activity
             android:name=".ui.activity.MapSelectActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MyShopActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.MyRouteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.ViewRecommentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.MyTravelsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.MyCollectActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.AccountManageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.SoftWareShareActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.BoonActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.RegistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.ForgetPasswordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.TwoCodeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.AccountDataActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.EditInputActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateVisible"></activity>
+            android:windowSoftInputMode="adjustPan|stateVisible" />
         <activity
             android:name=".ui.activity.PasswordChangActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -326,7 +326,7 @@
             android:name=".ui.activity.ProductListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.ImageShowActivity"
             android:screenOrientation="portrait"
@@ -335,8 +335,12 @@
             android:name=".ui.activity.MapSearchInputActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateVisible" />
-        <activity android:name=".ui.activity.MyWalletHistoryActivity"></activity>
-        <activity android:name=".ui.activity.SearchResultSceneActivity"></activity>
+        <activity android:name=".ui.activity.MyWalletHistoryActivity" />
+        <activity android:name=".ui.activity.SearchResultSceneActivity" />
+        <activity android:name=".ui.activity.RelaseTravelActivity" />
+        <activity android:name=".ui.activity.SendSceneMsgActivity" />
+        <activity android:name=".ui.activity.MapActivity"></activity>
+        <service android:name="com.yitu.etu.service.UpdateLocationService"/>
     </application>
 
 </manifest>

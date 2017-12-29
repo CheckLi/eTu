@@ -39,7 +39,7 @@ public class CommentAdapter extends BaseAdapter<CommentEntity,CommentAdapter.Vie
     public void bindData(int position, View convertView, ViewHolder viewHolder) {
         CommentEntity data= getItem(position);
         viewHolder.tv_name.setText(data.getUser().getName());
-        viewHolder.tv_time.setText(DateUtil.getTime(data.getText(),"yyyy-MM-dd HH:mm"));
+        viewHolder.tv_time.setText(DateUtil.getTime(data.getCreated()+"","yyyy-MM-dd HH:mm"));
         viewHolder.text.setText(data.getText());
         ImageLoadUtil.getInstance().loadImage(viewHolder.image, Urls.address + data.getUser().getHeader(), R.drawable.default_head, 200, 200);
     }

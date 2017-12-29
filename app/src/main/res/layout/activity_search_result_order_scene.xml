@@ -8,65 +8,65 @@
     tools:context="com.yitu.etu.ui.activity.SearchResultOrderSceneActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/square_2"
         android:orientation="vertical">
 
         <FrameLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
-            <com.yitu.etu.widget.image.RoundImageView2
+            <com.yitu.etu.widget.CarouselView
+                android:id="@+id/carouselView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:src="@drawable/etu_default2"
-                app:topLeftRadius="5dp"
-                app:topRightRadius="5dp" />
+                android:layout_height="wrap_content">
+            </com.yitu.etu.widget.CarouselView>
             <com.yitu.etu.widget.image.CircleImageView
                 android:id="@+id/image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="7dp"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/default_head"
                 app:border_color="@color/white"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="7dp"
                 app:border_width="0dp" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="7dp"
+                android:layout_gravity="bottom|right"
                 android:layout_marginBottom="7dp"
-                android:layout_gravity="bottom|right">
+                android:layout_marginRight="7dp">
+
                 <TextView
                     android:id="@+id/tv_jd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="10sp"
-                    android:textColor="@color/white"
-
-                    android:paddingTop="2dp"
+                    android:background="@drawable/bq_bg"
                     android:paddingBottom="2dp"
+
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:background="@drawable/bq_bg"
-                    android:text="进度 0/20"/>
+                    android:paddingTop="2dp"
+                    android:text="进度 0/20"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
                 <TextView
                     android:id="@+id/tv_need_money"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="10sp"
-                    android:textColor="@color/white"
                     android:layout_marginLeft="7dp"
-                    android:paddingTop="2dp"
+                    android:background="@drawable/bq_bg"
                     android:paddingBottom="2dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:background="@drawable/bq_bg"
-                    android:text="无需出行费"/>
+                    android:paddingTop="2dp"
+                    android:text="无需出行费"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
             </LinearLayout>
 
         </FrameLayout>
@@ -151,9 +151,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:onClick="onClick"
                 android:singleLine="true"
                 android:text="收藏"
-                android:onClick="onClick"
                 android:textColor="#5BCBFC"
                 android:textSize="16sp" />
 

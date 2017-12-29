@@ -1,10 +1,17 @@
 package com.yitu.etu.ui.activity;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Poi;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -20,13 +27,17 @@ import com.yitu.etu.entity.UserInfo;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.adapter.ChooseAreaAdapter;
 import com.yitu.etu.ui.adapter.CommentAdapter;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
+import com.yitu.etu.widget.CarouselView;
 import com.yitu.etu.widget.ExpandableTextView;
 import com.yitu.etu.widget.ListSlideView;
+import com.yitu.etu.widget.MListView;
 import com.yitu.etu.widget.SendMsgView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +59,7 @@ public class SearchResultSceneActivity extends BaseActivity {
     private SceneEntity.SpotBean spotBean;
     private TextView tv_title;
     private ExpandableTextView expandable_text;
+    private CarouselView carouselView;
 
     @Override
     public int getLayout() {
@@ -65,6 +77,19 @@ public class SearchResultSceneActivity extends BaseActivity {
                     Tools.getPopupWindow(SearchResultSceneActivity.this, new String[]{"发起行程", "导航过去", "我要报错", "加入收藏", "分享给朋友"}, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            if (position == 0) {
+                                Intent intent = new Intent(SearchResultSceneActivity.this, RelaseTravelActivity.class);
+                                intent.putExtra("data", spotBean);
+                                startActivity(intent);
+                            } else if (position == 1) {
+                                if (spotBean != null) {
+                                    Poi end = new Poi(spotBean.address, new LatLng(Double.valueOf(spotBean.getAddress_lat()), Double.valueOf(spotBean.getAddress_lng())), "");
+                                    Tools.navi(SearchResultSceneActivity.this, end);
+                                }
+                            }
+                            if (position == 2) {
+                                showErrorDialog();
+                            }
                             if (position == 3) {
                                 spotCollect();
                             }
@@ -118,7 +143,54 @@ public class SearchResultSceneActivity extends BaseActivity {
 
     }
 
-    //活动收藏
+    public void showErrorDialog() {
+        final Dialog dialog = new Dialog(this, R.style.LoadingDialog);
+        View view = getLayoutInflater().inflate(R.layout.dialog_list, null);
+        MListView listView = (MListView) view.findViewById(R.id.listView);
+        TextView dialog_title = (TextView) view.findViewById(R.id.tv_title);
+        dialog_title.setText("请选择报错项");
+        ChooseAreaAdapter chooseAreaAdapter = new ChooseAreaAdapter(this);
+        listView.setAdapter(chooseAreaAdapter);
+        List<String> data = new ArrayList<>();
+        data.add("图片报错");
+        data.add("地址报错");
+        data.add("错误描述");
+        chooseAreaAdapter.addData(data);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                dialog.dismiss();
+                if (spotBean != null) {
+                    if (EtuApplication.getInstance().isLogin()) {
+                        Intent intent = new Intent(SearchResultSceneActivity.this, SendSceneMsgActivity.class);
+                        intent.putExtra("type", position);
+                        intent.putExtra("id", spotBean.getId() + "");
+                        startActivity(intent);
+                    } else {
+                        showToast("请登录");
+                    }
+                }
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        Window window = dialog.getWindow();
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        window.setGravity(Gravity.CENTER);
+        dialog.setContentView(view);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.FILL_PARENT;
+        lp.height = WindowManager.LayoutParams.FILL_PARENT;
+        window.setAttributes(lp);
+        dialog.show();
+    }
+
+    //景点详情
     public void getSpotInfo(final boolean refresh) {
         showWaitDialog("加载中...");
         HashMap<String, String> params = new HashMap<>();
@@ -142,11 +214,13 @@ public class SearchResultSceneActivity extends BaseActivity {
                         tv_address = (TextView) view.findViewById(R.id.tv_address);
                         bq_feature = (TextView) view.findViewById(R.id.bq_feature);
                         tv_feature = (TextView) view.findViewById(R.id.tv_feature);
+                        carouselView = (CarouselView) view.findViewById(R.id.carouselView);
                         tv_title = (TextView) view.findViewById(R.id.tv_title);
                         tv_good = (TextView) view.findViewById(R.id.tv_good);
                         expandable_text = (ExpandableTextView) view.findViewById(R.id.expandable_text);
                         listView.addHeaderView(view);
                     }
+                    carouselView.setPath(spotBean.getImages());
                     tv_good.setText(spotBean.getGood() + "");
                     tv_address.setText(spotBean.getAddress());
                     tv_title.setText(spotBean.getTitle());
@@ -154,7 +228,7 @@ public class SearchResultSceneActivity extends BaseActivity {
                     expandable_text.setListener(new ExpandableTextView.OnExpandStateChangeListener() {
                         @Override
                         public void onExpandStateChanged(boolean isExpanded) {
-                            if (isExpanded) {
+                            if (!isExpanded) {
                                 expandable_text.id_expand_textview.setVisibility(View.GONE);
                             }
                         }
@@ -184,13 +258,14 @@ public class SearchResultSceneActivity extends BaseActivity {
         });
     }
 
-    public void getComment(boolean refresh) {
-        if (!refresh) {
-            showWaitDialog("加载中...");
-        }
+    public void getComment(final boolean refresh) {
         HashMap<String, String> params = new HashMap<>();
         params.put("id", id);
-        params.put("page", page + "");
+        if (refresh) {
+            params.put("page", "1");
+        } else {
+            params.put("page", page + "");
+        }
         Http.post(Urls.SPOT_GET_COMMENT, params, new GsonCallback<ArrayBaseEntity<CommentEntity>>() {
             @Override
             public void onError(Call call, Exception e, int i) {
@@ -203,6 +278,9 @@ public class SearchResultSceneActivity extends BaseActivity {
             public void onResponse(ArrayBaseEntity<CommentEntity> response, int i) {
                 Log.e("onResponse", response.message);
                 if (response.success()) {
+                    if (refresh) {
+                        commentAdapter.clearAll();
+                    }
                     commentAdapter.addData(response.getData());
                     page++;
                 }

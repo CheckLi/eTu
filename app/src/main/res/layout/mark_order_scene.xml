@@ -9,11 +9,11 @@
 
     <com.yitu.etu.widget.image.CircleImageView
         android:id="@+id/image"
-        app:border_color="@color/color_999999"
+        app:border_color="#ce4e88"
         app:border_width="2dp"
         android:layout_width="60dp"
         android:layout_height="60dp"
 
         android:layout_margin="10dp"
-        android:src="@drawable/icon29" />
+        android:src="@color/white" />
 </LinearLayout>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yitu.etu.ui.activity.MyShopActivity">
+
+    <ScrollView
+        style="@style/MyListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_white_5dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/tv_name"
+                    style="@style/recomment_edit_style"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:hint="行程名称"
+                    android:lines="1"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/find_scene"
+                    style="@style/recomment_edit_style"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/white"
+                    android:hint="查找景区" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/tv_intro"
+                style="@style/recomment_edit_style"
+                android:gravity="top"
+                android:hint="行程简介"
+                android:lines="1"
+                android:singleLine="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_white_5dp"
+                android:orientation="vertical"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="15dp">
+
+                <com.yitu.etu.widget.MgridView
+                    android:id="@+id/image_select"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:horizontalSpacing="10dp"
+                    android:numColumns="3"
+                    android:verticalSpacing="10dp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/tv_text"
+                style="@style/recomment_edit_style"
+                android:gravity="top|left"
+                android:hint="行程内容"
+                android:minLines="8" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_white_5dp"
+                android:gravity="top"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/recomment_edit_style"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/white"
+                    android:hint="行程地址"
+                    android:lines="1" />
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    style="@style/recomment_edit_style"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/white"
+                    android:ellipsize="end"
+                    android:hint="点击定位"
+                    android:lines="1"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+
+            <EditText
+                android:id="@+id/tv_number"
+                style="@style/recomment_edit_style"
+                android:gravity="top"
+
+                android:hint="参与人数"
+                android:inputType="number"
+                android:lines="1"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/tv_money"
+                style="@style/recomment_edit_style"
+                android:gravity="top"
+                android:hint="参与金额"
+                android:inputType="numberDecimal"
+                android:lines="1"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/join_starttime"
+                style="@style/recomment_edit_style"
+                android:gravity="top"
+
+                android:hint="参与开始时间"
+                android:onClick="chooseTime" />
+
+            <TextView
+                android:id="@+id/join_endtime"
+                style="@style/recomment_edit_style"
+                android:gravity="top"
+
+                android:hint="参与结束时间"
+                android:onClick="chooseTime" />
+
+            <TextView
+                android:id="@+id/start_time"
+                style="@style/recomment_edit_style"
+                android:gravity="top"
+
+                android:hint="活动开始时间"
+                android:onClick="chooseTime" />
+
+            <TextView
+
+                android:id="@+id/end_time"
+                style="@style/recomment_edit_style"
+                android:gravity="top"
+                android:hint="活动结束时间"
+                android:onClick="chooseTime" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

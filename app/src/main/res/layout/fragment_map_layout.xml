@@ -140,6 +140,9 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="2dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:text="进度 0/20"
                 android:textColor="@color/white"
                 android:textSize="10sp" />
@@ -160,6 +163,10 @@
                 android:text="行走的攻略"
                 android:singleLine="true"
                 android:lines="1"
+
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:ellipsize="end"
                 android:textColor="@color/color_333333"
                 android:textSize="16sp"
@@ -171,6 +178,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:lines="1"
+
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:singleLine="true"
                 android:text="距离你376米"
                 android:textColor="@color/color_999999"

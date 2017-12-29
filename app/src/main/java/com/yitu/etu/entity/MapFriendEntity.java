@@ -11,9 +11,10 @@ import com.yitu.etu.ui.fragment.MapsFragment;
  * Created by deng meng on 2017/12/14.
  */
 public class MapFriendEntity extends MerchantBaseEntity implements Parcelable{
-   public MapFriendEntity() {
+    {
         setType(MapsFragment.type_friend);
     }
+    public  MapFriendEntity(){}
     public String title;
     public String address;
     public String sex;
