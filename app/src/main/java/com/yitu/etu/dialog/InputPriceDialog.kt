@@ -69,6 +69,17 @@ class InputPriceDialog : Dialog {
         }
     }
 
+    fun setRightBtnResultText(content: String,tips:String, onClick: (content:String) -> Unit) {
+        btn_yes.text = content
+        btn_yes.setOnClickListener {
+            if (!tv_input_price.text.isNullOrBlank()) {
+                onClick(tv_input_price.text.toString())
+            } else {
+                context.showToast(tips)
+            }
+        }
+    }
+
     fun setLeftBtn(content: String, onClick: (v: View) -> Unit) {
         btn_yes.text = content
         btn_yes.setOnClickListener {
@@ -80,6 +91,15 @@ class InputPriceDialog : Dialog {
     fun setHint(content:String,showXy:Boolean){
         tv_input_price.hint = content
         tv_input_price.inputType= EditorInfo.TYPE_CLASS_NUMBER
+        if(!showXy) {
+            tv_buy_xy.visibility = View.GONE
+        }
+
+    }
+
+    fun setHint(content:String,showXy:Boolean,inputType: Int){
+        tv_input_price.hint = content
+        tv_input_price.inputType= inputType
         if(!showXy) {
             tv_buy_xy.visibility = View.GONE
         }

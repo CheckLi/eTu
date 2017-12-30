@@ -242,8 +242,8 @@ public class RelaseTravelActivity extends BaseActivity {
         }
         if (requestCode == 112 && resultCode == RESULT_OK) {
             SceneEntity mapSceneEntity = (SceneEntity) data.getSerializableExtra("data");
-            lat = mapSceneEntity.getSpot().getAddress_lng();
-            lng = mapSceneEntity.getSpot().getAddress_lat();
+            lat = mapSceneEntity.getSpot().getAddress_lat();
+            lng = mapSceneEntity.getSpot().getAddress_lng();
             address = mapSceneEntity.getSpot().getAddress();
             tv_name.setText(mapSceneEntity.getSpot().getTitle());
             tv_address.setText(address);

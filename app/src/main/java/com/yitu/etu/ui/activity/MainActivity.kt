@@ -16,9 +16,13 @@ import com.yitu.etu.ui.fragment.LYFragment
 import com.yitu.etu.ui.fragment.MapsFragment
 import com.yitu.etu.util.LogUtil
 import com.yitu.etu.util.Tools
+import com.yitu.etu.util.isLogin
 import com.yitu.etu.widget.tablayout.OnTabSelectListener
 import io.rong.common.FileUtils
 import io.rong.imkit.RongIM
+import io.rong.imkit.manager.IUnReadMessageObserver
+import io.rong.imlib.model.Conversation
+import kotlinx.android.synthetic.main.actionbar_layout.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
@@ -77,23 +81,31 @@ class MainActivity : BaseActivity() {
     fun select(position: Int) {
         when (position) {
             0 -> {
+                tab_select.hideMsg(0)
+                RongIM.getInstance().removeUnReadMessageCountChangedObserver(unReadListener)
                 mActionBarView.setTitle("旅 友")
                 mActionBarView.hideLeftImage()
                 mActionBarView.setRightImage(R.drawable.icon56) {
                     val pop = Tools.getPopupWindow(this@MainActivity, arrayOf("添加好友", "好友列表", "发起群聊"), object : AdapterView.OnItemClickListener {
                         override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            when(position){
-                                0->"添加好友"
-                                1->"添加好友"
-                                2->"发起群聊"
+                            if(!isLogin()){
+                                showToast("请先登录")
+                            }else {
+                                when (position) {
+                                    0 -> nextActivity<SearchFriendActivity>()
+                                    1 -> nextActivity<FriendListActivity>()
+                                    2 -> nextActivity<SearchFriendActivity>()
+                                    else -> ""
+                                }
                             }
                         }
 
                     },"right")
-                    pop.showAsDropDown(mActionBarView)
+                    pop.showAsDropDown(mActionBarView.iv_right,20,0)
                 }
             }
             1 -> {
+                registUnRead()
                 mActionBarView.setLeftImage(R.drawable.icon114) {
                     val fragments = supportFragmentManager.fragments
                     fragments?.forEach {
@@ -109,6 +121,7 @@ class MainActivity : BaseActivity() {
                 }
             }
             2 -> {
+                registUnRead()
                 mActionBarView.setTitle("个人中心")
                 mActionBarView.hideLeftImage()
                 mActionBarView.hideRightImage()
@@ -136,9 +149,26 @@ class MainActivity : BaseActivity() {
             tab_select.currentTab = 1
             select(1)
         }
+
+
     }
 
+    private fun registUnRead(){
+        /**
+         * 未读消息监听
+         */
+        RongIM.getInstance().addUnReadMessageCountChangedObserver(unReadListener, Conversation.ConversationType.PRIVATE, Conversation.ConversationType.GROUP, Conversation.ConversationType.SYSTEM,
+                Conversation.ConversationType.APP_PUBLIC_SERVICE, Conversation.ConversationType.PUSH_SERVICE, Conversation.ConversationType.DISCUSSION,
+                Conversation.ConversationType.CUSTOMER_SERVICE, Conversation.ConversationType.CHATROOM)
+    }
 
+    private val unReadListener= IUnReadMessageObserver { count ->
+        if(count<1){
+            tab_select.hideMsg(0)
+        }else {
+            tab_select.showMsg(0, if (count > 99) 99 else count)
+        }
+    }
     override fun onResume() {
         super.onResume()
     }
@@ -150,6 +180,7 @@ class MainActivity : BaseActivity() {
     override fun onDestroy() {
         Glide.get(this).clearMemory()
         RongIM.getInstance().disconnect()
+        RongIM.getInstance().removeUnReadMessageCountChangedObserver(unReadListener)
         super.onDestroy()
     }
 }

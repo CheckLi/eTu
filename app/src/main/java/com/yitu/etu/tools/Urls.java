@@ -48,6 +48,10 @@ public class Urls {
     public static final String URL_PRODUCT_LIST = address + "/product/getlist";//产品列表
     public static final String URL_HISTORY_YU_E = address + "/user/accountLog";//余额记录
     public static final String URL_HISTORY_P_AN = address + "/product/safe_orderlist";//平安符记录
+    public static final String URL_SEARCH_USER=address+"/user/search";//搜索用户
+    public static final String URL_ADD_FRIEND=address+"/chat/applyFrend";//添加好友
+    public static final String URL_CHANG_BEIZHU=address+"/chat/saveName";//修改好友备注
+    public static final String URL_FRIEND_LIST=address+"/chat/get_frend_list";//获取好友列表
     /**
      * 类型rechargetype（0为余额充
      值、1为平安符购买、2为活动参
@@ -73,6 +77,7 @@ public class Urls {
     public static final String SPOT_ADD_GOOD=address+"/spot/addGood";
     public static final String SPOT_ADD_COMMENT=address+"/spot/addComment";
     public static final String SPOT_COLLECT=address+"/spot/collect";
+
 
     public static final String ACTION_ADD=address+"/action/addAction";
     public static final String SPOT_UP_ERROR=address+"/spot/uperror";

@@ -57,11 +57,11 @@ public class ImageLoadUtil {
         width= (int) (img.getResources().getDisplayMetrics().density*width);
         height= (int) (img.getResources().getDisplayMetrics().density*height);
         if(width>0&&height<=0){
-            creator=creator.resize(width,width);
+            creator=creator.resize(width,width).centerCrop();
         }else if(height>0&&width<=0){
-            creator=creator.resize(height,height);
+            creator=creator.resize(height,height).centerCrop();
         }else if(width>0&&height>0){
-            creator=creator.resize(width,height);
+            creator=creator.resize(width,height).centerCrop();
         }
         creator.centerCrop()
                 .error(displayError)

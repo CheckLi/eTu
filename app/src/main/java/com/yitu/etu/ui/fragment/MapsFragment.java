@@ -832,7 +832,8 @@ public class MapsFragment extends SupportMapFragment implements
         if (marker.getObject() == null) {
             return null;
         }
-        MapFriendEntity data = (MapFriendEntity) marker.getObject();
+
+        final MapFriendEntity data = (MapFriendEntity) marker.getObject();
         View view = inflater.inflate(R.layout.pop_map_firend, null,
                 false);
         ImageView image = (ImageView) view.findViewById(R.id.image);
@@ -840,10 +841,10 @@ public class MapsFragment extends SupportMapFragment implements
         TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
         tv_distance.setText(canculat(new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude())));
         tv_title.setText(data.title);
-        view.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.tv_chat).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.showMessage("我2");
+                Tools.startChat(data.title,data.id,"可以一起去旅游吗?",getActivity());
             }
         });
         GlideApp.with(MapsFragment.this)

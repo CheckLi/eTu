@@ -18,7 +18,7 @@ import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.ui.adapter.CircleFirendAdapter;
 import com.yitu.etu.util.Tools;
-import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.ListSlideView;
 
 import java.util.HashMap;
@@ -31,6 +31,11 @@ public class SearchResultUserActivity extends BaseActivity {
     private SmartRefreshLayout layout_refresh;
     private MapFriendEntity data;
     private CircleFirendAdapter circleFirendAdapter;
+    private TextView tv_name;
+    private ImageView image;
+    private ImageView sex;
+    private View view;
+    private CircleFirendEntity info;
 
     @Override
     public int getLayout() {
@@ -47,7 +52,15 @@ public class SearchResultUserActivity extends BaseActivity {
                     Tools.getPopupWindow(SearchResultUserActivity.this, new String[]{"加为好友", "发起聊天"}, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                            if (position == 0) {
+                                addFriend();
+                            } else if (position == 1) {
+                                if (info != null && info.getUser() != null) {
+                                    Tools.startChat(info.getUser().name, info.getUser().getId() + "", SearchResultUserActivity.this);
+                                } else {
+                                    showToast("请稍等...");
+                                }
+                            }
                         }
                     }, null).showAsDropDown(v, 0, 0);
                 } else {
@@ -60,36 +73,24 @@ public class SearchResultUserActivity extends BaseActivity {
     @Override
     public void initView() {
         data = new MapFriendEntity();
-        data.title = getIntent().getStringExtra("title");
-        data.image = getIntent().getStringExtra("image");
-        data.sex = getIntent().getStringExtra("sex");
         data.user_id = getIntent().getStringExtra("user_id");
         listView = (ListSlideView) findViewById(R.id.listView);
         circleFirendAdapter = new CircleFirendAdapter(this, true);
-        listView.setAdapter(circleFirendAdapter);
-        View view = getLayoutInflater().inflate(R.layout.activity_search_result_user, null);
-        TextView tv_name = (TextView) view.findViewById(R.id.tv_name);
-        ImageView image = (ImageView) view.findViewById(R.id.image);
-        ImageView sex = (ImageView) view.findViewById(R.id.sex);
-        GlideApp.with(this)
-                .load(Urls.address + data.getImage())
-                .centerCrop()
-                .error(R.drawable.default_head)
-                .placeholder(R.drawable.default_head).into(image);
-//        ImageLoadUtil.getInstance().loadImage(image, Urls.address + data.getImage(), R.drawable.default_head, 200, 200);
-        tv_name.setText(data.title);
-        if ("0".equals(data.sex)) {
-            sex.setImageResource(R.drawable.icon2);
-        } else {
-            sex.setImageResource(R.drawable.icon0);
-        }
+        view = getLayoutInflater().inflate(R.layout.activity_search_result_user, null);
         listView.addHeaderView(view);
+        listView.setAdapter(circleFirendAdapter);
+        view.setVisibility(View.GONE);
+        tv_name = (TextView) view.findViewById(R.id.tv_name);
+        image = (ImageView) view.findViewById(R.id.image);
+        sex = (ImageView) view.findViewById(R.id.sex);
+
+
         layout_refresh = (SmartRefreshLayout) findViewById(R.id.layout_refresh);
         layout_refresh.setEnableLoadmore(false);
         layout_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                RefreshSuccessInit(layout_refresh,true);
+                RefreshSuccessInit(layout_refresh, true);
                 getUserIndex();
             }
         });
@@ -97,7 +98,7 @@ public class SearchResultUserActivity extends BaseActivity {
     }
 
     public void refresh(final boolean isRefresh) {
-        if(isRefresh) {
+        if (isRefresh) {
             RefreshSuccessInit(layout_refresh, isRefresh);
         }
         RefreshSuccess(layout_refresh, isRefresh, 10);
@@ -116,7 +117,7 @@ public class SearchResultUserActivity extends BaseActivity {
 
     //活动收藏
     public void getUserIndex() {
-        showWaitDialog("收藏中...");
+        showWaitDialog("获取中...");
         HashMap<String, String> params = new HashMap<>();
         params.put("user_id", data.user_id);
         Http.post(Urls.CIRCLE_USER_INDEX, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity>>() {
@@ -128,12 +129,37 @@ public class SearchResultUserActivity extends BaseActivity {
 
             @Override
             public void onResponse(ObjectBaseEntity<CircleFirendEntity> response, int i) {
-
-                circleFirendAdapter.clearAll();
-                circleFirendAdapter.addData(response.getData().getCircle());
                 hideWaitDialog();
+                if (response.success()) {
+                    info = response.data;
+                    view.setVisibility(View.VISIBLE);
+                    circleFirendAdapter.clearAll();
+                    circleFirendAdapter.addData(response.getData().getCircle());
+                   /* GlideApp.with(SearchResultUserActivity.this)
+                            .load(Urls.address + info.getUser().getHeader())
+                            .centerCrop()
+                            .error(R.drawable.default_head)
+                            .placeholder(R.drawable.default_head).into(image);*/
+                    ImageLoadUtil.getInstance().loadImage(image, Urls.address + info.getUser().getHeader(), R.drawable.default_head, 60, 60);
+                    tv_name.setText(info.getUser().getName());
+                    if (info.getUser().sex == 0) {
+                        sex.setImageResource(R.drawable.icon2);
+                    } else {
+                        sex.setImageResource(R.drawable.icon0);
+                    }
+                } else {
+                    showToast(response.getMessage());
+                }
             }
         });
+    }
+
+
+    /**
+     * 添加好友
+     */
+    private void addFriend() {
+        Tools.addFriend(this, data.user_id);
     }
 }
 

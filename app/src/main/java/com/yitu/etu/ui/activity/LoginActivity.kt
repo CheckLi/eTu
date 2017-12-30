@@ -89,7 +89,7 @@ class LoginActivity : BaseActivity() {
                             EtuApplication.getInstance().connectChat()//登陆聊天服务器
                             finish()
                         } else {
-                            showToast("登陆失败")
+                            showToast(response.message)
                         }
                     }
                 })

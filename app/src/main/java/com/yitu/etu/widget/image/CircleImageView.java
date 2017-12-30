@@ -16,11 +16,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 
 import com.yitu.etu.R;
 
 
-public class CircleImageView extends RecyclerImageView {
+public class CircleImageView extends ImageView {
 
 	private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
 

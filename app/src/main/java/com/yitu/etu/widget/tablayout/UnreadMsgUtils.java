@@ -19,8 +19,8 @@ public class UnreadMsgUtils {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) msgView.getLayoutParams();
         DisplayMetrics dm = msgView.getResources().getDisplayMetrics();
         msgView.setVisibility(View.VISIBLE);
+        msgView.setStrokeWidth(0);
         if (num <= 0) {//圆点,设置默认宽高
-            msgView.setStrokeWidth(0);
             msgView.setText("");
 
             lp.width = (int) (5 * dm.density);
