@@ -24,10 +24,14 @@ public abstract class BaseFragment extends Fragment {
     public boolean add = true;
     private LoadingDialog mWaitDialog;
     public String className=getClass().getSimpleName();
+    public LayoutInflater inflater;
+    public View view;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(getLayout(), container, false);
+        this.inflater=inflater;
+        view = inflater.inflate(getLayout(), container, false);
+        return view;
     }
 
     @Override

@@ -28,19 +28,20 @@ public class ImageShowActivity extends BaseActivity {
     public void initView() {
         SmoothImageView imageView = (SmoothImageView) findViewById(R.id.smoothImageView);
         String path = getIntent().getStringExtra("path");
+        int mLocationX = getIntent().getIntExtra("locationX", 0);
+        int mLocationY = getIntent().getIntExtra("locationY", 0);
+        int mWidth = getIntent().getIntExtra("width", 0);
+        int mHeight = getIntent().getIntExtra("height", 0);
+        imageView.setOriginalInfo(mWidth, mHeight, mLocationX, mLocationY);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         GlideApp.with(this)
                 .load(path)
                 .placeholder(R.drawable.ic_default_image)
                 .error(R.drawable.ic_default_image)
                 .into(imageView);
-        int mLocationX = getIntent().getIntExtra("locationX", 0);
-        int mLocationY = getIntent().getIntExtra("locationY", 0);
-        int mWidth = getIntent().getIntExtra("width", 0);
-        int mHeight = getIntent().getIntExtra("height", 0);
 
-        imageView.setOriginalInfo(mWidth, mHeight, mLocationX, mLocationY);
         imageView.transformIn();
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
 //        ImageLoader.getInstance().displayImage(mDatas.get(mPosition), imageView);
 //        ImageLoadUtil.getInstance().loadImage(imageView, path, 0, 0);
 

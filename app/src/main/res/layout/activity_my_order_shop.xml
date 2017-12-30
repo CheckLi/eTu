@@ -161,6 +161,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btn_manage_order"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:background="@drawable/round_24416b_5dp"
@@ -168,6 +169,7 @@
             android:textColor="@color/white"/>
 
         <Button
+            android:id="@+id/btn_manage_product"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_gravity="right"

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Parcelable
 import com.amap.api.maps.model.LatLng
 import com.huizhuang.zxsq.utils.nextActivity
+import com.huizhuang.zxsq.utils.nextCheckLoginActivity
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.Shop
@@ -120,6 +121,12 @@ class MyShopActivity : BaseActivity() {
 
         btn_location.setOnClickListener {
             nextActivity<MapActivity>(1001)
+        }
+        btn_manage_product.setOnClickListener {
+            nextActivity<ManageProductActivity>()
+        }
+        btn_manage_order.setOnClickListener {
+            nextActivity<ManageOrderActivity>()
         }
     }
 
