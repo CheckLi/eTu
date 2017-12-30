@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.yitu.etu.ui.activity.SearchResultSceneActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.yitu.etu.ui.activity.SearchResultSceneActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <com.yitu.etu.widget.CarouselView
             android:id="@+id/carouselView"
             android:layout_width="match_parent"
@@ -37,7 +38,7 @@
                 android:paddingTop="4dp"
                 android:text="12"
                 android:textColor="#FFBA44"
-                android:textSize="13sp" />
+                android:textSize="13sp"/>
 
             <ImageView
                 android:id="@+id/img_dz"
@@ -49,7 +50,7 @@
                 android:onClick="onClick"
                 android:padding="10dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/icon33" />
+                android:src="@drawable/icon33"/>
         </FrameLayout>
 
     </FrameLayout>
@@ -72,7 +73,7 @@
             android:gravity="center"
             android:text="的撒"
             android:textColor="@color/color_3478F5"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -84,7 +85,7 @@
                 android:gravity="center"
                 android:text="地址:"
                 android:textColor="@color/color_818B93"
-                android:textSize="15sp" />
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/tv_address"
@@ -93,7 +94,7 @@
                 android:gravity="center"
                 android:text="地址"
                 android:textColor="@color/color_818B93"
-                android:textSize="15sp" />
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -108,7 +109,7 @@
                 android:gravity="center"
                 android:text="特点:"
                 android:textColor="@color/color_818B93"
-                android:textSize="15sp" />
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/tv_feature"
@@ -123,7 +124,7 @@
                 android:singleLine="true"
                 android:text="地址"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <TextView
@@ -132,7 +133,7 @@
             android:gravity="center"
             android:text="景区介绍:"
             android:textColor="@color/color_818B93"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
 
         <com.yitu.etu.widget.ExpandableTextView
@@ -147,7 +148,7 @@
                 android:layout_marginTop="7dp"
                 android:text="ds"
                 android:textColor="@color/color_818B93"
-                android:textSize="15sp" />
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@id/id_expand_textview"
@@ -155,27 +156,147 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="展开"
-                android:textColor="@android:color/holo_red_light" />
+                android:textColor="@android:color/holo_red_light"/>
         </com.yitu.etu.widget.ExpandableTextView>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-
         android:layout_marginLeft="7dp"
+
         android:layout_marginRight="7dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/item_cicle_firend_bg"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:padding="10dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="服务窗"
+            android:textColor="@color/color_3478F5"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/li_ms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon42"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="美食"
+                    android:textColor="#F08519"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+
+                android:id="@+id/li_zs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon46"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="住宿"
+                    android:textColor="#00A2E9"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/li_yw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon44"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="游玩"
+                    android:textColor="#4B8D7F"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/li_yj"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/item_cicle_firend_bg"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="游记"
             android:textColor="@color/color_3478F5"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
+
+        <com.yitu.etu.widget.MgridView
+            android:id="@+id/gridView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:horizontalSpacing="10dp"
+            android:listSelector="@color/transparent"
+            android:numColumns="4"
+            android:verticalSpacing="10dp"></com.yitu.etu.widget.MgridView>
 
     </LinearLayout>
 
@@ -187,5 +308,5 @@
         android:layout_marginTop="7dp"
         android:text="评论"
         android:textColor="@color/color_3478F5"
-        android:textSize="15sp" />
+        android:textSize="15sp"/>
 </LinearLayout>

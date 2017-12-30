@@ -1,7 +1,11 @@
 package com.yitu.etu.util;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,4 +35,51 @@ public class FileUtil {
         return "data:image/=" + imgFilePath.substring(imgFilePath.lastIndexOf(".") + 1) + ";base64," + Base64.encodeToString(data, Base64.DEFAULT);// 返回Base64编码过的字节数组字符串
     }
 
+    /**
+     * bitmap转为base64
+     *
+     * @return
+     */
+    public static String GetImageStr(Drawable drawable) {
+        Bitmap bitmap = getBitmapFromDrawable(drawable);
+        String result = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            if (bitmap != null) {
+                baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+                baos.flush();
+                baos.close();
+
+                byte[] bitmapBytes = baos.toByteArray();
+                result = "data:image/=jpg;base64," + Base64.encodeToString(bitmapBytes, Base64.DEFAULT);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (baos != null) {
+                    baos.flush();
+                    baos.close();
+                }
+                bitmap = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+
+    public static Bitmap getBitmapFromDrawable(Drawable drawable) {
+        if (drawable == null) {
+            return null;
+        }
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+        return ((BitmapDrawable) drawable).getBitmap();
+    }
 }

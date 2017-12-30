@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -266,13 +267,16 @@ public class MapsFragment extends SupportMapFragment implements
                 }
             });
 
-            dialog.setOnClickListener(new View.OnClickListener() {
+            dialog.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), SearchResultOrderSceneActivity.class);
-                    intent.putExtra("title", data.title);
-                    intent.putExtra("id", data.title_id);
-                    startActivity(intent);
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        Intent intent = new Intent(getContext(), SearchResultOrderSceneActivity.class);
+                        intent.putExtra("title", data.title);
+                        intent.putExtra("id", data.title_id);
+                        startActivity(intent);
+                    }
+                    return false;
                 }
             });
 
@@ -308,17 +312,19 @@ public class MapsFragment extends SupportMapFragment implements
                 }
             });
 
-            dialog.setOnClickListener(new View.OnClickListener() {
+            dialog.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View v) {
-                    if (isChooseScene) {
-                        chooseResult(data);
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        if (isChooseScene) {
+                            chooseResult(data);
+                        } else {
+                            Intent intent = new Intent(getContext(), SearchResultSceneActivity.class);
+                            intent.putExtra("id", data.spot_id);
+                            startActivity(intent);
+                        }
                     }
-                    else{
-                        Intent intent = new Intent(getContext(), SearchResultSceneActivity.class);
-                        intent.putExtra("id", data.spot_id);
-                        startActivity(intent);
-                    }
+                    return false;
                 }
             });
         }
@@ -1172,11 +1178,11 @@ public class MapsFragment extends SupportMapFragment implements
         LatLng startLatlng = new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude());
         float distance = AMapUtils.calculateLineDistance(startLatlng, endLatlng);
         if (distance < 1000f) {
-            return "距离你"+distance + "m";
+            return "距离你" + distance + "m";
         } else {
             BigDecimal b = new BigDecimal(((double) distance) / 1000);
             float f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-            return "距离你"+f1 + "km";
+            return "距离你" + f1 + "km";
         }
     }
 

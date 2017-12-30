@@ -99,12 +99,17 @@ public class CarouselView extends FrameLayout {
 
         @Override
         public void UpdateUI(Context context, final int position, String data) {
+            if(!data.startsWith(".%")){
             GlideApp.with(getContext())
                     .load(Urls.address + data)
                     .centerCrop()
                     .placeholder(R.drawable.ic_default_image)
                     .error(R.drawable.ic_default_image)
                     .into(imageView);
+            }
+            else{
+                imageView.setImageDrawable(getResources().getDrawable(Integer.parseInt(data.replace(".%",""))));
+            }
         }
     }
 }

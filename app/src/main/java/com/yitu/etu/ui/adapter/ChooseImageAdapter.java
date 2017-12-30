@@ -5,11 +5,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
 import com.yitu.etu.Iinterface.ImageSelectListener;
 import com.yitu.etu.R;
 import com.yitu.etu.util.FileUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TODO this class desription here
@@ -18,9 +22,11 @@ import com.yitu.etu.util.imageLoad.ImageLoadUtil;
  */
 public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.ViewHolder> {
     ImageSelectListener mListener;
+    private Map<String, String> images;
 
     public ChooseImageAdapter(Context context) {
         super(context);
+        images = new HashMap<>();
     }
 
     @Override
@@ -56,7 +62,7 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
     }
 
     @Override
-    public void bindData(final int position, View convertView, ViewHolder viewHolder) {
+    public void bindData(final int position, View convertView, final ViewHolder viewHolder) {
         if (position == getCount() - 1) {
             viewHolder.imageView.setImageResource(R.drawable.icon57);
             viewHolder.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -77,7 +83,22 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
             convertView.setPadding(px, px, px, px);
 
             viewHolder.imageView.setImageResource(R.drawable.etu_default);
-            ImageLoadUtil.getInstance().loadImage(viewHolder.imageView, getItem(position), 100, 100);
+            ImageLoadUtil.getInstance().loadImage(viewHolder.imageView, getItem(position), R.drawable.etu_default, 100, 100
+                    , new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            if (getItem(position).contains("http:") || getItem(position).contains("https:")) {
+                                if (!images.containsKey(getItem(position))) {
+                                    images.put(getItem(position), FileUtil.GetImageStr(viewHolder.imageView.getDrawable()));
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -102,7 +123,13 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
     public String getPutString() {
         StringBuffer buffer = new StringBuffer("");
         for (String s : data) {
-            buffer.append(FileUtil.GetImageStr(s) + "|");
+            if (s.contains("https:") || s.contains("http:")) {
+                if(images.containsKey(s)) {
+                    buffer.append(images.get(s) + "|");
+                }
+            } else {
+                buffer.append(FileUtil.GetImageStr(s) + "|");
+            }
         }
         return buffer.length() > 0 ? buffer.toString().substring(0, buffer.length() - 1) : "";
     }

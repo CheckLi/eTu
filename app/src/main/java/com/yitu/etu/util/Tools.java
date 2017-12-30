@@ -76,9 +76,9 @@ public class Tools {
         popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         View view = LayoutInflater.from(context).inflate(R.layout.layout_pop, null);
         if ("left".equals(bgType)) {
-            view.setBackgroundResource(R.drawable.t1);
+            view.setBackgroundResource(R.drawable.bg_left_pop);
         } else {
-            view.setBackgroundResource(R.drawable.t2);
+            view.setBackgroundResource(R.drawable.bg1111);
         }
         ListView listView = (ListView) view.findViewById(R.id.listView);
         listView.setLayoutParams(new LinearLayout.LayoutParams(maxLength + dp2px(context, 3), LinearLayout.LayoutParams.WRAP_CONTENT));

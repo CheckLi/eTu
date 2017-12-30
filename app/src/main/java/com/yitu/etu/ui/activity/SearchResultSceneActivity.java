@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amap.api.maps.model.LatLng;
@@ -29,12 +30,14 @@ import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.ui.adapter.ChooseAreaAdapter;
 import com.yitu.etu.ui.adapter.CommentAdapter;
+import com.yitu.etu.ui.adapter.YjImageAdapter;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.widget.CarouselView;
 import com.yitu.etu.widget.ExpandableTextView;
 import com.yitu.etu.widget.ListSlideView;
 import com.yitu.etu.widget.MListView;
+import com.yitu.etu.widget.MgridView;
 import com.yitu.etu.widget.SendMsgView;
 
 import java.util.ArrayList;
@@ -60,6 +63,9 @@ public class SearchResultSceneActivity extends BaseActivity {
     private TextView tv_title;
     private ExpandableTextView expandable_text;
     private CarouselView carouselView;
+    private MgridView gridView;
+    private YjImageAdapter yjImageAdapter;
+    private LinearLayout li_yj;
 
     @Override
     public int getLayout() {
@@ -217,8 +223,28 @@ public class SearchResultSceneActivity extends BaseActivity {
                         carouselView = (CarouselView) view.findViewById(R.id.carouselView);
                         tv_title = (TextView) view.findViewById(R.id.tv_title);
                         tv_good = (TextView) view.findViewById(R.id.tv_good);
+                        li_yj = (LinearLayout) view.findViewById(R.id.li_yj);
+                        gridView = (MgridView) view.findViewById(R.id.gridView);
+                        yjImageAdapter = new YjImageAdapter(SearchResultSceneActivity.this);
+                        gridView.setAdapter(yjImageAdapter);
                         expandable_text = (ExpandableTextView) view.findViewById(R.id.expandable_text);
                         listView.addHeaderView(view);
+                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                                Intent intent = new Intent(SearchResultSceneActivity.this, TravelsDetailActivity.class);
+                                intent.putExtra("travels_id", yjImageAdapter.getItem(position).getId());
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                    yjImageAdapter.clearAll();
+                    yjImageAdapter.addData(response.getData().getTitlelist());
+                    if (yjImageAdapter.getCount() == 0) {
+                        li_yj.setVisibility(View.GONE);
+                    } else {
+                        li_yj.setVisibility(View.VISIBLE);
                     }
                     carouselView.setPath(spotBean.getImages());
                     tv_good.setText(spotBean.getGood() + "");
@@ -363,8 +389,26 @@ public class SearchResultSceneActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
+        Intent intent;
         if (v.getId() == R.id.img_dz) {
             sendDz();
+        } else if (v.getId() == R.id.li_ms) {
+           intent=new Intent(SearchResultSceneActivity.this,SceneServiceActivity.class);
+           intent.putExtra("type",1);
+            intent.putExtra("spot_id",id);
+           startActivity(intent);
+        }
+        else if (v.getId() == R.id.li_zs) {
+            intent=new Intent(SearchResultSceneActivity.this,SceneServiceActivity.class);
+            intent.putExtra("type",2);  intent.putExtra("spot_id",id);
+            startActivity(intent);
+        }
+        else if (v.getId() == R.id.li_yw) {
+            intent=new Intent(SearchResultSceneActivity.this,SceneServiceActivity.class);
+            intent.putExtra("type",3);
+            intent.putExtra("spot_id",id);
+
+            startActivity(intent);
         }
     }
 }

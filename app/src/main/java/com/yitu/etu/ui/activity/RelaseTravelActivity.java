@@ -167,6 +167,7 @@ public class RelaseTravelActivity extends BaseActivity {
                             hideWaitDialog();
                             if (response.success()) {
                                 EventBus.getDefault().post(new EventRefresh(className));
+                                finish();
                             }
                             showToast(response.getMessage());
 

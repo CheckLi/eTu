@@ -78,6 +78,8 @@ public class Urls {
     public static final String SPOT_UP_ERROR=address+"/spot/uperror";
     public static final String USER_LOCATION=address+"/user/location";
     public static final String CIRCLE_ALLOW_CIRCLE=address+"/circle/allowcircle";
+    public static final String SHOP_GET_LIST=address+"/shop/get_lis";
+
 
 
 }
