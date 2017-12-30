@@ -5,6 +5,8 @@ import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.view.View
+import android.widget.AdapterView
 import com.bumptech.glide.Glide
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.EtuApplication
@@ -13,6 +15,7 @@ import com.yitu.etu.ui.fragment.AccountFragment
 import com.yitu.etu.ui.fragment.LYFragment
 import com.yitu.etu.ui.fragment.MapsFragment
 import com.yitu.etu.util.LogUtil
+import com.yitu.etu.util.Tools
 import com.yitu.etu.widget.tablayout.OnTabSelectListener
 import io.rong.common.FileUtils
 import io.rong.imkit.RongIM
@@ -41,7 +44,7 @@ class MainActivity : BaseActivity() {
 
 
     override fun getData() {
-       EtuApplication.getInstance().connectChat()//连接聊天服务器
+        EtuApplication.getInstance().connectChat()//连接聊天服务器
         val buff = StringBuffer("")
         buff.append("缓存目录1$cacheDir\n")
         buff.append("缓存目录2$filesDir\n")
@@ -77,7 +80,17 @@ class MainActivity : BaseActivity() {
                 mActionBarView.setTitle("旅 友")
                 mActionBarView.hideLeftImage()
                 mActionBarView.setRightImage(R.drawable.icon56) {
-                    showToast("添加")
+                    val pop = Tools.getPopupWindow(this@MainActivity, arrayOf("添加好友", "好友列表", "发起群聊"), object : AdapterView.OnItemClickListener {
+                        override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            when(position){
+                                0->"添加好友"
+                                1->"添加好友"
+                                2->"发起群聊"
+                            }
+                        }
+
+                    },"right")
+                    pop.showAsDropDown(mActionBarView)
                 }
             }
             1 -> {

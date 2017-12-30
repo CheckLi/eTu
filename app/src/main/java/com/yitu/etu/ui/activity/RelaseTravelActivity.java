@@ -237,7 +237,7 @@ public class RelaseTravelActivity extends BaseActivity {
             LatLng latLng = (LatLng) data.getParcelableExtra("latLng");
             lat = latLng.latitude + "";
             lng = latLng.longitude + "";
-            address=data.getStringExtra("address");
+            address = data.getStringExtra("address");
             tv_address.setText(address);
         }
         if (requestCode == 112 && resultCode == RESULT_OK) {
@@ -251,7 +251,7 @@ public class RelaseTravelActivity extends BaseActivity {
             if (showAdd) {
                 image_select.getChooseImageAdapter().clearAll();
                 for (String img : images) {
-                    image_select.add(Urls.address+img);
+                    image_select.add(Urls.address + img);
                 }
             } else {
                 showImagAdapter.clearAll();

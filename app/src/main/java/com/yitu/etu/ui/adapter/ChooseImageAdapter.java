@@ -23,6 +23,7 @@ import java.util.Map;
 public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.ViewHolder> {
     ImageSelectListener mListener;
     private Map<String, String> images;
+    private boolean isShowAdd = true;
 
     public ChooseImageAdapter(Context context) {
         super(context);
@@ -53,7 +54,7 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
 
     @Override
     public int getCount() {
-        return 1 + super.getCount();
+        return isShowAdd ? 1 + super.getCount() : super.getCount();
     }
 
     @Override
@@ -63,7 +64,7 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
 
     @Override
     public void bindData(final int position, View convertView, final ViewHolder viewHolder) {
-        if (position == getCount() - 1) {
+        if (isShowAdd && position == getCount() - 1) {
             viewHolder.imageView.setImageResource(R.drawable.icon57);
             viewHolder.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             int px = Tools.dp2px(getContext(), 40);
@@ -124,7 +125,7 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
         StringBuffer buffer = new StringBuffer("");
         for (String s : data) {
             if (s.contains("https:") || s.contains("http:")) {
-                if(images.containsKey(s)) {
+                if (images.containsKey(s)) {
                     buffer.append(images.get(s) + "|");
                 }
             } else {
@@ -133,4 +134,10 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
         }
         return buffer.length() > 0 ? buffer.toString().substring(0, buffer.length() - 1) : "";
     }
+
+    public void showAdd(boolean isShow) {
+        isShowAdd = isShow;
+        notifyDataSetChanged();
+    }
+
 }

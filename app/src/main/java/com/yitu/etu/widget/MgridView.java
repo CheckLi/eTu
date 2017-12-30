@@ -98,4 +98,12 @@ public class MgridView extends GridView {
     public String getImagePutString() {
         return adapter.getPutString();
     }
+
+    /**
+     * 控制ADD显示
+     * @param isShow true显示
+     */
+    public void showAdd(boolean isShow){
+        adapter.showAdd(isShow);
+    }
 }
