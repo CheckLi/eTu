@@ -7,13 +7,21 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Parcelable
 import android.support.v4.app.Fragment
+import android.text.InputType
+import android.view.Gravity
 import android.view.View
 import com.amap.api.maps.model.LatLng
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
+import com.yitu.etu.dialog.InputPriceDialog
+import com.yitu.etu.entity.ObjectBaseEntity
+import com.yitu.etu.tools.GsonCallback
+import com.yitu.etu.tools.Http
+import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.activity.BaseActivity
 import com.yitu.etu.ui.activity.MapActivity
+import com.yitu.etu.util.userInfo
 import io.rong.imkit.DefaultExtensionModule
 import io.rong.imkit.RongExtension
 import io.rong.imkit.RongIM
@@ -25,9 +33,11 @@ import io.rong.imlib.IRongCallback
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
+import io.rong.message.ImageMessage
 import io.rong.message.LocationMessage
-
-
+import okhttp3.Call
+import java.io.File
+import java.lang.Exception
 
 
 /**
@@ -38,10 +48,11 @@ import io.rong.message.LocationMessage
  * @date:2017年12月31日 09:50
  *
  */
-var mTargetId=""
+var mTargetId = ""
+
 class ChatFragment : ConversationFragment() {
     override fun onResolveAdapter(context: Context): MessageListAdapter {
-        mTargetId=activity.intent.data.getQueryParameter("targetId")
+        mTargetId = activity.intent.data.getQueryParameter("targetId")
         return MessageAdapter(context)
     }
 }
@@ -61,15 +72,49 @@ class MyPlugin(val type: Int) : IPluginModule {
         if (activity is BaseActivity) {
             when (type) {
                 0 -> {
-                    activity.Camera()
+                    activity.Camera(true, 3, 4, 720, 1280)
                     activity.setSuccessListener {
-
+                        sendImageMessage(it)
                     }
                 }
-                else ->p0.nextActivityFromFragment<MapActivity>(1001)
+                3 -> {
+                    val dialog = InputPriceDialog(p0.activity, "发送平安符")
+                    val xy = dialog.setHint("输入平安符数量", true, Gravity.CENTER_HORIZONTAL, InputType.TYPE_CLASS_PHONE)
+                    xy.text = "平安符剩余数量:${activity.userInfo()?.safecount}个"
+                    dialog.setRightBtnResultText("确认", "请输入平安符数量") {
+                        sendPan("1", it, activity)
+                    }
+                    dialog.showDialog()
+                }
+                else -> p0.nextActivityFromFragment<MapActivity>(1001)
 
             }
         }
+    }
+
+    /**
+     * 发送平安符
+     */
+    fun sendPan(peopleCount: String, count: String, activity: BaseActivity) {
+        activity.showWaitDialog("发送中...")
+        Http.post(Urls.URL_SEND_PIN_A_FU, hashMapOf("count" to count, "people" to peopleCount), object : GsonCallback<ObjectBaseEntity<Any>>() {
+            override fun onResponse(response: ObjectBaseEntity<Any>, id: Int) {
+                activity.hideWaitDialog()
+                if (response.success()) {
+                    with(response.data) {
+
+                    }
+                } else {
+                    activity.showToast(response.message)
+                }
+            }
+
+            override fun onError(call: Call?, e: Exception?, id: Int) {
+                activity.hideWaitDialog()
+                activity.showToast("发送失败")
+            }
+
+        })
     }
 
     override fun obtainDrawable(p0: Context?): Drawable {
@@ -93,14 +138,17 @@ class MyPlugin(val type: Int) : IPluginModule {
     }
 
     override fun onActivityResult(p0: Int, p1: Int, data: Intent?) {
-        when(type){
-            0->""
-            else->{
-                val latLng = data?.getParcelableExtra<Parcelable>("latLng") as LatLng
-                val address = data.getStringExtra("address")
-                val uri=data?.getParcelableExtra<Uri>("image")
-                sendLocation(latLng.latitude,latLng.longitude,address,uri)
+
+        when (type) {
+            1 -> {
+                if (data != null) {
+                    val latLng = data?.getParcelableExtra<Parcelable>("latLng") as LatLng
+                    val address = data.getStringExtra("address")
+                    val uri = data?.getParcelableExtra<Uri>("image")
+                    sendLocation(latLng.latitude, latLng.longitude, address, uri)
+                }
             }
+            else -> ""
         }
     }
 
@@ -126,17 +174,20 @@ class MyExtensionModule : DefaultExtensionModule() {
     }
 }
 
-fun sendImageMessage(path:String){
-
+/**
+ * 发送图片
+ */
+fun sendImageMessage(path: String) {
+    RongIM.getInstance().sendImageMessage(Conversation.ConversationType.PRIVATE, mTargetId, ImageMessage.obtain(Uri.fromFile(File(path)), Uri.fromFile(File(path)), false), null, null, null)
 }
 
-fun sendLocation(lat:Double,lng:Double,poi:String,thumb:Uri){
+fun sendLocation(lat: Double, lng: Double, poi: String, thumb: Uri) {
     val locationMessage = LocationMessage.obtain(lat, lng, poi, thumb)
     val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, locationMessage)
     sendMessage(message)
 }
 
-fun sendMessage(myMessage:Message){
+fun sendMessage(myMessage: Message) {
     /**
      * <p>发送消息。
      * 通过 {@link io.rong.imlib.IRongCallback.ISendMessageCallback}

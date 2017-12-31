@@ -91,11 +91,9 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-4'
     implementation project(':timepicker')
     implementation 'com.bigkoo:convenientbanner:2.0.5'
+    compile 'com.kyleduo.switchbutton:library:2.0.0'
 }
 
 task showMeCache << {
     configurations.compile.each { println it }
-}
-configurations.all {
-    resolutionStrategy.force 'com.android.support:support-annotations:23.1.0'
 }

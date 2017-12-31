@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import com.yitu.etu.tools.InputFilterHelper
@@ -58,7 +60,7 @@ class InputPriceDialog : Dialog {
         }
     }
 
-    fun setRightBtn(content: String,tips:String, onClick: (price:Float) -> Unit) {
+    fun setRightBtn(content: String, tips: String, onClick: (price: Float) -> Unit) {
         btn_yes.text = content
         btn_yes.setOnClickListener {
             if (!tv_input_price.text.isNullOrBlank()) {
@@ -69,7 +71,7 @@ class InputPriceDialog : Dialog {
         }
     }
 
-    fun setRightBtnResultText(content: String,tips:String, onClick: (content:String) -> Unit) {
+    fun setRightBtnResultText(content: String, tips: String, onClick: (content: String) -> Unit) {
         btn_yes.text = content
         btn_yes.setOnClickListener {
             if (!tv_input_price.text.isNullOrBlank()) {
@@ -88,21 +90,40 @@ class InputPriceDialog : Dialog {
         }
     }
 
-    fun setHint(content:String,showXy:Boolean){
+    fun setHint(content: String, showXy: Boolean) {
         tv_input_price.hint = content
-        tv_input_price.inputType= EditorInfo.TYPE_CLASS_NUMBER
-        if(!showXy) {
+        tv_input_price.inputType = EditorInfo.TYPE_CLASS_NUMBER
+        if (!showXy) {
             tv_buy_xy.visibility = View.GONE
+        } else {
+            tv_buy_xy.visibility = View.VISIBLE
         }
 
     }
 
-    fun setHint(content:String,showXy:Boolean,inputType: Int){
+    fun setHint(content: String, showXy: Boolean, inputType: Int) {
         tv_input_price.hint = content
-        tv_input_price.inputType= inputType
-        if(!showXy) {
+        tv_input_price.inputType = inputType
+        if (!showXy) {
             tv_buy_xy.visibility = View.GONE
+        } else {
+            tv_buy_xy.visibility = View.VISIBLE
         }
 
+    }
+
+    fun setHint(content: String, showXy: Boolean, gravity: Int, inputType: Int): TextView {
+        tv_input_price.hint = content
+        tv_input_price.inputType = inputType
+
+        if (!showXy) {
+            tv_buy_xy.visibility = View.GONE
+        } else {
+            tv_buy_xy.visibility = View.VISIBLE
+            val params = tv_buy_xy.layoutParams as LinearLayout.LayoutParams
+            params.gravity = gravity
+            tv_buy_xy.layoutParams = params
+        }
+        return tv_buy_xy
     }
 }

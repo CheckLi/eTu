@@ -49,7 +49,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        className=getClass().getSimpleName();
+        className = getClass().getSimpleName();
         setContentView(getLayout());
         getIntentExtra(getIntent());
         MyActivityManager.getInstance().addActivity(this);
@@ -122,13 +122,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         ISNav.getInstance().toListActivity(this, config, REQUEST_LIST_CODE);
     }
 
-    public void Camera() {
+    public void Camera(boolean isCrop,int aspectX,int aspectY,int outx,int outy) {
         ISCameraConfig config = new ISCameraConfig.Builder()
-                .needCrop(true)
-                .cropSize(1, 1, 200, 200)
+                .needCrop(isCrop)
+                .cropSize(aspectX, aspectY, outx, outy)
                 .build();
 
         ISNav.getInstance().toCameraActivity(this, config, REQUEST_CAMERA_CODE);
+    }
+
+    public void Camera() {
+        Camera(true,1,1,200,200);
     }
 
     @Override
@@ -137,7 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (requestCode == REQUEST_LIST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> pathList = data.getStringArrayListExtra("result");
             selectSuccess(pathList);
-            if(pathList.size()>0){
+            if (pathList.size() > 0) {
                 imageResult(pathList.get(0));
             }
         } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK && data != null) {
@@ -158,9 +162,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public abstract void initListener();
 
-    public void getIntentExtra(Intent intent){
+    public void getIntentExtra(Intent intent) {
 
     }
+
     /**
      * 隐藏系统软键盘
      */
@@ -207,8 +212,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void imageResult(String path){
-        if(mSuccessListener!=null){
+    public void imageResult(String path) {
+        if (mSuccessListener != null) {
             mSuccessListener.selectSuccess(path);
         }
     }
@@ -301,25 +306,29 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 设置左侧文字按钮点击事件
+     *
      * @param text
      * @param onClickListener
      */
-    public void setLeftText(String text, View.OnClickListener onClickListener){
-        mActionBarView.setLeftText(text,onClickListener);
+    public void setLeftText(String text, View.OnClickListener onClickListener) {
+        mActionBarView.setLeftText(text, onClickListener);
     }
 
-    /**\
+    /**
+     * \
      * 设置右侧文字按钮点击事件
+     *
      * @param text
      * @param onClickListener
      */
-    public void setRightText(String text, View.OnClickListener onClickListener){
-        mActionBarView.setRightText(text,onClickListener);
+    public void setRightText(String text, View.OnClickListener onClickListener) {
+        mActionBarView.setRightText(text, onClickListener);
     }
 
 
     /**
      * 数据拉去成功的时候调用
+     *
      * @param smart
      * @param isRefresh
      * @param size
@@ -327,8 +336,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void RefreshSuccess(SmartRefreshLayout smart, boolean isRefresh, int size) {
         smart.finishRefresh();
         smart.finishLoadmore();
-        if(isRefresh){
-            page=1;
+        if (isRefresh) {
+            page = 1;
         }
         if (size < 10) {
             add = false;
@@ -342,12 +351,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 初始化刷新状态
+     *
      * @param smart
      */
-    public void RefreshSuccessInit(SmartRefreshLayout smart,boolean isRefresh){
+    public void RefreshSuccessInit(SmartRefreshLayout smart, boolean isRefresh) {
         smart.finishRefresh();
         smart.finishLoadmore();
-        if(isRefresh) {
+        if (isRefresh) {
             page = 1;
             add = true;
         }

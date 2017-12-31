@@ -11,12 +11,17 @@ import com.bumptech.glide.Glide
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
+import com.yitu.etu.entity.ObjectBaseEntity
+import com.yitu.etu.entity.UserInfo
+import com.yitu.etu.tools.GsonCallback
+import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.fragment.AccountFragment
 import com.yitu.etu.ui.fragment.LYFragment
 import com.yitu.etu.ui.fragment.MapsFragment
 import com.yitu.etu.util.LogUtil
 import com.yitu.etu.util.Tools
 import com.yitu.etu.util.isLogin
+import com.yitu.etu.util.post
 import com.yitu.etu.widget.tablayout.OnTabSelectListener
 import io.rong.common.FileUtils
 import io.rong.imkit.RongIM
@@ -24,7 +29,9 @@ import io.rong.imkit.manager.IUnReadMessageObserver
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.actionbar_layout.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.Call
 import java.io.File
+import java.lang.Exception
 
 
 class MainActivity : BaseActivity() {
@@ -183,6 +190,28 @@ class MainActivity : BaseActivity() {
         RongIM.getInstance().removeUnReadMessageCountChangedObserver(unReadListener)
         super.onDestroy()
     }
+
+    fun refreshMyInfo() {
+        showWaitDialog("获取中...")
+        post(Urls.URL_GET_USER_INFO, hashMapOf(), object : GsonCallback<ObjectBaseEntity<UserInfo>>() {
+            override fun onResponse(response: ObjectBaseEntity<UserInfo>, id: Int) {
+                hideWaitDialog()
+                if (response.success()) {
+                    with(response.data) {
+
+                    }
+                } else {
+                    showToast(response.message)
+                }
+            }
+
+            override fun onError(call: Call?, e: Exception?, id: Int) {
+                hideWaitDialog()
+                showToast("获取失败")
+            }
+
+        })
+    }
 }
 
 private class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
@@ -209,5 +238,4 @@ private class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
             }
         }
     }
-
 }

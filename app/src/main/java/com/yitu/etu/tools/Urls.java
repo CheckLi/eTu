@@ -23,6 +23,7 @@ public class Urls {
     public static final String paySms = address + "/user/getPaypwdSms";//获取支付密码验证码
     public static final String reSetPayPassword = address + "/user/forgetPaypwd";//重新设置支付密码
     public static final String URL_GET_USER_INFO = address + "/user/getinfo";//获取用户信息，包含钱包信息
+    public static final String URL_SEND_PIN_A_FU = address + "/chat/sendPacket";//发送平安符
     public static final String URL_GET_ID_USER_INFO = address + "/user/infobyid";//获取指定用户信息
     public static final String URL_GET_USER_SHOP_DETAIL = address + "/shop/getShopInfo";//获取店铺信息
     public static final String URL_SAVE_USER_SHOP_DETAIL = address + "/shop/saveShopInfo";//保存店铺信息
