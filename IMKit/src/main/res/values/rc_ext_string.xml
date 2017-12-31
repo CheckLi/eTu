@@ -4,9 +4,9 @@
     <string name="rc_action_bar_ok">确定</string>
 
     <string name="rc_plugin_location">位置</string>
-    <string name="rc_plugin_image">图片</string>
+    <string name="rc_plugin_image">照片</string>
     <string name="rc_plugin_location_message">发送位置</string>
-    <string name="rc_plugin_location_sharing">共享实时位置</string>
+    <string name="rc_plugin_location_sharing">位置共享</string>
     <string name="rc_audio_input">按住 说话</string>
     <string name="rc_audio_input_hover">松开 发送</string>
     <string name="rc_ext_send">发送</string>

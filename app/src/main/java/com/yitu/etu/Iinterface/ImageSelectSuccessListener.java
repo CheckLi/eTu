@@ -1,7 +1,5 @@
 package com.yitu.etu.Iinterface;
 
-import java.util.List;
-
 /**
  * @className:ImageSelectSuccessListener
  * @description:
@@ -10,6 +8,4 @@ import java.util.List;
  */
 public interface ImageSelectSuccessListener {
     void selectSuccess(String path);
-
-    void selectSuccess(List<String> pathList);
 }

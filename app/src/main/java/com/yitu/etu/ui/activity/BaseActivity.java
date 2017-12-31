@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.yitu.etu.Iinterface.ImageSelectSuccessListener;
 import com.yitu.etu.R;
 import com.yitu.etu.dialog.LoadingDialog;
 import com.yitu.etu.tools.MyActivityManager;
@@ -43,6 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final int REQUEST_LIST_CODE = 0;
     public static final int REQUEST_CAMERA_CODE = 1;
     public ActionBarView mActionBarView;
+    public ImageSelectSuccessListener mSuccessListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +58,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         initView();
         getData();
         initListener();
+    }
+
+
+    public void setSuccessListener(ImageSelectSuccessListener successListener) {
+        mSuccessListener = successListener;
     }
 
     private void init() {
@@ -115,7 +122,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ISNav.getInstance().toListActivity(this, config, REQUEST_LIST_CODE);
     }
 
-    public void Camera(View view) {
+    public void Camera() {
         ISCameraConfig config = new ISCameraConfig.Builder()
                 .needCrop(true)
                 .cropSize(1, 1, 200, 200)
@@ -201,7 +208,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void imageResult(String path){
-
+        if(mSuccessListener!=null){
+            mSuccessListener.selectSuccess(path);
+        }
     }
 
     public void selectSuccess(String path) {

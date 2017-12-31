@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Parcelable
 import com.amap.api.maps.model.LatLng
 import com.huizhuang.zxsq.utils.nextActivity
-import com.huizhuang.zxsq.utils.nextCheckLoginActivity
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.Shop
@@ -16,7 +15,6 @@ import com.yitu.etu.util.addHost
 import com.yitu.etu.util.imageLoad.ImageLoadUtil
 import com.yitu.etu.util.post
 import kotlinx.android.synthetic.main.activity_my_order_shop.*
-import kotlinx.android.synthetic.main.activity_view_recomment.*
 import okhttp3.Call
 import java.lang.Exception
 
@@ -142,7 +140,7 @@ class MyShopActivity : BaseActivity() {
             if (1001 == requestCode && resultCode == Activity.RESULT_OK) {
                 latLng = data.getParcelableExtra<Parcelable>("latLng") as LatLng
                 val address = data.getStringExtra("address")
-                tv_address.text = address
+                et_shop_address.setText(address)
             }
         }
     }

@@ -22,6 +22,7 @@ import com.yitu.etu.service.UpdateLocationService;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.fragment.Chat.MyExtensionModule;
 import com.yitu.etu.util.LogUtil;
 import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
@@ -31,8 +32,12 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.rong.imkit.DefaultExtensionModule;
+import io.rong.imkit.IExtensionModule;
+import io.rong.imkit.RongExtensionManager;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
@@ -82,15 +87,39 @@ public class EtuApplication extends Application {
         /**
          * 聊天初始化
          */
-        RongIM.init(this);
-        RongIM.getInstance().enableNewComingMessageIcon(true);//显示新消息提醒
-        RongIM.getInstance().enableUnreadMessageIcon(true);//显示未读消息数目
+        initChat();
 
         share();
         Picasso.with(this).setIndicatorsEnabled(true);
         initLocation();//获取定位信息
     }
 
+    private void initChat() {
+        RongIM.init(this);
+        RongIM.getInstance().enableNewComingMessageIcon(true);//显示新消息提醒
+        RongIM.getInstance().enableUnreadMessageIcon(true);//显示未读消息数目
+        setMyExtensionModule();
+    }
+
+    /**
+     * 初始化自定义面板
+     */
+    public void setMyExtensionModule() {
+        List<IExtensionModule> moduleList = RongExtensionManager.getInstance().getExtensionModules();
+        IExtensionModule defaultModule = null;
+        if (moduleList != null) {
+            for (IExtensionModule module : moduleList) {
+                if (module instanceof DefaultExtensionModule) {
+                    defaultModule = module;
+                    break;
+                }
+            }
+            if (defaultModule != null) {
+                RongExtensionManager.getInstance().unregisterExtensionModule(defaultModule);
+                RongExtensionManager.getInstance().registerExtensionModule(new MyExtensionModule());
+            }
+        }
+    }
     public void initLocation() {
         LocationUtil.getInstance().startLocation(new AMapLocationListener() {
             @Override

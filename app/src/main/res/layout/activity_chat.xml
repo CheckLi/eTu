@@ -8,7 +8,7 @@
     tools:context="com.yitu.etu.ui.activity.ChatActivity">
     <fragment
         android:id="@+id/conversation"
-        android:name="io.rong.imkit.fragment.ConversationFragment"
+        android:name="com.yitu.etu.ui.fragment.Chat.ChatFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>

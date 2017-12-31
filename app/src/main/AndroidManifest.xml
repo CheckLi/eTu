@@ -353,6 +353,8 @@
         </activity>
         <activity android:name=".ui.activity.FriendListActivity">
         </activity>
+        <activity android:name=".ui.activity.AMapLocationActivity">
+        </activity>
     </application>
 
 </manifest>

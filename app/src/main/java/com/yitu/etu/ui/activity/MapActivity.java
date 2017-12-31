@@ -3,6 +3,7 @@ package com.yitu.etu.ui.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +62,9 @@ public class MapActivity extends BaseActivity {
 
                     Intent intent = new Intent();
                     intent.putExtra("address", regeocodeResult.getRegeocodeAddress().getFormatAddress());
-                    intent.putExtra("latLng", new LatLng(regeocodeResult.getRegeocodeQuery().getPoint().getLatitude(), regeocodeResult.getRegeocodeQuery().getPoint().getLongitude()));
+                    LatLng latLng=new LatLng(regeocodeResult.getRegeocodeQuery().getPoint().getLatitude(), regeocodeResult.getRegeocodeQuery().getPoint().getLongitude());
+                    intent.putExtra("latLng", latLng);
+                    intent.putExtra("image",getMapUrl(latLng.latitude,latLng.longitude));
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -315,5 +318,12 @@ public class MapActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    private Uri getMapUrl(double x, double y) {
+        String url = "http://restapi.amap.com/v3/staticmap?location=" + y + "," + x +
+                "&zoom=17&scale=2&size=400*200&markers=-1,http://ico.ooopic.com/ajax/iconpng/?id=158688.png,A:" + y + ","
+                + x + "&key=" + "be40ebd66fbbe4358c331c58d69ae086";
+        return Uri.parse(url);
     }
 }
