@@ -30,7 +30,7 @@ public class ImageLoadUtil {
     public void loadImage(ImageView img, String url, int defaultDrawable, int width, int height) {
         loadImage(img, url, width, height, defaultDrawable, defaultDrawable, null);
     }
-    
+
 
     public void loadImage(ImageView img, String url, int defaultDrawable, int width, int height, Callback listener) {
         loadImage(img, url, width, height, defaultDrawable, defaultDrawable, listener);
@@ -47,21 +47,22 @@ public class ImageLoadUtil {
      * @param displayLoadding 加载中的时候显示的图片
      */
     public void loadImage(ImageView img, String url, int width, int height, @DrawableRes int displayError, @DrawableRes int displayLoadding, Callback listener) {
-        RequestCreator creator=null;
-        if(url.contains("http:")||url.contains("https:")){
-            creator= Picasso.with(img.getContext()).load(url);
-        }else{
-            creator= Picasso.with(img.getContext()).load(new File(url));
+        RequestCreator creator = null;
+        if (url.contains("http:") || url.contains("https:")) {
+            creator = Picasso.with(img.getContext()).load(url);
+        } else {
+            creator = Picasso.with(img.getContext()).load(new File(url));
         }
-
-        width= (int) (img.getResources().getDisplayMetrics().density*width);
-        height= (int) (img.getResources().getDisplayMetrics().density*height);
-        if(width>0&&height<=0){
-            creator=creator.resize(width,width).centerCrop();
-        }else if(height>0&&width<=0){
-            creator=creator.resize(height,height).centerCrop();
-        }else if(width>0&&height>0){
-            creator=creator.resize(width,height).centerCrop();
+        if (width > 0 && height > 0) {
+            width = (int) (img.getResources().getDisplayMetrics().density * width);
+            height = (int) (img.getResources().getDisplayMetrics().density * height);
+            if (width > 0 && height <= 0) {
+                creator = creator.resize(width, width);
+            } else if (height > 0 && width <= 0) {
+                creator = creator.resize(height, height);
+            } else if (width > 0 && height > 0) {
+                creator = creator.resize(width, height);
+            }
         }
         creator.centerCrop()
                 .error(displayError)

@@ -6,7 +6,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yitu.etu.R;
+import com.yitu.etu.entity.ShopProductEntity;
+import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.Tools;
+import com.yitu.etu.widget.GlideApp;
 
 import java.util.List;
 
@@ -15,7 +18,7 @@ import java.util.List;
  * <p>
  * Created by deng meng on 2017/12/29.
  */
-public class ManageProductAdapter extends BaseAdapter<String,ManageProductAdapter.ViewHolder>{
+public class ManageProductAdapter extends BaseAdapter<ShopProductEntity,ManageProductAdapter.ViewHolder>{
 
     private final int px;
 
@@ -23,17 +26,6 @@ public class ManageProductAdapter extends BaseAdapter<String,ManageProductAdapte
         super(context);
         px = Tools.dp2px(context, 7);
 
-    }
-
-    public ManageProductAdapter(Context context, List<String> data) {
-        super(context, data);
-        px = Tools.dp2px(context, 7);
-
-    }
-
-    @Override
-    public int getCount() {
-        return 2;
     }
 
     @Override
@@ -57,11 +49,17 @@ public class ManageProductAdapter extends BaseAdapter<String,ManageProductAdapte
         } else {
             convertView.setPadding(px, 0, px, px);
         }
-//        GlideApp.with(getContext())
-//                .load(Urls.address + data.getImage())
-//                .centerCrop()
-//                .error(R.drawable.etu_default)
-//                .placeholder(R.drawable.etu_default).into(viewHolder.image);
+        ShopProductEntity data= getItem(position);
+        viewHolder.tv_title.setText(data.getName());
+
+        viewHolder.tv_price.setText("价格:"+data.getPrice()+"元");
+
+        viewHolder.tv_address.setText(data.getDes());
+        GlideApp.with(getContext())
+                .load(Urls.address + data.getImage())
+                .centerCrop()
+                .error(R.drawable.etu_default)
+                .placeholder(R.drawable.etu_default).into(viewHolder.image);
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {

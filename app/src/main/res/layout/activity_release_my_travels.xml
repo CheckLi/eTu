@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/rc_divider_color"
+    tools:context="com.yitu.etu.ui.activity.MyShopActivity">
+
+    <ScrollView
+        style="@style/MyListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+
+            <EditText
+                android:id="@+id/tv_name"
+                style="@style/recomment_edit_style"
+                android:layout_marginTop="3dp"
+                android:gravity="top"
+                android:hint="游记名称"
+                android:lines="1"
+                android:singleLine="true"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_white_5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/find_scene"
+                    style="@style/recomment_edit_style"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/white"
+                    android:hint="查找景区" />
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    style="@style/recomment_edit_style"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:ellipsize="end"
+                    android:hint="点击查找"
+                    android:lines="1"
+                    android:singleLine="true" />
+
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_white_5dp"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/btn_add"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/icon101" />
+
+                <EditText
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_add"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:gravity="top"
+                    android:hint="游记内容"
+                    android:minLines="5"
+                    android:textColor="@color/color_333333"
+                    android:textSize="14sp" />
+
+                <com.yitu.etu.widget.MgridView
+                    android:id="@+id/image_select"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_add"
+                    android:layout_marginTop="10dp"
+                    android:horizontalSpacing="10dp"
+                    android:numColumns="1"
+                    android:verticalSpacing="10dp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

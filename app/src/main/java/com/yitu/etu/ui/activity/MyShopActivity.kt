@@ -121,7 +121,11 @@ class MyShopActivity : BaseActivity() {
             nextActivity<MapActivity>(1001)
         }
         btn_manage_product.setOnClickListener {
-            nextActivity<ManageProductActivity>()
+            if(shop==null){
+                showToast("店铺信息获取异常")
+            }else {
+                nextActivity<ManageProductActivity>("shop_id" to shop?.id.toString())
+            }
         }
         btn_manage_order.setOnClickListener {
             nextActivity<ManageOrderActivity>()

@@ -22,7 +22,7 @@ class MyTravelsActivity : BaseActivity() {
     override fun initActionBar() {
         title="我的游记"
         setRightText("发布"){
-            showToast("发布")
+           nextActivity<ReleaseMyTravelsActivity>()
         }
     }
 

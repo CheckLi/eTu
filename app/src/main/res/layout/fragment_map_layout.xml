@@ -234,18 +234,5 @@
         </LinearLayout>
 
     </LinearLayout>
-    <com.kyleduo.switchbutton.SwitchButton
-        android:id="@+id/sb_custom"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        app:kswBackRadius="2dp"
-        app:kswThumbRadius="2dp"
-        app:kswThumbRangeRatio="2.2"
-        android:textColor="@color/color_b4ffffff"
-        app:kswTextOn="你好"
-        app:kswTextOff="哈哈"
-        app:kswBackDrawable="@drawable/flyme_back_drawable"
-        app:kswThumbColor="@color/white"
         />
 </FrameLayout>

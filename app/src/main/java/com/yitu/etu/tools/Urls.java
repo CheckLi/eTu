@@ -85,7 +85,11 @@ public class Urls {
     public static final String USER_LOCATION=address+"/user/location";
     public static final String CIRCLE_ALLOW_CIRCLE=address+"/circle/allowcircle";
     public static final String SHOP_GET_LIST=address+"/shop/get_list";
+    public static final String SHOP_GET_SHOP_ORDER_LIST=address+"/shop/get_shop_order";
+    public static final String GET_SHOP_PRODUCT=address+"/shop/getShopProduct";
+    public static final String SHOP_SAVE_PRODUCT=address+"/shop/saveProductInfo";
+    public static final String CHECK_SHOP_ORDER=address+"/shop/checkShopOrder";
 
-
+    public static final String RELEASE_My_Travel=address+"/title/addTitle";
 
 }
