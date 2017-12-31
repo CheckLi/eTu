@@ -9,6 +9,7 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.text.InputType
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import com.amap.api.maps.model.LatLng
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
@@ -57,9 +58,14 @@ class ChatFragment : ConversationFragment() {
     }
 }
 
-class MessageAdapter(context: Context) : MessageListAdapter(context) {
-    override fun bindView(v: View?, position: Int, data: UIMessage?) {
-        super.bindView(v, position, data)
+class MessageAdapter(var context: Context) : MessageListAdapter(context) {
+    override fun bindView(v: View?, position: Int, data: UIMessage) {
+        if(data.message.objectName.equals("RCD:ZXJPacket")){
+            //这是红包
+            LayoutInflater.from(context).inflate(R.layout.chat_packet_item,null)
+        }else {
+            super.bindView(v, position, data)
+        }
     }
 }
 
@@ -80,7 +86,7 @@ class MyPlugin(val type: Int) : IPluginModule {
                 3 -> {
                     val dialog = InputPriceDialog(p0.activity, "发送平安符")
                     val xy = dialog.setHint("输入平安符数量", true, Gravity.CENTER_HORIZONTAL, InputType.TYPE_CLASS_PHONE)
-                    xy.text = "平安符剩余数量:${activity.userInfo()?.safecount}个"
+                    xy.text = "当前余量：${activity.userInfo()?.safecount}"
                     dialog.setRightBtnResultText("确认", "请输入平安符数量") {
                         sendPan("1", it, activity)
                     }

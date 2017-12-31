@@ -45,10 +45,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final int REQUEST_CAMERA_CODE = 1;
     public ActionBarView mActionBarView;
     public ImageSelectSuccessListener mSuccessListener;
-
+    public Context context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context=this;
         className = getClass().getSimpleName();
         setContentView(getLayout());
         getIntentExtra(getIntent());
