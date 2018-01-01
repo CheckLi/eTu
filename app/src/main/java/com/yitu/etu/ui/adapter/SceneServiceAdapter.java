@@ -3,10 +3,15 @@ package com.yitu.etu.ui.adapter;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yitu.etu.R;
+import com.yitu.etu.entity.SceneServiceEntity;
+import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.Tools;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
+import com.yitu.etu.widget.image.RoundImageView;
 
 /**
  * @className:SceneService
@@ -14,17 +19,13 @@ import com.yitu.etu.util.Tools;
  * @author: JIAMING.LI
  * @date:2017年12月30日 13:46
  */
-public class SceneServiceAdapter extends BaseAdapter<String, SceneServiceAdapter.ViewHolder> {
+public class SceneServiceAdapter extends BaseAdapter<SceneServiceEntity.ListBean, SceneServiceAdapter.ViewHolder> {
     private final int px;
-
-    public SceneServiceAdapter(Context context) {
+    String name;
+    public SceneServiceAdapter(Context context,String name) {
         super(context);
         px = Tools.dp2px(context, 7);
-    }
-
-    @Override
-    public int getCount() {
-        return 3;
+        this.name=name;
     }
 
     @Override
@@ -41,28 +42,32 @@ public class SceneServiceAdapter extends BaseAdapter<String, SceneServiceAdapter
         viewHolder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
         viewHolder.tv_ts = (TextView) convertView.findViewById(R.id.tv_ts);
         viewHolder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
-        viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
+        viewHolder.imageView = (RoundImageView) convertView.findViewById(R.id.imageView);
+        viewHolder.li_content=(LinearLayout) convertView.findViewById(R.id.li_content);
     }
 
     @Override
     public void bindData(int position, View convertView, ViewHolder viewHolder) {
         if (position == 0) {
-            convertView.setPadding(px, px, px, px);
+            viewHolder.li_content.setPadding(px, px, px, px);
         } else {
-            convertView.setPadding(px, 0, px, px);
+            viewHolder.li_content.setPadding(px, 0, px, px);
         }
-        viewHolder.tv_scene.setText("附近景区:" + "");
-        viewHolder.tv_phone.setText("电话:" + "");
-        viewHolder.tv_good.setText("点赞:" + "");
-        viewHolder.tv_address.setText("地址:"+"");
-        viewHolder.tv_price.setText("最低消费:" + "");
-        viewHolder.tv_ts.setText("特殊:" + "");
-        viewHolder.tv_title.setText("12:" + "");
+        SceneServiceEntity.ListBean data=getItem(position);
+        viewHolder.tv_scene.setText("附近景区:" + name);
+        viewHolder.tv_phone.setText("电话:" +data.getPhone());
+        viewHolder.tv_good.setText("点赞:" +data.getGood());
+        viewHolder.tv_address.setText("地址:"+data.getAddress());
+        viewHolder.tv_price.setText("最低消费:￥" + data.getPrice());
+        viewHolder.tv_ts.setText("特色:" + data.getTese());
+        viewHolder.tv_title.setText(data.getName());
+        ImageLoadUtil.getInstance().loadImage( viewHolder.imageView , Urls.address+data.getImage(),-1,-1);
 
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {
-        ImageView imageView;
+        RoundImageView imageView;
+        LinearLayout li_content;
         TextView tv_scene, tv_phone, tv_good, tv_address, tv_price, tv_ts, tv_title;
 
         @Override

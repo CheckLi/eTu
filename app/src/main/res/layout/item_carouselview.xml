@@ -8,6 +8,7 @@
 
         android:id="@+id/carouselView"
         android:layout_width="match_parent"
+        android:layout_marginBottom="7dp"
         android:layout_height="wrap_content">
     </com.yitu.etu.widget.CarouselView>
 

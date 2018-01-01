@@ -3,6 +3,7 @@ package com.yitu.etu.ui.adapter;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yitu.etu.R;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class ManageProductAdapter extends BaseAdapter<ShopProductEntity,ManageProductAdapter.ViewHolder>{
 
-    private final int px;
+    public final int px;
 
     public ManageProductAdapter(Context context) {
         super(context);
@@ -39,15 +40,15 @@ public class ManageProductAdapter extends BaseAdapter<ShopProductEntity,ManagePr
         viewHolder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
         viewHolder.image = (ImageView) convertView.findViewById(R.id.image);
         viewHolder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
-
+        viewHolder.li_content=(LinearLayout) convertView.findViewById(R.id.li_content);
     }
 
     @Override
     public void bindData(int position, View convertView, ViewHolder viewHolder) {
         if (position == 0) {
-            convertView.setPadding(px, px, px, px);
+            viewHolder.li_content.setPadding(px, px, px, px);
         } else {
-            convertView.setPadding(px, 0, px, px);
+            viewHolder.li_content.setPadding(px, 0, px, px);
         }
         ShopProductEntity data= getItem(position);
         viewHolder.tv_title.setText(data.getName());
@@ -65,6 +66,7 @@ public class ManageProductAdapter extends BaseAdapter<ShopProductEntity,ManagePr
     class ViewHolder extends BaseAdapter.abstractViewHodler {
         TextView tv_title, tv_address, tv_price;
         ImageView image;
+        LinearLayout li_content;
 
         @Override
         int getItemLayoutID(int type) {

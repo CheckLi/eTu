@@ -1,0 +1,248 @@
+package com.yitu.etu.ui.activity;
+
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.TextView;
+
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Poi;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.yitu.etu.EtuApplication;
+import com.yitu.etu.R;
+import com.yitu.etu.entity.ArrayBaseEntity;
+import com.yitu.etu.entity.HttpStateEntity;
+import com.yitu.etu.entity.ObjectBaseEntity;
+import com.yitu.etu.entity.SceneServiceEntity;
+import com.yitu.etu.entity.SceneShopProductEntity;
+import com.yitu.etu.entity.ShopProductEntity;
+import com.yitu.etu.tools.GsonCallback;
+import com.yitu.etu.tools.Http;
+import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.adapter.ManageProductAdapter;
+import com.yitu.etu.ui.adapter.ManageProductAdapter2;
+import com.yitu.etu.ui.adapter.SceneServiceAdapter;
+import com.yitu.etu.util.ToastUtil;
+import com.yitu.etu.util.Tools;
+import com.yitu.etu.widget.CarouselView;
+import com.yitu.etu.widget.ListSlideView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.Call;
+
+public class SceneShopProductActivity extends BaseActivity {
+
+    private View view;
+    private ListSlideView listView;
+    private ManageProductAdapter2 manageProductAdapter;
+    private SmartRefreshLayout layout_refresh;
+    private CarouselView carouselView;
+    private SceneServiceEntity.ListBean data;
+    private TextView tv_good;
+    private TextView tv_des;
+    private TextView tv_phone;
+    private TextView tv_address;
+    private int type;
+    private int id;
+    private String title;
+    public SceneShopProductEntity response;
+    @Override
+    public int getLayout() {
+        return R.layout.activity_scene_service;
+    }
+
+    @Override
+    public void initActionBar() {
+        mActionBarView.setRightImage(R.drawable.icon145, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (EtuApplication.getInstance().isLogin()) {
+                    Tools.getPopupWindow(context, new String[]{"发起行程", "导航过去", "加入收藏", "分享给朋友"}, new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            if (position == 0) {
+                                Intent intent = new Intent(context, RelaseTravelActivity.class);
+//                                intent.putExtra("data", null);
+                                startActivity(intent);
+                            } else if (position == 1 && data != null) {
+                                Poi end = new Poi(data.getAddress(), new LatLng(Double.valueOf(data.getAddress_lat()), Double.valueOf(data.getAddress_lng())), "");
+                                Tools.navi(context, end);
+
+                            }
+                            if (position == 2) {
+                                shopCollect();
+                            }
+                            if (position == 3) {
+                            }
+                        }
+                    }, null).showAsDropDown(v, 0, 0);
+                } else {
+                    showToast("请登录");
+                }
+            }
+        });
+    }
+
+    @Override
+    public void initView() {
+//        data = (SceneServiceEntity.ListBean) getIntent().getSerializableExtra("data");
+        type = getIntent().getIntExtra("type", 0);
+        id = getIntent().getIntExtra("id", 0);
+        title= getIntent().getStringExtra("title");
+        setTitle(title);
+        listView = (ListSlideView) findViewById(R.id.listview);
+        findViewById(R.id.img_my_shop).setVisibility(View.VISIBLE);
+        view = getLayoutInflater().inflate(R.layout.activity_scene_shop_product, null);
+        tv_good = (TextView) view.findViewById(R.id.tv_good);
+        tv_des = (TextView) view.findViewById(R.id.tv_des);
+        tv_phone = (TextView) view.findViewById(R.id.tv_phone);
+        tv_address = (TextView) view.findViewById(R.id.tv_address);
+        manageProductAdapter = new ManageProductAdapter2(this);
+        layout_refresh = (SmartRefreshLayout) findViewById(R.id.layout_refresh);
+        carouselView = (CarouselView) view.findViewById(R.id.carouselView);
+        view.setVisibility(View.GONE);
+        listView.addHeaderView(view);
+        listView.setAdapter(manageProductAdapter);
+        layout_refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                page = 1;
+                refresh(true);
+            }
+        });
+
+        layout_refresh.setOnLoadmoreListener(new OnLoadmoreListener() {
+            @Override
+            public void onLoadmore(RefreshLayout refreshlayout) {
+                refresh(false);
+            }
+        });
+        refresh(true);
+        listView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context,SceneShopProductDetailActivity.class);
+                intent.putExtra("response",response);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void shopCollect() {
+        if (EtuApplication.getInstance().isLogin()) {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("id", id + "");
+            params.put("type", type + "");
+            Http.post(Urls.SHOP_COLLECT, params, new GsonCallback<HttpStateEntity>() {
+                @Override
+                public void onError(Call call, Exception e, int i) {
+                }
+
+                @Override
+                public void onResponse(HttpStateEntity response, int i) {
+                    ToastUtil.showMessage(response.getMessage());
+                }
+            });
+        } else {
+            showToast("请登录");
+        }
+    }
+
+    public void refresh(final boolean isRefresh) {
+        if (isRefresh) {
+            showWaitDialog("加载中...");
+        }
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("shop_id", id + "");
+        params.put("page", page + "");
+        Http.post(Urls.SHOP_GET_PRODUCT, params, new GsonCallback<ObjectBaseEntity<SceneShopProductEntity>>() {
+
+
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                layout_refresh.finishRefresh();
+                layout_refresh.finishLoadmore();
+                hideWaitDialog();
+            }
+
+            @Override
+            public void onResponse(ObjectBaseEntity<SceneShopProductEntity> response, int id) {
+               SceneShopProductActivity .this.response=response.getData();
+                if (response.success()) {
+                    if (isRefresh) {
+                        data = response.getData().getInfo();
+                        view.setVisibility(View.VISIBLE);
+                        manageProductAdapter.clearAll();
+                        tv_des.setText(data.getDes());
+                        tv_phone.setText("电话：" + data.getPhone());
+                        tv_address.setText("地址：" + data.getAddress());
+                        tv_good.setText(data.getGood() + "");
+                        ArrayList<String> path = new ArrayList<>();
+                        path.add(data.getImage());
+                        carouselView.setPath(path);
+                    }
+                    manageProductAdapter.addData(response.getData().getData());
+                    RefreshSuccess(layout_refresh, isRefresh, response.getData().getData().size());
+                }
+                hideWaitDialog();
+
+            }
+        });
+    }
+
+    public void sendDz() {
+        if (EtuApplication.getInstance().isLogin()) {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("id", id + "");
+            params.put("type", "0");
+            Http.post(Urls.SHOP_ADD_GOOD, params, new GsonCallback<HttpStateEntity>() {
+                @Override
+                public void onError(Call call, Exception e, int i) {
+                }
+
+                @Override
+                public void onResponse(HttpStateEntity response, int i) {
+                    if (response.success()) {
+                        data.setGood(data.getGood() + 1);
+                        tv_good.setText(String.valueOf(data.getGood()));
+                    }
+                    ToastUtil.showMessage(response.getMessage());
+                }
+            });
+        } else {
+            showToast("请登录");
+        }
+    }
+
+    @Override
+    public void getData() {
+
+    }
+
+    @Override
+    public void initListener() {
+
+    }
+
+    public void onClick(View v) {
+        if (v.getId() == R.id.img_dz) {
+            sendDz();
+        }
+        if (v.getId() == R.id.tv_address && data != null) {
+            Poi end = new Poi(data.getAddress(), new LatLng(Double.valueOf(data.getAddress_lat()), Double.valueOf(data.getAddress_lng())), "");
+            Tools.navi(context, end);
+
+        }
+        if (v.getId() == R.id.img_my_shop) {
+            startActivity(new Intent(context, BuyCarActivity.class));
+        }
+    }
+}

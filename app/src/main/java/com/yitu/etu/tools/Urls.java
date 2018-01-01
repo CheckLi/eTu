@@ -91,5 +91,8 @@ public class Urls {
     public static final String CHECK_SHOP_ORDER=address+"/shop/checkShopOrder";
 
     public static final String RELEASE_My_Travel=address+"/title/addTitle";
+    public static final String SHOP_GET_PRODUCT=address+"/shop/get_product";
+    public static final String SHOP_COLLECT=address+"/shop/collect";
 
+    public static final String SHOP_ADD_GOOD=address+"/shop/addGood";
 }

@@ -83,7 +83,7 @@ public class SearchResultSceneActivity extends BaseActivity {
                     Tools.getPopupWindow(SearchResultSceneActivity.this, new String[]{"发起行程", "导航过去", "我要报错", "加入收藏", "分享给朋友"}, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            if (position == 0) {
+                            if (position == 0 && spotBean != null) {
                                 Intent intent = new Intent(SearchResultSceneActivity.this, RelaseTravelActivity.class);
                                 intent.putExtra("data", spotBean);
                                 startActivity(intent);
@@ -393,20 +393,22 @@ public class SearchResultSceneActivity extends BaseActivity {
         if (v.getId() == R.id.img_dz) {
             sendDz();
         } else if (v.getId() == R.id.li_ms) {
-           intent=new Intent(SearchResultSceneActivity.this,SceneServiceActivity.class);
-           intent.putExtra("type",1);
-            intent.putExtra("spot_id",id);
-           startActivity(intent);
-        }
-        else if (v.getId() == R.id.li_zs) {
-            intent=new Intent(SearchResultSceneActivity.this,SceneServiceActivity.class);
-            intent.putExtra("type",2);  intent.putExtra("spot_id",id);
+            intent = new Intent(SearchResultSceneActivity.this, SceneServiceActivity.class);
+            intent.putExtra("type", 1);
+            intent.putExtra("spot_id", id);
+            intent.putExtra("name", spotBean.getTitle());
             startActivity(intent);
-        }
-        else if (v.getId() == R.id.li_yw) {
-            intent=new Intent(SearchResultSceneActivity.this,SceneServiceActivity.class);
-            intent.putExtra("type",3);
-            intent.putExtra("spot_id",id);
+        } else if (v.getId() == R.id.li_zs) {
+            intent = new Intent(SearchResultSceneActivity.this, SceneServiceActivity.class);
+            intent.putExtra("type", 2);
+            intent.putExtra("name", spotBean.getTitle());
+            intent.putExtra("spot_id", id);
+            startActivity(intent);
+        } else if (v.getId() == R.id.li_yw) {
+            intent = new Intent(SearchResultSceneActivity.this, SceneServiceActivity.class);
+            intent.putExtra("name", spotBean.getTitle());
+            intent.putExtra("type", 3);
+            intent.putExtra("spot_id", id);
 
             startActivity(intent);
         }
