@@ -37,13 +37,14 @@ import okhttp3.Call;
  */
 public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBean, CircleFirendAdapter.ViewHolder> {
     boolean isOther;
-    int myId;
+    int myId=-1;
 
     public CircleFirendAdapter(Context context, boolean isOther) {
         super(context);
         this.isOther = isOther;
+        if(EtuApplication.getInstance().isLogin()){
         myId = EtuApplication.getInstance().getUserInfo().getId();
-    }
+    }}
 
     @Override
     public ViewHolder onCreateViewHolder(int position) {

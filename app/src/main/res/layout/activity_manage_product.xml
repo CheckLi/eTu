@@ -24,6 +24,7 @@
         android:divider="@color/transparent"
         android:listSelector="@color/transparent"
         android:overScrollMode="never"
+        app:mode="right"
         android:scrollbars="none">
 
     </com.yitu.etu.widget.ListSlideView>

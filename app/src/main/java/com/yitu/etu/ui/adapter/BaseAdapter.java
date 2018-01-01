@@ -14,14 +14,17 @@ public abstract class BaseAdapter<T, E extends BaseAdapter.abstractViewHodler> e
     public List<T> data;
     boolean showNoDataItem = false;//没有数据时是否显示没有数据的item
     int NODATA = -1;//vieWtype 没有数据
+
     public BaseAdapter(Context context) {
         this.context = context;
     }
+
     public BaseAdapter(Context context,
                        List<T> data) {
         this(context);
         this.data = data;
     }
+
     public Context getContext() {
         return context;
     }
@@ -43,6 +46,7 @@ public abstract class BaseAdapter<T, E extends BaseAdapter.abstractViewHodler> e
             notifyDataSetChanged();
         }
     }
+
     public void addData(T data) {
         if (data == null) {
             return;
@@ -51,14 +55,16 @@ public abstract class BaseAdapter<T, E extends BaseAdapter.abstractViewHodler> e
         this.data.add(data);
         notifyDataSetChanged();
     }
-    public void replace(int position,T data) {
+
+    public void replace(int position, T data) {
         if (data == null) {
             return;
         }
         initData();
-        this.data.set(position,data);
+        this.data.set(position, data);
         notifyDataSetChanged();
     }
+
     public void addData(List<T> data) {
         if (data == null) {
             return;
@@ -76,7 +82,8 @@ public abstract class BaseAdapter<T, E extends BaseAdapter.abstractViewHodler> e
         this.data.add(0, data);
         notifyDataSetChanged();
     }
-    public  void initData(){
+
+    public void initData() {
         if (this.data == null) {
             this.data = new ArrayList<T>();
         }
@@ -87,6 +94,12 @@ public abstract class BaseAdapter<T, E extends BaseAdapter.abstractViewHodler> e
             data.remove(position);
             notifyDataSetChanged();
         }
+    }
+
+    public void remove(T data) {
+        this.data.remove(data);
+        notifyDataSetChanged();
+
     }
 
     @Override
@@ -122,7 +135,7 @@ public abstract class BaseAdapter<T, E extends BaseAdapter.abstractViewHodler> e
     @Override
     public int getItemViewType(int position) {
         int viewType = 1;
-        int count =(data == null ? 0 : data.size());
+        int count = (data == null ? 0 : data.size());
         if (showNoDataItem && count == 0) {
             viewType = NODATA;
         }
@@ -133,29 +146,29 @@ public abstract class BaseAdapter<T, E extends BaseAdapter.abstractViewHodler> e
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         E viewHolder;
-        if(convertView==null){
-            viewHolder=onCreateViewHolder(position);
-            convertView=getLayoutInflater().inflate(viewHolder.getItemLayoutID(getItemViewType(position)),null);
-            initItemView(position,convertView,viewHolder);
+        if (convertView == null) {
+            viewHolder = onCreateViewHolder(position);
+            convertView = getLayoutInflater().inflate(viewHolder.getItemLayoutID(getItemViewType(position)), null);
+            initItemView(position, convertView, viewHolder);
             convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (E) convertView.getTag();
         }
-        else{
-            viewHolder= (E)convertView.getTag();
-        }
-        bindData(position,convertView,viewHolder);
+        bindData(position, convertView, viewHolder);
         return convertView;
     }
+
     //创建ViewHolder
     abstract public E onCreateViewHolder(int position);
 
     //初始化view
-    abstract public void initItemView(int position,View convertView,E e);
+    abstract public void initItemView(int position, View convertView, E e);
 
     //绑定数据
-    abstract public void bindData(int position,View convertView,E viewHolder);
+    abstract public void bindData(int position, View convertView, E viewHolder);
 
-    abstract  class abstractViewHodler {
-        abstract int  getItemLayoutID(int  type);
+    abstract class abstractViewHodler {
+        abstract int getItemLayoutID(int type);
     }
 }
 

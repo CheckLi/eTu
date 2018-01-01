@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yitu.etu.EtuApplication;
@@ -18,9 +19,12 @@ import com.yitu.etu.util.DateUtil;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
+import com.yitu.etu.util.pay.BuyType;
+import com.yitu.etu.util.pay.PayUtil;
 import com.yitu.etu.widget.CarouselView;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 
@@ -39,6 +43,11 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
     private TextView tv_state;
     private TextView tv_need_money;
     private CarouselView carouselView;
+    private LinearLayout li_content;
+    private boolean isFromMe;
+    private LinearLayout li2;
+    private int status;
+    private OrderSceneEntity data;
 
     @Override
     public int getLayout() {
@@ -53,12 +62,14 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
                 Tools.getPopupWindow(SearchResultOrderSceneActivity.this, new String[]{"发布出行", "分享给朋友"}, new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (position == 0) {
-                            if (EtuApplication.getInstance().isLogin()) {
+                        if (EtuApplication.getInstance().isLogin()) {
+                            if (position == 0) {
                                 startActivity(new Intent(SearchResultOrderSceneActivity.this, RelaseTravelActivity.class));
-                            } else {
-                                ToastUtil.showMessage("请登录");
+                            } else if (position == 1) {
+
                             }
+                        } else {
+                            ToastUtil.showMessage("请登录");
                         }
 
                     }
@@ -72,6 +83,7 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        li_content = (LinearLayout) findViewById(R.id.li_content);
         carouselView = (CarouselView) findViewById(R.id.carouselView);
 
         tv_address = (TextView) findViewById(R.id.tv_address);
@@ -86,12 +98,20 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
         tv_state = (TextView) findViewById(R.id.tv_state);
         tv_need_money = (TextView) findViewById(R.id.tv_need_money);
         carouselView.setTopRadius(Tools.dp2px(this, 5));
+        li2 = (LinearLayout) findViewById(R.id.li2);
     }
 
     @Override
     public void getData() {
         id = getIntent().getStringExtra("id");
         title = getIntent().getStringExtra("title");
+        isFromMe = getIntent().getBooleanExtra("isFrom", false);
+        if (isFromMe) {
+            li2.setVisibility(View.VISIBLE);
+            tv_state.setVisibility(View.GONE);
+        } else {
+
+        }
         setTitle(title);
         ActionInfo();
     }
@@ -140,15 +160,21 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
             @Override
             public void onResponse(ObjectBaseEntity<OrderSceneEntity> response, int i) {
                 if (response.success()) {
-                    OrderSceneEntity data = response.getData();
+                    li_content.setVisibility(View.VISIBLE);
+                    data = response.getData();
                     tv_address.setText("地址：" + data.getAddress());
                     tv_cy_time.setText("参与时间：" + DateUtil.getTime(data.getJoin_starttime() + "", "yyyy-MM-dd HH:mm") + "至" + DateUtil.getTime(data.getJoin_endtime() + "", "yyyy-MM-dd HH:mm"));
                     tv_xj_time.setText("行程时间：" + DateUtil.getTime(data.getStart_time() + "", "yyyy-MM-dd HH:mm") + "至" + DateUtil.getTime(data.getEnd_time() + "", "yyyy-MM-dd HH:mm"));
-                    tv_state.setText("结束");
-                    tv_jd.setText("进度 1/20");
+                    tv_state.setText(data.getStatus_name());
+                    status = data.getStatus();
+                    tv_jd.setText("进度 " + data.getHasnumber() + "/" + data.getNumber());
                     carouselView.setPath(data.getImages());
                     text.setText(data.getText());
-                    tv_need_money.setText("dsad");
+                    if (Double.parseDouble(data.getMoney()) > 0d) {
+                        tv_need_money.setText("需要出行费");
+                    } else {
+                        tv_need_money.setText("无需出行费");
+                    }
                     ImageLoadUtil.getInstance().loadImage(image, Urls.address + data.getUser().getHeader(), 200, 200);
 
                 }
@@ -157,10 +183,48 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
 
     }
 
+    public void ActionJs() {
+        if (EtuApplication.getInstance().isLogin()) {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("action_id", id);
+            Http.post(Urls.address + "/action/checkOrder", params, new GsonCallback<ObjectBaseEntity<MerchantBaseEntity>>() {
+                @Override
+                public void onError(Call call, Exception e, int i) {
+
+                }
+
+                @Override
+                public void onResponse(ObjectBaseEntity<MerchantBaseEntity> response, int i) {
+
+                    ToastUtil.showMessage(response.getMessage());
+                }
+            });
+        } else {
+            ToastUtil.showMessage("请登录");
+        }
+    }
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_collect:
                 ActionCollect();
+                break;
+            case R.id.tv_ql:
+                //发起群聊
+                break;
+
+            case R.id.tv_state:
+                //参与活动
+                if (status == 1) {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("action_id", data.getId() + "");
+                    PayUtil.getInstance(-1, data.getPrice(), "参与" + title + "付款",2, BuyType.INSTANCE.getTYPE_BUY_ACTION())
+                            .toPayActivity(this, params);
+                }
+                break;
+
+            case R.id.tv_js:
+                ActionJs();
                 break;
         }
     }

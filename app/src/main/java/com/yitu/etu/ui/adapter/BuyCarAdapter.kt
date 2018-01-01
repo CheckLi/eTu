@@ -117,12 +117,37 @@ class BuyCarAdapter : MyBaseAdapter<BuyCar> {
         return data
     }
 
-    fun addItem(buycar:BuyCar){
-        if(data.size==0){
-            data= arrayListOf(buycar)
-        }else {
+    fun addItem(buycar: BuyCar) {
+        if (data.size == 0) {
+            data = arrayListOf(buycar)
+        } else {
             data.add(buycar)
         }
         notifyDataSetChanged()
+    }
+
+    /**
+     * 获取选中id
+     */
+    fun getPutId(): String {
+        val ids = StringBuffer()
+        data.forEach {
+            if (it.isCheck) {
+                ids.append("${it.id},")
+            }
+        }
+        return if (ids.length > 1) ids.toString().substring(0, ids.length - 1) else ids.toString()
+    }
+    /**
+     * 获取选中id
+     */
+    fun getPutCount(): String {
+        val ids = StringBuffer()
+        data.forEach {
+            if (it.isCheck) {
+                ids.append("${it.count},")
+            }
+        }
+        return if (ids.length > 1) ids.toString().substring(0, ids.length - 1) else ids.toString()
     }
 }

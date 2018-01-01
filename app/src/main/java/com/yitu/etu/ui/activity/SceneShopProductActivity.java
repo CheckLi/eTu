@@ -1,10 +1,9 @@
 package com.yitu.etu.ui.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.model.LatLng;
@@ -15,26 +14,22 @@ import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
-import com.yitu.etu.entity.ArrayBaseEntity;
 import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.SceneServiceEntity;
 import com.yitu.etu.entity.SceneShopProductEntity;
-import com.yitu.etu.entity.ShopProductEntity;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
-import com.yitu.etu.ui.adapter.ManageProductAdapter;
 import com.yitu.etu.ui.adapter.ManageProductAdapter2;
-import com.yitu.etu.ui.adapter.SceneServiceAdapter;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.CarouselView;
 import com.yitu.etu.widget.ListSlideView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import okhttp3.Call;
 
@@ -54,6 +49,8 @@ public class SceneShopProductActivity extends BaseActivity {
     private int id;
     private String title;
     public SceneShopProductEntity response;
+    private ImageView image;
+
     @Override
     public int getLayout() {
         return R.layout.activity_scene_service;
@@ -104,7 +101,8 @@ public class SceneShopProductActivity extends BaseActivity {
         tv_good = (TextView) view.findViewById(R.id.tv_good);
         tv_des = (TextView) view.findViewById(R.id.tv_des);
         tv_phone = (TextView) view.findViewById(R.id.tv_phone);
-        tv_address = (TextView) view.findViewById(R.id.tv_address);
+        tv_address=(TextView) view.findViewById(R.id.tv_address);
+        image= (ImageView) view.findViewById(R.id.image);
         manageProductAdapter = new ManageProductAdapter2(this);
         layout_refresh = (SmartRefreshLayout) findViewById(R.id.layout_refresh);
         carouselView = (CarouselView) view.findViewById(R.id.carouselView);
@@ -126,11 +124,12 @@ public class SceneShopProductActivity extends BaseActivity {
             }
         });
         refresh(true);
-        listView.setOnClickListener(new View.OnClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent=new Intent(context,SceneShopProductDetailActivity.class);
-                intent.putExtra("response",response);
+                intent.putExtra("title",response.getInfo().getName());
+                intent.putExtra("id",manageProductAdapter.getItem(position-1).getId()+"");
                 startActivity(intent);
             }
         });
@@ -188,6 +187,7 @@ public class SceneShopProductActivity extends BaseActivity {
                         ArrayList<String> path = new ArrayList<>();
                         path.add(data.getImage());
                         carouselView.setPath(path);
+                        ImageLoadUtil.getInstance().loadImage(image,Urls.address+data.getUser().getHeader(),200,200);
                     }
                     manageProductAdapter.addData(response.getData().getData());
                     RefreshSuccess(layout_refresh, isRefresh, response.getData().getData().size());
@@ -243,6 +243,9 @@ public class SceneShopProductActivity extends BaseActivity {
         }
         if (v.getId() == R.id.img_my_shop) {
             startActivity(new Intent(context, BuyCarActivity.class));
+        }
+        if (v.getId() == R.id.image) {
+            Tools.startChat(response.getInfo().getName(),response.getInfo().getUser_id()+"","可以一起去旅行吗？",this);
         }
     }
 }

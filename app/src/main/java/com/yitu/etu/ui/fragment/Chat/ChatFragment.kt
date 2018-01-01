@@ -9,8 +9,6 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.text.InputType
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
 import com.amap.api.maps.model.LatLng
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
 import com.yitu.etu.EtuApplication
@@ -22,12 +20,12 @@ import com.yitu.etu.tools.Http
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.activity.BaseActivity
 import com.yitu.etu.ui.activity.MapActivity
+import com.yitu.etu.ui.adapter.ChatMessageAdapter
 import com.yitu.etu.util.userInfo
 import io.rong.imkit.DefaultExtensionModule
 import io.rong.imkit.RongExtension
 import io.rong.imkit.RongIM
 import io.rong.imkit.fragment.ConversationFragment
-import io.rong.imkit.model.UIMessage
 import io.rong.imkit.plugin.IPluginModule
 import io.rong.imkit.widget.adapter.MessageListAdapter
 import io.rong.imlib.IRongCallback
@@ -54,20 +52,10 @@ var mTargetId = ""
 class ChatFragment : ConversationFragment() {
     override fun onResolveAdapter(context: Context): MessageListAdapter {
         mTargetId = activity.intent.data.getQueryParameter("targetId")
-        return MessageAdapter(context)
+        return ChatMessageAdapter(activity)
     }
 }
 
-class MessageAdapter(var context: Context) : MessageListAdapter(context) {
-    override fun bindView(v: View?, position: Int, data: UIMessage) {
-        if(data.message.objectName.equals("RCD:ZXJPacket")){
-            //这是红包
-            LayoutInflater.from(context).inflate(R.layout.chat_packet_item,null)
-        }else {
-            super.bindView(v, position, data)
-        }
-    }
-}
 
 /**
  * 自定义面板，0拍摄，1位置，2位置共享，3平安符

@@ -3,13 +3,12 @@ package com.yitu.etu.ui.activity
 import android.view.MotionEvent
 import android.view.View
 import com.yitu.etu.R
-import com.yitu.etu.entity.BuyCar
 import com.yitu.etu.ui.adapter.BuyCarAdapter
 import com.yitu.etu.util.BuyCarUtil
 import com.yitu.etu.util.formatPrice
+import com.yitu.etu.util.pay.BuyType
+import com.yitu.etu.util.pay.PayUtil
 import kotlinx.android.synthetic.main.activity_buy_car2.*
-import java.math.RoundingMode
-import java.text.DecimalFormat
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -20,22 +19,6 @@ class BuyCarActivity : BaseActivity() {
 
     override fun initActionBar() {
         title = "购物车"
-        setRightText("商品添加模拟"){
-            val by=BuyCar()
-            val mDfScore = DecimalFormat("#.00")
-            mDfScore.roundingMode = RoundingMode.DOWN
-            by.setpPrice(mDfScore.format(Random().nextFloat()*10).toFloat())
-
-            BuyCarUtil.addBuyCar(by)
-            adapter.addItem(by)
-            if(adapter.count==0){
-                data_empty_view.visibility = View.VISIBLE
-            }else{
-                data_empty_view.visibility = View.GONE
-            }
-            listview.slideBack()
-            initInfo()
-        }
     }
 
     override fun initView() {
@@ -76,13 +59,13 @@ class BuyCarActivity : BaseActivity() {
         /**
          * 添加和删除
          */
-        adapter.setBuyCarListener({ select,del ->
-            if(del){
-                if(adapter.count==0){
+        adapter.setBuyCarListener({ select, del ->
+            if (del) {
+                if (adapter.count == 0) {
                     data_empty_view.visibility = View.VISIBLE
                 }
                 listview.slideBack()
-            }else if (!select) {
+            } else if (!select) {
                 cb_select_all.isChecked = false
             } else {
                 cb_select_all.isChecked = adapter.checkSelect()
@@ -114,6 +97,17 @@ class BuyCarActivity : BaseActivity() {
             }
             true
         }
+        /**
+         * 去结算
+         */
+        to_settlement.setOnClickListener {
+            val params = HashMap<String, String>()
+            params.put("product_id", adapter.getPutId())
+            params.put("count", adapter.getPutCount())
+            PayUtil.getInstance(-1, totalPrice, "购物车购买", BuyType.TYPE_BUY_SHOP_PROJECT)
+                    .toPayActivity(this, params)
+        }
+
     }
 
     private fun initTotalPrice() {

@@ -1,7 +1,6 @@
 package com.yitu.etu.ui.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ import com.yitu.etu.util.Tools;
 import com.yitu.etu.widget.GlideApp;
 
 import java.util.HashMap;
-import java.util.List;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -72,7 +70,12 @@ public class ManageOrderAdapter extends BaseAdapter<ShopOrderEntity, ManageOrder
                     public void onClick(View view) {
                     InputPriceDialog inputPriceDialog = new InputPriceDialog(getContext(), "订单核销");
                     inputPriceDialog.setHint("已到核销期限，可直接核销",false);
-                    inputPriceDialog.setRightBtn("取消",null);
+                    inputPriceDialog.setRightBtn("取消", new Function1<View, Unit>() {
+                        @Override
+                        public Unit invoke(View view) {
+                            return null;
+                        }
+                    });
                     inputPriceDialog.setLeftBtn("确认", new Function1<View, Unit>() {
                         @Override
                         public Unit invoke(View view) {

@@ -95,4 +95,16 @@ public class Urls {
     public static final String SHOP_COLLECT=address+"/shop/collect";
 
     public static final String SHOP_ADD_GOOD=address+"/shop/addGood";
+    public static final String SHOP_DEL_PRODUCT=address+"/shop/delProductInfo";
+
+    /**
+     * 支付
+     * 购买数量count、商品ID
+     product_id（多个⽤英⽂,隔开）、
+     ⽀付类型paytype（0为余额⽀付；
+     1为⽀付宝⽀付；2为微信⽀付）、
+     ⽀付密码paypwd（当为余额⽀付
+     时传⼊）
+     */
+    public static final String URL_SHOP_PROJECT=address+"/shop/create_order";
 }

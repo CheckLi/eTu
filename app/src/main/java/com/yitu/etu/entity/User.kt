@@ -1,5 +1,6 @@
 package com.yitu.etu.entity
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 /**
@@ -38,7 +39,7 @@ data class UserInfo(
 		@SerializedName("updated") val updated: Int=0, //1512573139
 		@SerializedName("ispaypwd") var ispaypwd: Int=0, //0
 		@SerializedName("token") val token: String="" //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGkuOTFldG8uY29tIiwiaWF0IjoxNTEzNDExODc0LCJpZCI6MzF9.s-UtStiEgghabcAN8idmWrlC2EqXwN5puKUPyL9uQUI
-)
+):Serializable
 
 
 data class RenZBean(

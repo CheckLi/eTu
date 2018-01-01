@@ -10,12 +10,12 @@ import com.google.gson.annotations.SerializedName
  * @date:2017年12月22日 18:17
  *
  */
-data class BuyCar(
+open class BuyCar(
         @SerializedName("id") val id: Int=0, //3
         @SerializedName("shop_id") val shopId: Int=0, //1
         @SerializedName("name") val name: String="", //甜皮鸭
         @SerializedName("image") val image: String="", ///assets/data/20171213/15131793219177.jpg
-        @SerializedName("list_image") val listImage: String="", ///assets/data/20171213/15131793219538.jpg|/assets/data/20171213/15131793214830.jpg
+        @SerializedName("list_image1") val listImage: String="", ///assets/data/20171213/15131793219538.jpg|/assets/data/20171213/15131793214830.jpg
         @SerializedName("fxdes") val fxdes: String="",
         @SerializedName("des") val des: String="", //川味鸭子
         @SerializedName("salecount") val salecount: Int=0, //-1

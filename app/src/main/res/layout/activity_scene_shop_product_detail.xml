@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.yitu.etu.ui.activity.SceneShopProductActivity">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             tools:context="com.yitu.etu.ui.activity.SceneShopProductActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                     android:paddingTop="4dp"
                     android:text="12"
                     android:textColor="#FFBA44"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"/>
 
                 <ImageView
                     android:id="@+id/img_dz"
@@ -55,9 +55,21 @@
                     android:onClick="onClick"
                     android:padding="10dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/icon33" />
+                    android:src="@drawable/icon33"/>
             </FrameLayout>
 
+            <com.yitu.etu.widget.image.CircleImageView
+                android:id="@+id/image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:onClick="onClick"
+                android:src="@drawable/default_head"
+                app:border_color="@color/white"
+                app:border_width="2dp"/>
         </FrameLayout>
 
         <LinearLayout
@@ -86,7 +98,7 @@
                     android:singleLine="true"
                     android:text="产品介绍"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/tv_des"
@@ -97,7 +109,7 @@
                     android:singleLine="true"
                     android:text="人均：12￥"
                     android:textColor="@color/black"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"/>
 
 
             </LinearLayout>
@@ -109,7 +121,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginLeft="7dp"
+
         android:layout_marginRight="7dp"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -134,33 +148,46 @@
                     android:singleLine="true"
                     android:text="产品详情"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/tv_des"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_ts"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:lines="1"
                         android:singleLine="true"
                         android:text="人均：12￥"
                         android:textColor="@color/black"
-                        android:textSize="13sp" />
+                        android:textSize="13sp"/>
 
                     <TextView
-                        android:id="@+id/tv_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:text="单价："
+                        android:textColor="@color/black"
+                        android:textSize="13sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:lines="1"
                         android:singleLine="true"
                         android:text="人均：12￥"
+                        android:textColor="@color/color_red"
+                        android:textSize="13sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="元"
                         android:textColor="@color/black"
-                        android:textSize="13sp" />
+                        android:textSize="13sp"/>
                 </LinearLayout>
 
                 <TextView
@@ -174,18 +201,101 @@
                     android:singleLine="true"
                     android:text="人均：12￥"
                     android:textColor="@color/black"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"/>
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/money_bg"
+                android:padding="4dp">
+
+                <TextView
+                    android:id="@+id/tv_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:text="1212"
+                    android:textColor="@color/color_red"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/btn_jian"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/jia_bg"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="-"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tv_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:text="1"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/btn_jia"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+
+                    android:background="@drawable/jian_bg"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="+"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btn_add_buy"
+                android:layout_width="44dp"
+                android:layout_height="27dp"
+                android:onClick="onClick"
+                android:src="@drawable/icon52"/>
 
             <TextView
+                android:id="@+id/btn_send_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1212" />
+                android:background="@drawable/send_order_bg"
+                android:onClick="onClick"
+                android:paddingBottom="3dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="3dp"
+                android:text="下订单"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_my_shop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/icon52"
+        android:onClick="onClick"
+        android:visibility="gone"/>
 </FrameLayout>

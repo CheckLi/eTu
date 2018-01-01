@@ -138,4 +138,6 @@ data class Ticket(
 		@SerializedName("updated") val updated: Int = 0 //1514093617
 ): Serializable
 
-data class PayBean(var id:Int,var price:Float,var desc:String,var rechargetype: Int,var classname: String,var buyType: Int):Serializable
+data class PayBean(var id:Int,var price:Float,var desc:String,var rechargetype: Int,var classname: String,var buyType: Int,var params:MutableMap<String,String>):Serializable{
+	constructor( id:Int, price:Float, desc:String, rechargetype: Int, classname: String, buyType: Int):this(id,price,desc,rechargetype,classname,buyType, mutableMapOf())
+}

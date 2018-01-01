@@ -1,5 +1,7 @@
 package com.yitu.etu.entity;
 
+import com.yitu.etu.util.TextUtils;
+
 import java.util.List;
 
 /**
@@ -177,6 +179,10 @@ public class OrderSceneEntity {
 
     public String getMoney() {
         return money;
+    }
+
+    public Float getPrice(){
+        return Float.parseFloat(TextUtils.getText(money,"0.00"));
     }
 
     public void setMoney(String money) {

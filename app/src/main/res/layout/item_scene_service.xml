@@ -60,7 +60,7 @@
                     android:lines="1"
                     android:singleLine="true"
                     android:text="人均：12￥"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/color_red"
                     android:textSize="13sp" />
             </LinearLayout>
 

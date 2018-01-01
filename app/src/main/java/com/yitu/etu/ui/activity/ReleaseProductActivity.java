@@ -1,8 +1,6 @@
 package com.yitu.etu.ui.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -13,15 +11,12 @@ import com.squareup.picasso.Callback;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.ShopProductEntity;
-import com.yitu.etu.eventBusItem.EventRefresh;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.FileUtil;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.MgridView;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -161,8 +156,8 @@ public class ReleaseProductActivity extends BaseActivity {
             }
             if (data != null) {
                 params.put("id", data.getId() + "");
-                showWaitDialog("发布中...");
             }
+            showWaitDialog("保存中...");
             new Thread(new Runnable() {
                 @Override
                 public void run() {

@@ -14,6 +14,7 @@ object BuyCarUtil {
     /**
      * 添加到购物车
      */
+    @JvmStatic
     fun addBuyCar(buycar: BuyCar) {
         var buys = PrefrersUtil.getInstance().getListClass(AppConstant.PARAM_SAVE_BUY_CAR, BuyCar::class.java)
         if (buys == null || buys.size == 0) {
@@ -42,6 +43,7 @@ object BuyCarUtil {
     /**
      * 删除一个商品
      */
+    @JvmStatic
     fun cutBuyCar(buycar: BuyCar) {
         var buys = PrefrersUtil.getInstance().getListClass(AppConstant.PARAM_SAVE_BUY_CAR, BuyCar::class.java)
         if (buys == null || buys.size == 0) {
@@ -61,6 +63,7 @@ object BuyCarUtil {
     /**
      * 获取所有购物车
      */
+    @JvmStatic
     fun getAllBuyCar(): ArrayList<BuyCar> {
         return PrefrersUtil.getInstance().getListClass(AppConstant.PARAM_SAVE_BUY_CAR, BuyCar::class.java)
     }
@@ -68,6 +71,7 @@ object BuyCarUtil {
     /**
      * 保存所有购物车
      */
+    @JvmStatic
     fun saveBuyCar(buycar: MutableList<BuyCar>?) {
         if (buycar != null && buycar.size > 0) {
             PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buycar)

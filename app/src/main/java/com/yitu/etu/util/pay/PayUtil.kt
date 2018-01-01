@@ -21,8 +21,8 @@ import java.lang.Exception
  * @author: JIAMING.LI
  * @date:2017年12月25日 23:09
  */
-class PayUtil(val id: Int, val price: Float, val desc: String,val rechargetype: Int,val classname:String, val buyType: Int) {
-    constructor(id: Int, price: Float, desc: String, buyType: Int) : this(id, price, desc, -1,"", buyType) {}
+class PayUtil(val id: Int, val price: Float, val desc: String, val rechargetype: Int, val classname: String, val buyType: Int, val params1: MutableMap<String, String>) {
+    constructor(id: Int, price: Float, desc: String, buyType: Int) : this(id, price, desc, -1, "", buyType, mutableMapOf()) {}
 
     companion object {
         @JvmStatic
@@ -32,12 +32,12 @@ class PayUtil(val id: Int, val price: Float, val desc: String,val rechargetype: 
 
         @JvmStatic
         fun getInstance(id: Int, price: Float, desc: String, rechargetype: Int, buyType: Int): PayUtil {
-            return PayUtil(id, price, desc, rechargetype,"", buyType)
+            return PayUtil(id, price, desc, rechargetype, "", buyType, mutableMapOf())
         }
 
         @JvmStatic
         fun getInstance(payBean: PayBean): PayUtil {
-            return PayUtil(payBean.id, payBean.price, payBean.desc,payBean.rechargetype,payBean.classname, payBean.buyType)
+            return PayUtil(payBean.id, payBean.price, payBean.desc, payBean.rechargetype, payBean.classname, payBean.buyType, payBean.params)
         }
     }
 
@@ -45,7 +45,15 @@ class PayUtil(val id: Int, val price: Float, val desc: String,val rechargetype: 
      * 开始进入支付
      */
     fun toPayActivity(activity: AppCompatActivity) {
-        val payBean = PayBean(id, price, desc,rechargetype,activity.javaClass.simpleName, buyType)
+        val payBean = PayBean(id, price, desc, rechargetype, activity.javaClass.simpleName, buyType)
+        activityUtil.nextActivity(activity, PayOrderActivity::class.java, bundleOf("pay" to payBean), false)
+    }
+
+    /**
+     * 开始进入支付
+     */
+    fun toPayActivity(activity: AppCompatActivity, params: MutableMap<String, String>) {
+        val payBean = PayBean(id, price, desc, rechargetype, activity.javaClass.simpleName, buyType, params)
         activityUtil.nextActivity(activity, PayOrderActivity::class.java, bundleOf("pay" to payBean), false)
     }
 
@@ -65,7 +73,7 @@ class PayUtil(val id: Int, val price: Float, val desc: String,val rechargetype: 
                 "paytype" to type.toString()
         )
 
-        if(id!=-1){
+        if (id != -1) {
             params.put("id", id.toString())
         }
         if (type == 0 && !paypassword.isNullOrBlank()) {
@@ -74,6 +82,9 @@ class PayUtil(val id: Int, val price: Float, val desc: String,val rechargetype: 
         if (rechargetype != -1) {
             params.put("rechargetype", rechargetype.toString())
         }
+        for (param in params1) {
+            params.put(param.key, param.value)
+        }
         when (buyType) {
         //门票购买
             BuyType.TYPE_BUY_TICKET -> {
@@ -81,7 +92,16 @@ class PayUtil(val id: Int, val price: Float, val desc: String,val rechargetype: 
             }
         //平安符购买
             BuyType.TYPE_BUY_P_AN -> {
-                params.put("money",price.toString())
+                params.put("money", price.toString())
+                payTicket(Urls.URL_BUY_P_AN, params, activity, type)
+            }
+        //店铺商品创建订单
+            BuyType.TYPE_BUY_SHOP_PROJECT -> {
+                payTicket(Urls.URL_SHOP_PROJECT, params, activity, type)
+            }
+        //活动支付
+            BuyType.TYPE_BUY_ACTION -> {
+                params.put("money", price.toString())
                 payTicket(Urls.URL_BUY_P_AN, params, activity, type)
             }
         }

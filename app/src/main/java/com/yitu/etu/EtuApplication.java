@@ -27,6 +27,8 @@ import com.yitu.etu.util.LogUtil;
 import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
 import com.yitu.etu.util.location.LocationUtil;
+import com.yitu.etu.widget.chat.PacketMessage;
+import com.yitu.etu.widget.chat.RedPacketMessageItem;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -99,6 +101,9 @@ public class EtuApplication extends Application {
         RongIM.getInstance().enableNewComingMessageIcon(true);//显示新消息提醒
         RongIM.getInstance().enableUnreadMessageIcon(true);//显示未读消息数目
         setMyExtensionModule();
+        //注册平安符item
+        RongIM.getInstance().registerMessageType(PacketMessage.class);
+        RongIM.getInstance().registerMessageTemplate(new RedPacketMessageItem());
     }
 
     /**

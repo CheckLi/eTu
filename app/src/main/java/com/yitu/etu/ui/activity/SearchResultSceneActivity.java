@@ -114,6 +114,30 @@ public class SearchResultSceneActivity extends BaseActivity {
         layout_refresh = (SmartRefreshLayout) findViewById(R.id.layout_refresh);
 
         commentAdapter = new CommentAdapter(this);
+
+        view = getLayoutInflater().inflate(R.layout.activity_map_search_scene, null);
+        view.setVisibility(View.GONE);
+        tv_address = (TextView) view.findViewById(R.id.tv_address);
+        bq_feature = (TextView) view.findViewById(R.id.bq_feature);
+        tv_feature = (TextView) view.findViewById(R.id.tv_feature);
+        carouselView = (CarouselView) view.findViewById(R.id.carouselView);
+        tv_title = (TextView) view.findViewById(R.id.tv_title);
+        tv_good = (TextView) view.findViewById(R.id.tv_good);
+        li_yj = (LinearLayout) view.findViewById(R.id.li_yj);
+        gridView = (MgridView) view.findViewById(R.id.gridView);
+        yjImageAdapter = new YjImageAdapter(SearchResultSceneActivity.this);
+        gridView.setAdapter(yjImageAdapter);
+        expandable_text = (ExpandableTextView) view.findViewById(R.id.expandable_text);
+        listView.addHeaderView(view);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(SearchResultSceneActivity.this, TravelsDetailActivity.class);
+                intent.putExtra("travels_id", yjImageAdapter.getItem(position).getId());
+                startActivity(intent);
+            }
+        });
         listView.setAdapter(commentAdapter);
         listView.setDividerHeight(0);
         send_msg = (SendMsgView) findViewById(R.id.send_msg);
@@ -212,33 +236,10 @@ public class SearchResultSceneActivity extends BaseActivity {
             @Override
             public void onResponse(ObjectBaseEntity<SceneEntity> response, int i) {
                 if (response.success()) {
+                    spotBean = response.getData().getSpot();
                     commentAdapter.clearAll();
                     page = 1;
-                    if (view == null) {
-                        spotBean = response.getData().getSpot();
-                        view = getLayoutInflater().inflate(R.layout.activity_map_search_scene, null);
-                        tv_address = (TextView) view.findViewById(R.id.tv_address);
-                        bq_feature = (TextView) view.findViewById(R.id.bq_feature);
-                        tv_feature = (TextView) view.findViewById(R.id.tv_feature);
-                        carouselView = (CarouselView) view.findViewById(R.id.carouselView);
-                        tv_title = (TextView) view.findViewById(R.id.tv_title);
-                        tv_good = (TextView) view.findViewById(R.id.tv_good);
-                        li_yj = (LinearLayout) view.findViewById(R.id.li_yj);
-                        gridView = (MgridView) view.findViewById(R.id.gridView);
-                        yjImageAdapter = new YjImageAdapter(SearchResultSceneActivity.this);
-                        gridView.setAdapter(yjImageAdapter);
-                        expandable_text = (ExpandableTextView) view.findViewById(R.id.expandable_text);
-                        listView.addHeaderView(view);
-                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                                Intent intent = new Intent(SearchResultSceneActivity.this, TravelsDetailActivity.class);
-                                intent.putExtra("travels_id", yjImageAdapter.getItem(position).getId());
-                                startActivity(intent);
-                            }
-                        });
-                    }
+                    view.setVisibility(View.VISIBLE);
                     yjImageAdapter.clearAll();
                     yjImageAdapter.addData(response.getData().getTitlelist());
                     if (yjImageAdapter.getCount() == 0) {

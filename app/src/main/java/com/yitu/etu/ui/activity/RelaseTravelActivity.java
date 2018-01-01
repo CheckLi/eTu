@@ -15,7 +15,6 @@ import com.yitu.etu.eventBusItem.EventRefresh;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
-import com.yitu.etu.ui.adapter.ShowImagAdapter2;
 import com.yitu.etu.util.TextUtils;
 import com.yitu.etu.widget.MgridView;
 
@@ -24,6 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +33,7 @@ import okhttp3.Call;
 public class RelaseTravelActivity extends BaseActivity {
 
     private MgridView image_select;
-    private ShowImagAdapter2 showImagAdapter;
+    //    private ShowImagAdapter2 showImagAdapter;
     private SceneEntity.SpotBean data;
     boolean showAdd = true;
     private TextView start_time;
@@ -83,14 +83,21 @@ public class RelaseTravelActivity extends BaseActivity {
         end_time = (TextView) findViewById(R.id.end_time);
         start_time = (TextView) findViewById(R.id.start_time);
         image_select = (MgridView) findViewById(R.id.image_select);
-        showImagAdapter = new ShowImagAdapter2(this);
+//        showImagAdapter = new ShowImagAdapter2(this);
         if (!showAdd) {
             lat = data.getAddress_lat();
             lng = data.getAddress_lng();
             address = data.getAddress();
             tv_name.setText(data.getTitle());
-            showImagAdapter.addData(data.getImages());
-            image_select.setAdapter(showImagAdapter);
+            List<String> paths = new ArrayList<>();
+//            showImagAdapter.addData(data.getImages());
+            for (String path :
+                    data.getImages()) {
+                paths.add(Urls.address + path);
+            }
+            image_select.showAdd(false);
+            image_select.getChooseImageAdapter().addData(paths);
+//            image_select.setAdapter(showImagAdapter);
         }
         if (!TextUtils.isEmpty(address)) {
             tv_address.setText(address);
@@ -128,7 +135,11 @@ public class RelaseTravelActivity extends BaseActivity {
             showToast("请选择行程地址");
         } else if (tv_number.getText().toString().trim().equals("")) {
             showToast("请输入参与人数");
-        } else if (join_starttime.getText().toString().trim().equals("")) {
+        }
+        else if (tv_money.getText().toString().trim().equals("")) {
+            showToast("请输入参与金额");
+        }
+        else if (join_starttime.getText().toString().trim().equals("")) {
             showToast("请选择参与开始时间");
         } else if (join_endtime.getText().toString().trim().equals("")) {
             showToast("请选择参与结束时间");
@@ -248,15 +259,16 @@ public class RelaseTravelActivity extends BaseActivity {
             tv_name.setText(mapSceneEntity.getSpot().getTitle());
             tv_address.setText(address);
             List<String> images = mapSceneEntity.getSpot().getImages();
-            if (showAdd) {
-                image_select.getChooseImageAdapter().clearAll();
-                for (String img : images) {
-                    image_select.add(Urls.address + img);
-                }
-            } else {
-                showImagAdapter.clearAll();
-                showImagAdapter.addData(images);
+//            if (showAdd) {
+            image_select.getChooseImageAdapter().clearAll();
+            image_select.getChooseImageAdapter().clearAll();
+            for (String img : images) {
+                image_select.add(Urls.address + img);
             }
+//            } else {
+//                showImagAdapter.clearAll();
+//                showImagAdapter.addData(images);
+//            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

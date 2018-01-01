@@ -34,6 +34,7 @@ public class ReleaseMyTravelsActivity extends BaseActivity {
 
     @Override
     public void initActionBar() {
+        setTitle("发布游记");
         setRightText("完成", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +113,7 @@ public class ReleaseMyTravelsActivity extends BaseActivity {
                 @Override
                 public void run() {
                     if (content.getVisibility() != View.VISIBLE) {
-                        params.put("text", image_select.getImagePutString());
+                        params.put("text", String.format("上课了大姐夫两颗键欢喜冤家<img  src=\"%s\"/>", image_select.getImagePutString()));
                     }
                     Http.post(Urls.RELEASE_My_Travel, params, new GsonCallback<HttpStateEntity>() {
                         @Override
@@ -126,6 +127,7 @@ public class ReleaseMyTravelsActivity extends BaseActivity {
                             hideWaitDialog();
                             if (response.success()) {
                                 EventBus.getDefault().post(new EventRefresh(className));
+                                setResult(RESULT_OK);
                                 finish();
                             }
                             showToast(response.getMessage());
