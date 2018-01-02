@@ -95,20 +95,20 @@ class MainActivity : BaseActivity() {
                 mActionBarView.setRightImage(R.drawable.icon56) {
                     val pop = Tools.getPopupWindow(this@MainActivity, arrayOf("添加好友", "好友列表", "发起群聊"), object : AdapterView.OnItemClickListener {
                         override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            if(!isLogin()){
+                            if (!isLogin()) {
                                 showToast("请先登录")
-                            }else {
+                            } else {
                                 when (position) {
                                     0 -> nextActivity<SearchFriendActivity>()
                                     1 -> nextActivity<FriendListActivity>()
-                                    2 -> nextActivity<SearchFriendActivity>()
+                                    2 -> Tools.createChagGroup(this@MainActivity)
                                     else -> ""
                                 }
                             }
                         }
 
-                    },"right")
-                    pop.showAsDropDown(mActionBarView.iv_right,20,0)
+                    }, "right")
+                    pop.showAsDropDown(mActionBarView.iv_right, 20, 0)
                 }
             }
             1 -> {
@@ -160,7 +160,7 @@ class MainActivity : BaseActivity() {
 
     }
 
-    private fun registUnRead(){
+    private fun registUnRead() {
         /**
          * 未读消息监听
          */
@@ -169,13 +169,14 @@ class MainActivity : BaseActivity() {
                 Conversation.ConversationType.CUSTOMER_SERVICE, Conversation.ConversationType.CHATROOM)
     }
 
-    private val unReadListener= IUnReadMessageObserver { count ->
-        if(count<1){
+    private val unReadListener = IUnReadMessageObserver { count ->
+        if (count < 1) {
             tab_select.hideMsg(0)
-        }else {
+        } else {
             tab_select.showMsg(0, if (count > 99) 99 else count)
         }
     }
+
     override fun onResume() {
         super.onResume()
     }

@@ -78,6 +78,7 @@ class MyCollectActivity : BaseActivity() {
             when (adapter.getItem(position).type) {
                 2 -> nextActivity<SearchResultSceneActivity>("id" to adapter.getItem(position).pid.toString())
                 3 -> nextActivity<SearchResultOrderSceneActivity>("id" to adapter.getItem(position).pid.toString(), "title" to adapter.getItem(position).name)
+                5,6,7 -> nextActivity<SceneShopProductActivity>("id" to adapter.getItem(position).pid, "title" to adapter.getItem(position).name,"type" to adapter.getItem(position).type)
                 else -> showToast("开发中")
             }
 

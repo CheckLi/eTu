@@ -211,6 +211,7 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
                 break;
             case R.id.tv_ql:
                 //发起群聊
+                Tools.createChagGroup(this);
                 break;
 
             case R.id.tv_state:

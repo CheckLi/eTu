@@ -410,7 +410,6 @@ public class SearchResultSceneActivity extends BaseActivity {
             intent.putExtra("name", spotBean.getTitle());
             intent.putExtra("type", 3);
             intent.putExtra("spot_id", id);
-
             startActivity(intent);
         }
     }

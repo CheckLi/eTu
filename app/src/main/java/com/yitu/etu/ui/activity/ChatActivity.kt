@@ -1,12 +1,17 @@
 package com.yitu.etu.ui.activity
 
+import android.os.Handler
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.FrameLayout
 import com.huizhuang.zxsq.utils.nextActivity
+import com.xiaozhi.firework_core.FireWorkView
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
+import com.yitu.etu.eventBusItem.EventPlayYanHua
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.util.Tools
@@ -15,10 +20,13 @@ import com.yitu.etu.util.post
 import io.rong.imkit.fragment.ConversationFragment
 import kotlinx.android.synthetic.main.actionbar_layout.view.*
 import okhttp3.Call
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.lang.Exception
 
 
 class ChatActivity : BaseActivity() {
+    private lateinit var yanhua: FireWorkView
     override fun getLayout(): Int = R.layout.activity_chat
 
     override fun initActionBar() {
@@ -45,6 +53,14 @@ class ChatActivity : BaseActivity() {
     }
 
     override fun initView() {
+        EventBus.getDefault().register(this)
+        /**
+         * 添加烟花曾
+         */
+        yanhua = FireWorkView(this@ChatActivity, R.drawable.icon1)
+        val params = FrameLayout.LayoutParams(-1, -1)
+        (window.decorView as ViewGroup).addView(yanhua, params)
+        yanhua.visibility=View.GONE
     }
 
     override fun getData() {
@@ -85,5 +101,28 @@ class ChatActivity : BaseActivity() {
             }
 
         })
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
+
+    val hand=Handler()
+    val run= Runnable {
+        yanhua.stopAnim()
+        yanhua.visibility=View.GONE
+    }
+
+    @Subscribe
+    fun onEventPlay(event: EventPlayYanHua){
+        if(event.play){
+            yanhua.visibility=View.VISIBLE
+            yanhua.playAnim()
+            hand.removeCallbacks(run)
+            hand.postDelayed(run,3000)
+        }else{
+            yanhua.stopAnim()
+        }
     }
 }

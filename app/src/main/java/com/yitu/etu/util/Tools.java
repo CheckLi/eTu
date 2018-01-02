@@ -3,6 +3,7 @@ package com.yitu.etu.util;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.yitu.etu.R;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.ui.activity.BaseActivity;
+import com.yitu.etu.ui.activity.FriendListActivity;
 import com.yitu.etu.ui.activity.ImageShowActivity;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.rong.imkit.RongIM;
@@ -180,7 +183,7 @@ public class Tools {
             @Override
             public void onResponse(String response, int id) {
                 try {
-                    JSONObject jsonObject=new JSONObject(response);
+                    JSONObject jsonObject = new JSONObject(response);
                     activity.hideWaitDialog();
                     activity.showToast(jsonObject.optString("message"));
                 } catch (JSONException e) {
@@ -201,7 +204,7 @@ public class Tools {
      * @param context
      */
     public static void startChat(String title, String id, Context context) {
-        RongIM.getInstance().startPrivateChat(context, id,title );
+        RongIM.getInstance().startPrivateChat(context, id, title);
     }
 
     /**
@@ -212,7 +215,7 @@ public class Tools {
      * @param context
      */
     public static void startChat(String title, String id, String chatContent, Context context) {
-        RongIM.getInstance().startPrivateChat(context,id , title);
+        RongIM.getInstance().startPrivateChat(context, id, title);
         // 构造 TextMessage 实例
         TextMessage myTextMessage = TextMessage.obtain(chatContent);
 
@@ -249,5 +252,18 @@ public class Tools {
                 //消息发送失败的回调
             }
         });
+    }
+
+    /**
+     * 讨论组聊天
+     */
+    public static void startChatGroup(final Context context, final List<String> targetUserIds, final String title) {
+        RongIM.getInstance().createDiscussionChat(context, targetUserIds, title);
+    }
+
+    public static void createChagGroup(Context context) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("select", true);
+        activityUtil.nextActivity(context, FriendListActivity.class, bundle, false);
     }
 }

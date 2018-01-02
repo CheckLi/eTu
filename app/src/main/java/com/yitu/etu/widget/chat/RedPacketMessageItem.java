@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.yitu.etu.R;
+import com.yitu.etu.dialog.SingleTipsDialog;
+import com.yitu.etu.eventBusItem.EventPlayYanHua;
+
+import org.greenrobot.eventbus.EventBus;
 
 import io.rong.imkit.model.ProviderTag;
 import io.rong.imkit.model.UIMessage;
@@ -29,14 +33,14 @@ import io.rong.imlib.model.Message;
 public class RedPacketMessageItem extends IContainerItemProvider.MessageProvider<PacketMessage> {
     @Override
     public void bindView(View view, int i, PacketMessage textMessage, UIMessage uiMessage) {
-        View leftImg=view.findViewById(R.id.img);
-        View rightImg=view.findViewById(R.id.img2);
-        LinearLayout group= (LinearLayout) view.findViewById(R.id.ll_content);
-        if(uiMessage.getMessageDirection()== Message.MessageDirection.SEND){
+        View leftImg = view.findViewById(R.id.img);
+        View rightImg = view.findViewById(R.id.img2);
+        LinearLayout group = (LinearLayout) view.findViewById(R.id.ll_content);
+        if (uiMessage.getMessageDirection() == Message.MessageDirection.SEND) {
             leftImg.setVisibility(View.GONE);
             rightImg.setVisibility(View.VISIBLE);
             group.setGravity(Gravity.RIGHT);
-        }else{
+        } else {
             leftImg.setVisibility(View.VISIBLE);
             rightImg.setVisibility(View.GONE);
             group.setGravity(Gravity.LEFT);
@@ -50,11 +54,14 @@ public class RedPacketMessageItem extends IContainerItemProvider.MessageProvider
 
     @Override
     public void onItemClick(View view, int i, PacketMessage textMessage, UIMessage uiMessage) {
-
+        SingleTipsDialog dialog = new SingleTipsDialog(view.getContext(), "平安符领取");
+        dialog.setMessage("恭喜成功领取平安符,参数不详，无法进行下一步");
+        dialog.showDialog();
+        EventBus.getDefault().post(new EventPlayYanHua(true));
     }
 
     @Override
     public View newView(Context context, ViewGroup viewGroup) {
-        return LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rc_item_message_packet,viewGroup,false);
+        return LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rc_item_message_packet, viewGroup, false);
     }
 }

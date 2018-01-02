@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.view.View
 import com.yitu.etu.R
-import kotlinx.android.synthetic.main.tips_dialog.*
+import kotlinx.android.synthetic.main.single_tips_dialog.*
 
 /**
  * @className:LoadingDialog
@@ -13,10 +13,10 @@ import kotlinx.android.synthetic.main.tips_dialog.*
  * @author: JIAMING.LI
  * @date:2017年12月08日 17:53
  */
-class TipsDialog : Dialog {
+class SingleTipsDialog : Dialog {
 
     constructor(context: Context, title: String) : super(context, R.style.LoadingDialog) {
-        setContentView(R.layout.tips_dialog)
+        setContentView(R.layout.single_tips_dialog)
         tv_title_bg.text = title
         btn_cancel.setOnClickListener {
             dismiss()
@@ -39,14 +39,6 @@ class TipsDialog : Dialog {
     }
     fun setMessage(content:String){
         tv_message.text=content
-    }
-
-    fun setRightBtn(content:String,onClick:(v:View)->Unit){
-        btn_yes.text = content
-        btn_yes.setOnClickListener {
-            onClick(it)
-            dismiss()
-        }
     }
 
     fun setLeftBtn(content:String,onClick:(v:View)->Unit){

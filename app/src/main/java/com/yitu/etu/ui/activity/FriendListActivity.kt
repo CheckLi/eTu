@@ -1,5 +1,6 @@
 package com.yitu.etu.ui.activity
 
+import android.content.Intent
 import android.view.inputmethod.EditorInfo
 import com.yitu.etu.R
 import com.yitu.etu.dialog.BtnlistDialog
@@ -11,6 +12,7 @@ import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.adapter.FriendListAdapter
 import com.yitu.etu.util.Empty
+import com.yitu.etu.util.Tools
 import com.yitu.etu.util.post
 import io.rong.imkit.RongIM
 import kotlinx.android.synthetic.main.activity_friend_list.*
@@ -21,16 +23,31 @@ class FriendListActivity : BaseActivity() {
     lateinit var adapter: FriendListAdapter
     lateinit var dialog: InputPriceDialog
     var id: String? = null
+    var select: Boolean = false
     override fun getLayout(): Int = R.layout.activity_friend_list
+
+    override fun getIntentExtra(intent: Intent?) {
+        select = intent?.getBooleanExtra("select", false) ?: false
+    }
 
     override fun initActionBar() {
         title = "好友列表"
+        if (select) {
+            setRightText("创建群聊") {
+                val list = adapter.getIds()
+                if (list.size > 1) {
+                    Tools.startChatGroup(this@FriendListActivity, list, adapter.getNames())
+                } else {
+                    showToast("请选择用户")
+                }
+            }
+        }
     }
 
     override fun initView() {
         dialog = InputPriceDialog(this@FriendListActivity, "修改备注")
         dialog.setHint("请输入备注名", false, EditorInfo.TYPE_CLASS_TEXT)
-        adapter = FriendListAdapter(mutableListOf())
+        adapter = FriendListAdapter(mutableListOf(), select)
         listview.adapter = adapter
     }
 

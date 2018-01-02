@@ -11,3 +11,4 @@ package com.yitu.etu.eventBusItem
 
 class EventClearSuccess(val success:Boolean)
 class EventRefresh(val classname:String)
+class EventPlayYanHua(val play:Boolean)

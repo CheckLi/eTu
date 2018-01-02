@@ -22,6 +22,7 @@ import com.yitu.etu.ui.activity.BaseActivity
 import com.yitu.etu.ui.activity.MapActivity
 import com.yitu.etu.ui.adapter.ChatMessageAdapter
 import com.yitu.etu.util.userInfo
+import com.yitu.etu.widget.chat.PacketMessage
 import io.rong.imkit.DefaultExtensionModule
 import io.rong.imkit.RongExtension
 import io.rong.imkit.RongIM
@@ -96,7 +97,9 @@ class MyPlugin(val type: Int) : IPluginModule {
                 activity.hideWaitDialog()
                 if (response.success()) {
                     with(response.data) {
-
+                        val packetMessage=PacketMessage.obtain("平安符发送")
+                        val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, packetMessage)
+                        sendMessage(message,packetMessage.content)
                     }
                 } else {
                     activity.showToast(response.message)
@@ -195,6 +198,33 @@ fun sendMessage(myMessage: Message) {
      * @param callback    发送消息的回调，参考 {@link io.rong.imlib.IRongCallback.ISendMessageCallback}。
      */
     RongIM.getInstance().sendMessage(myMessage, null, null, object : IRongCallback.ISendMessageCallback {
+        override fun onAttached(message: Message) {
+            //消息本地数据库存储成功的回调
+        }
+
+        override fun onSuccess(message: Message) {
+            //消息通过网络发送成功的回调
+        }
+
+        override fun onError(message: Message, errorCode: RongIMClient.ErrorCode) {
+            //消息发送失败的回调
+        }
+    })
+}
+fun sendMessage(myMessage: Message,pushContent:String) {
+    /**
+     * <p>发送消息。
+     * 通过 {@link io.rong.imlib.IRongCallback.ISendMessageCallback}
+     * 中的方法回调发送的消息状态及消息体。</p>
+     *
+     * @param message     将要发送的消息体。
+     * @param pushContent 当下发 push 消息时，在通知栏里会显示这个字段。
+     *                    如果发送的是自定义消息，该字段必须填写，否则无法收到 push 消息。
+     *                    如果发送 sdk 中默认的消息类型，例如 RC:TxtMsg, RC:VcMsg, RC:ImgMsg，则不需要填写，默认已经指定。
+     * @param pushData    push 附加信息。如果设置该字段，用户在收到 push 消息时，能通过 {@link io.rong.push.notification.PushNotificationMessage#getPushData()} 方法获取。
+     * @param callback    发送消息的回调，参考 {@link io.rong.imlib.IRongCallback.ISendMessageCallback}。
+     */
+    RongIM.getInstance().sendMessage(myMessage, pushContent, null, object : IRongCallback.ISendMessageCallback {
         override fun onAttached(message: Message) {
             //消息本地数据库存储成功的回调
         }
