@@ -42,7 +42,6 @@ import io.rong.imkit.IExtensionModule;
 import io.rong.imkit.RongExtensionManager;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
-import io.rong.imlib.model.Conversation;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
@@ -199,7 +198,7 @@ public class EtuApplication extends Application {
         PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_BUY_CAR);
         EventBus.getDefault().post(new LoginSuccessEvent(null));
         RongIM.getInstance().logout();
-        RongIM.getInstance().clearConversations(
+       /* RongIM.getInstance().clearConversations(
                 new RongIMClient.ResultCallback() {
                     @Override
                     public void onSuccess(Object o) {
@@ -212,7 +211,7 @@ public class EtuApplication extends Application {
                     }
                 }, Conversation.ConversationType.PRIVATE, Conversation.ConversationType.GROUP, Conversation.ConversationType.SYSTEM,
                 Conversation.ConversationType.APP_PUBLIC_SERVICE, Conversation.ConversationType.PUSH_SERVICE, Conversation.ConversationType.DISCUSSION,
-                Conversation.ConversationType.CUSTOMER_SERVICE, Conversation.ConversationType.CHATROOM);
+                Conversation.ConversationType.CUSTOMER_SERVICE, Conversation.ConversationType.CHATROOM);*/
     }
 
     public String getChatToken() {
