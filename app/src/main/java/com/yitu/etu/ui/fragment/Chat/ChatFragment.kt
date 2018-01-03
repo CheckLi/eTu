@@ -15,20 +15,18 @@ import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.dialog.InputPriceDialog
 import com.yitu.etu.entity.ObjectBaseEntity
+import com.yitu.etu.entity.PinAnBean
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.activity.BaseActivity
 import com.yitu.etu.ui.activity.MapActivity
-import com.yitu.etu.ui.adapter.ChatMessageAdapter
 import com.yitu.etu.util.userInfo
 import com.yitu.etu.widget.chat.PacketMessage
 import io.rong.imkit.DefaultExtensionModule
 import io.rong.imkit.RongExtension
 import io.rong.imkit.RongIM
-import io.rong.imkit.fragment.ConversationFragment
 import io.rong.imkit.plugin.IPluginModule
-import io.rong.imkit.widget.adapter.MessageListAdapter
 import io.rong.imlib.IRongCallback
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
@@ -50,20 +48,13 @@ import java.lang.Exception
  */
 var mTargetId = ""
 
-class ChatFragment : ConversationFragment() {
-    override fun onResolveAdapter(context: Context): MessageListAdapter {
-        mTargetId = activity.intent.data.getQueryParameter("targetId")
-        return ChatMessageAdapter(activity)
-    }
-}
-
-
 /**
  * 自定义面板，0拍摄，1位置，2位置共享，3平安符
  */
 class MyPlugin(val type: Int) : IPluginModule {
     override fun onClick(p0: Fragment, p1: RongExtension?) {
         val activity: Activity = p0.activity
+        mTargetId = activity.intent.data.getQueryParameter("targetId")
         if (activity is BaseActivity) {
             when (type) {
                 0 -> {
@@ -81,7 +72,12 @@ class MyPlugin(val type: Int) : IPluginModule {
                     }
                     dialog.showDialog()
                 }
-                else -> p0.nextActivityFromFragment<MapActivity>(1001)
+                1->p0.nextActivityFromFragment<MapActivity>(1001)
+                else -> {
+                    val mes = PacketMessage.obtain("李佳明的平安符","1","1","22")
+                    val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, mes)
+                    sendMessage(message)
+                }
 
             }
         }
@@ -92,14 +88,14 @@ class MyPlugin(val type: Int) : IPluginModule {
      */
     fun sendPan(peopleCount: String, count: String, activity: BaseActivity) {
         activity.showWaitDialog("发送中...")
-        Http.post(Urls.URL_SEND_PIN_A_FU, hashMapOf("count" to count, "people" to peopleCount), object : GsonCallback<ObjectBaseEntity<Any>>() {
-            override fun onResponse(response: ObjectBaseEntity<Any>, id: Int) {
+        Http.post(Urls.URL_SEND_PIN_A_FU, hashMapOf("count" to count, "people" to peopleCount), object : GsonCallback<ObjectBaseEntity<PinAnBean>>() {
+            override fun onResponse(response: ObjectBaseEntity<PinAnBean>, id: Int) {
                 activity.hideWaitDialog()
                 if (response.success()) {
                     with(response.data) {
-                        val packetMessage=PacketMessage.obtain("平安符发送")
-                        val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, packetMessage)
-                        sendMessage(message,packetMessage.content)
+                        val mes = PacketMessage.obtain("平安符赠送",count,people,idPin)
+                        val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, mes)
+                        sendMessage(message)
                     }
                 } else {
                     activity.showToast(response.message)

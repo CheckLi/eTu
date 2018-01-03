@@ -35,15 +35,18 @@ public class RedPacketMessageItem extends IContainerItemProvider.MessageProvider
     public void bindView(View view, int i, PacketMessage textMessage, UIMessage uiMessage) {
         View leftImg = view.findViewById(R.id.img);
         View rightImg = view.findViewById(R.id.img2);
+        LinearLayout frame = (LinearLayout) view.findViewById(R.id.fl_content);
         LinearLayout group = (LinearLayout) view.findViewById(R.id.ll_content);
         if (uiMessage.getMessageDirection() == Message.MessageDirection.SEND) {
             leftImg.setVisibility(View.GONE);
             rightImg.setVisibility(View.VISIBLE);
             group.setGravity(Gravity.RIGHT);
+            frame.setGravity(Gravity.RIGHT);
         } else {
             leftImg.setVisibility(View.VISIBLE);
             rightImg.setVisibility(View.GONE);
             group.setGravity(Gravity.LEFT);
+            frame.setGravity(Gravity.LEFT);
         }
     }
 

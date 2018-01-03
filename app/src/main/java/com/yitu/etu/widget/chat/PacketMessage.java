@@ -2,6 +2,7 @@ package com.yitu.etu.widget.chat;
 
 import android.os.Parcel;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,11 +10,8 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.rong.common.ParcelUtils;
-import io.rong.common.RLog;
 import io.rong.imlib.MessageTag;
 import io.rong.imlib.model.MentionedInfo;
 import io.rong.imlib.model.MessageContent;
@@ -27,11 +25,17 @@ import io.rong.imlib.model.UserInfo;
  */
 @MessageTag(
         value = "RCD:ZXJPacket"
-        ,flag = MessageTag.ISCOUNTED
+        , flag = MessageTag.ISCOUNTED
 )
+/**
+ * 平安符红包的objectname是RCD:ZXJPacket  参数有content平安符标题，count平安符个数，people可抢的人数
+ */
 public class PacketMessage extends MessageContent {
     private static final String TAG = "PacketMessage";
     private String content;
+    private String pinanCount;
+    private String people;
+    private String pinId;
     protected String extra;
     public static final Creator<PacketMessage> CREATOR = new Creator<PacketMessage>() {
         public PacketMessage createFromParcel(Parcel source) {
@@ -55,49 +59,49 @@ public class PacketMessage extends MessageContent {
         JSONObject jsonObj = new JSONObject();
 
         try {
-            jsonObj.put("content", this.getEmotion(this.getContent()));
-            if(!TextUtils.isEmpty(this.getExtra())) {
+            jsonObj.put("content", content);
+            jsonObj.put("count", pinanCount);
+            jsonObj.put("people", people);
+            jsonObj.put("id", pinId);
+            if (!TextUtils.isEmpty(this.getExtra())) {
                 jsonObj.put("extra", this.getExtra());
             }
 
-            if(this.getJSONUserInfo() != null) {
+            if (this.getJSONUserInfo() != null) {
                 jsonObj.putOpt("user", this.getJSONUserInfo());
             }
-
-            if(this.getJsonMentionInfo() != null) {
-                jsonObj.putOpt("mentionedInfo", this.getJsonMentionInfo());
-            }
-        } catch (JSONException var4) {
-            RLog.e("PacketMessage", "JSONException " + var4.getMessage());
+        } catch (JSONException e) {
+            Log.e("JSONException", e.getMessage());
         }
 
         try {
             return jsonObj.toString().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException var3) {
-            var3.printStackTrace();
-            return null;
-        }
-    }
-
-    private String getEmotion(String content) {
-        Pattern pattern = Pattern.compile("\\[/u([0-9A-Fa-f]+)\\]");
-        Matcher matcher = pattern.matcher(content);
-        StringBuffer sb = new StringBuffer();
-
-        while(matcher.find()) {
-            int inthex = Integer.parseInt(matcher.group(1), 16);
-            matcher.appendReplacement(sb, String.valueOf(Character.toChars(inthex)));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
 
-        matcher.appendTail(sb);
-        return sb.toString();
+        return null;
     }
 
-    protected PacketMessage() {
+
+    protected PacketMessage(String content, String pinanCount, String people,String pinId) {
+        setContent(content);
+        setPinanCount(pinanCount);
+        setPeople(people);
+        setPinId(pinId);
+
     }
 
-    public static PacketMessage obtain(String text) {
-        return new PacketMessage();
+    public String getPinId() {
+        return pinId;
+    }
+
+    public void setPinId(String pinId) {
+        this.pinId = pinId;
+    }
+
+    public static PacketMessage obtain(String content, String pinanCount, String people, String pinId) {
+        return new PacketMessage(content, pinanCount, people,pinId);
     }
 
     public PacketMessage(byte[] data) {
@@ -105,29 +109,28 @@ public class PacketMessage extends MessageContent {
 
         try {
             jsonStr = new String(data, "UTF-8");
-        } catch (UnsupportedEncodingException var5) {
-            var5.printStackTrace();
+        } catch (UnsupportedEncodingException e1) {
+
         }
 
         try {
             JSONObject jsonObj = new JSONObject(jsonStr);
-            if(jsonObj.has("content")) {
-                this.setContent(jsonObj.optString("content"));
-            }
 
-            if(jsonObj.has("extra")) {
+            if (jsonObj.has("content"))
+                content = jsonObj.optString("content");
+            pinanCount = jsonObj.optString("count");
+            people = jsonObj.optString("people");
+            pinId = jsonObj.optString("id");
+
+            if (jsonObj.has("extra")) {
                 this.setExtra(jsonObj.optString("extra"));
             }
 
-            if(jsonObj.has("user")) {
+            if (jsonObj.has("user")) {
                 this.setUserInfo(this.parseJsonToUserInfo(jsonObj.getJSONObject("user")));
             }
+        } catch (JSONException e) {
 
-            if(jsonObj.has("mentionedInfo")) {
-                this.setMentionedInfo(this.parseJsonToMentionInfo(jsonObj.getJSONObject("mentionedInfo")));
-            }
-        } catch (JSONException var4) {
-            RLog.e("PacketMessage", "JSONException " + var4.getMessage());
         }
 
     }
@@ -145,13 +148,36 @@ public class PacketMessage extends MessageContent {
         ParcelUtils.writeToParcel(dest, this.content);
         ParcelUtils.writeToParcel(dest, this.getUserInfo());
         ParcelUtils.writeToParcel(dest, this.getMentionedInfo());
+        ParcelUtils.writeToParcel(dest, this.getPinanCount());
+        ParcelUtils.writeToParcel(dest, this.getPeople());
+        ParcelUtils.writeToParcel(dest, this.getPinId());
+    }
+
+
+    public String getPinanCount() {
+        return pinanCount;
+    }
+
+    public void setPinanCount(String pinanCount) {
+        this.pinanCount = pinanCount;
+    }
+
+    public String getPeople() {
+        return people;
+    }
+
+    public void setPeople(String people) {
+        this.people = people;
     }
 
     public PacketMessage(Parcel in) {
         this.setExtra(ParcelUtils.readFromParcel(in));
         this.setContent(ParcelUtils.readFromParcel(in));
-        this.setUserInfo((UserInfo)ParcelUtils.readFromParcel(in, UserInfo.class));
-        this.setMentionedInfo((MentionedInfo)ParcelUtils.readFromParcel(in, MentionedInfo.class));
+        this.setUserInfo((UserInfo) ParcelUtils.readFromParcel(in, UserInfo.class));
+        this.setMentionedInfo((MentionedInfo) ParcelUtils.readFromParcel(in, MentionedInfo.class));
+        setPinanCount(ParcelUtils.readFromParcel(in));
+        setPeople(ParcelUtils.readFromParcel(in));
+        setPinId(ParcelUtils.readFromParcel(in));
     }
 
     public PacketMessage(String content) {
