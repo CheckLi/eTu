@@ -1,5 +1,6 @@
 package com.yitu.etu.ui.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +19,7 @@ import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.SceneServiceEntity;
 import com.yitu.etu.entity.SceneShopProductEntity;
+import com.yitu.etu.entity.ShopProductEntity;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
@@ -93,7 +95,7 @@ public class SceneShopProductActivity extends BaseActivity {
 //        data = (SceneServiceEntity.ListBean) getIntent().getSerializableExtra("data");
         type = getIntent().getIntExtra("type", 0);
         id = getIntent().getIntExtra("id", 0);
-        title= getIntent().getStringExtra("title");
+        title = getIntent().getStringExtra("title");
         setTitle(title);
         listView = (ListSlideView) findViewById(R.id.listview);
         findViewById(R.id.img_my_shop).setVisibility(View.VISIBLE);
@@ -101,8 +103,8 @@ public class SceneShopProductActivity extends BaseActivity {
         tv_good = (TextView) view.findViewById(R.id.tv_good);
         tv_des = (TextView) view.findViewById(R.id.tv_des);
         tv_phone = (TextView) view.findViewById(R.id.tv_phone);
-        tv_address=(TextView) view.findViewById(R.id.tv_address);
-        image= (ImageView) view.findViewById(R.id.image);
+        tv_address = (TextView) view.findViewById(R.id.tv_address);
+        image = (ImageView) view.findViewById(R.id.image);
         manageProductAdapter = new ManageProductAdapter2(this);
         layout_refresh = (SmartRefreshLayout) findViewById(R.id.layout_refresh);
         carouselView = (CarouselView) view.findViewById(R.id.carouselView);
@@ -127,12 +129,24 @@ public class SceneShopProductActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(context,SceneShopProductDetailActivity.class);
-                intent.putExtra("title",response.getInfo().getName());
-                intent.putExtra("id",manageProductAdapter.getItem(position-1).getId()+"");
-                startActivity(intent);
+                if (type == 5) {
+                    showYdDialog(manageProductAdapter.getItem(position - 1));
+                } else {
+                    Intent intent = new Intent(context, SceneShopProductDetailActivity.class);
+                    intent.putExtra("title", response.getInfo().getName());
+                    intent.putExtra("type", type);
+                    intent.putExtra("id", manageProductAdapter.getItem(position - 1).getId() + "");
+                    startActivity(intent);
+                }
             }
         });
+    }
+
+    public void showYdDialog(ShopProductEntity data) {
+        Dialog dialog=new Dialog(this,R.style.transparentDialog);
+        View dialogView=getLayoutInflater().inflate(R.layout.dialog_yd,null);
+        dialog.setContentView(dialogView);
+        dialog.show();
     }
 
     public void shopCollect() {
@@ -174,7 +188,7 @@ public class SceneShopProductActivity extends BaseActivity {
 
             @Override
             public void onResponse(ObjectBaseEntity<SceneShopProductEntity> response, int id) {
-               SceneShopProductActivity .this.response=response.getData();
+                SceneShopProductActivity.this.response = response.getData();
                 if (response.success()) {
                     if (isRefresh) {
                         data = response.getData().getInfo();
@@ -187,7 +201,7 @@ public class SceneShopProductActivity extends BaseActivity {
                         ArrayList<String> path = new ArrayList<>();
                         path.add(data.getImage());
                         carouselView.setPath(path);
-                        ImageLoadUtil.getInstance().loadImage(image,Urls.address+data.getUser().getHeader(),200,200);
+                        ImageLoadUtil.getInstance().loadImage(image, Urls.address + data.getUser().getHeader(), R.drawable.default_head, 200, 200);
                     }
                     manageProductAdapter.addData(response.getData().getData());
                     RefreshSuccess(layout_refresh, isRefresh, response.getData().getData().size());
@@ -245,7 +259,7 @@ public class SceneShopProductActivity extends BaseActivity {
             startActivity(new Intent(context, BuyCarActivity.class));
         }
         if (v.getId() == R.id.image) {
-            Tools.startChat(response.getInfo().getName(),response.getInfo().getUser_id()+"","可以一起去旅行吗？",this);
+            Tools.startChat(response.getInfo().getName(), response.getInfo().getUser_id() + "", "可以一起去旅行吗？", this);
         }
     }
 }

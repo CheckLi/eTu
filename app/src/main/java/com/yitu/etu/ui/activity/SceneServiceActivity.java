@@ -9,7 +9,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yitu.etu.R;
-import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.SceneServiceEntity;
 import com.yitu.etu.tools.GsonCallback;
@@ -46,7 +45,7 @@ public class SceneServiceActivity extends BaseActivity {
     @Override
     public void initActionBar() {
         type = getIntent().getIntExtra("type", 1);
-        name=getIntent().getStringExtra("name");
+        name = getIntent().getStringExtra("name");
         setMTitle();
     }
 
@@ -66,7 +65,7 @@ public class SceneServiceActivity extends BaseActivity {
         spot_id = getIntent().getStringExtra("spot_id");
         listView = (ListSlideView) findViewById(R.id.listview);
 
-        sceneServiceAdapter = new SceneServiceAdapter(this,name);
+        sceneServiceAdapter = new SceneServiceAdapter(this, name);
 
         layout_refresh = (SmartRefreshLayout) findViewById(R.id.layout_refresh);
         view = getLayoutInflater().inflate(R.layout.item_carouselview, null);
@@ -94,13 +93,21 @@ public class SceneServiceActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i>0){
-                    Intent intent=new Intent(context,SceneShopProductActivity.class);
-                    SceneServiceEntity.ListBean data= sceneServiceAdapter.getItem(i-1);
-                    intent.putExtra("id",data.getId());
-                    intent.putExtra("title",data.getName());
-                    intent.putExtra("type",type+4);
-                    startActivity(intent);
+                if (i > 0) {
+                    if (type == 3) {
+                        Intent intent = new Intent(context, SceneShopProductDetailActivity.class);
+                        SceneServiceEntity.ListBean data = sceneServiceAdapter.getItem(i - 1);
+                        intent.putExtra("id", data.getId());
+                        intent.putExtra("title", data.getName());
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(context, SceneShopProductActivity.class);
+                        SceneServiceEntity.ListBean data = sceneServiceAdapter.getItem(i - 1);
+                        intent.putExtra("id", data.getId());
+                        intent.putExtra("title", data.getName());
+                        intent.putExtra("type", type + 4);
+                        startActivity(intent);
+                    }
                 }
             }
         });

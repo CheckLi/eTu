@@ -1,1 +1,1 @@
-include ':app', ':IMLib', ':IMKit', ':navi',':timepicker'
+include ':app', ':IMLib', ':IMKit', ':timepicker', ':CalendarView'

@@ -46,6 +46,7 @@ public class SceneShopProductDetailActivity extends BaseActivity {
     private int number = 1;
     double price = 0d;
     private ImageView image;
+    private int type;
 
     @Override
     public int getLayout() {
@@ -103,9 +104,10 @@ public class SceneShopProductDetailActivity extends BaseActivity {
     @Override
     public void getData() {
         setTitle(getIntent().getStringExtra("title"));
+
+        type=getIntent().getIntExtra("type",0);
         HashMap<String, String> params = new HashMap<>();
         params.put("id", getIntent().getStringExtra("id") + "");
-        params.put("type", "");
         showWaitDialog("获取中...");
         Http.post(Urls.address + "/shop/get_product_info", params, new GsonCallback<ObjectBaseEntity<SceneShopProductDetailEntity>>() {
             @Override
@@ -120,7 +122,7 @@ public class SceneShopProductDetailActivity extends BaseActivity {
                 if (response.success()) {
                     shopProductEntity = response.getData().getProduct();
                     shopData = response.getData().getShop();
-                    ImageLoadUtil.getInstance().loadImage(image, Urls.address + shopData.getUser().getHeader(), 50, 50);
+                    ImageLoadUtil.getInstance().loadImage(image, Urls.address + shopData.getUser().getHeader(),R.drawable.default_head, 50, 50);
                     tv_des.setText(shopProductEntity.getDes());
                     tv_address.setText("地址：" + shopData.getAddress());
                     tv_price.setText(shopProductEntity.getPrice() + "");
@@ -150,7 +152,7 @@ public class SceneShopProductDetailActivity extends BaseActivity {
                 return;
             }
             params.put("id", shopData.getId() + "");
-            params.put("type", "");
+            params.put("type", type+"");
             Http.post(Urls.SHOP_COLLECT, params, new GsonCallback<HttpStateEntity>() {
                 @Override
                 public void onError(Call call, Exception e, int i) {

@@ -221,7 +221,7 @@ public class RelaseTravelActivity extends BaseActivity {
         //设置标题
         dialog.setTitle("选择时间");
         //设置类型
-        dialog.setType(DateType.TYPE_ALL);
+        dialog.setType(DateType.TYPE_YMDHM);
         //设置消息体的显示格式，日期格式
         dialog.setMessageFormat("yyyy-MM-dd HH:mm");
         //设置选择回调
@@ -260,7 +260,6 @@ public class RelaseTravelActivity extends BaseActivity {
             tv_address.setText(address);
             List<String> images = mapSceneEntity.getSpot().getImages();
 //            if (showAdd) {
-            image_select.getChooseImageAdapter().clearAll();
             image_select.getChooseImageAdapter().clearAll();
             for (String img : images) {
                 image_select.add(Urls.address + img);

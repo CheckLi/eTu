@@ -92,12 +92,9 @@ dependencies {
     implementation project(':timepicker')
     implementation 'com.bigkoo:convenientbanner:2.0.5'
     compile 'com.kyleduo.switchbutton:library:2.0.0'
-    compile 'com.jingtianxiaozhi.firework:firework-core:1.0.0'
+    implementation project(':CalendarView')
 }
 
 task showMeCache << {
     configurations.compile.each { println it }
-}
-configurations.all {
-    resolutionStrategy.force 'com.android.support:support-annotations:23.1.0'
 }

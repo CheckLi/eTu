@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/CalendarView/CalendarView.iml" filepath="$PROJECT_DIR$/CalendarView/CalendarView.iml" />
       <module fileurl="file://$PROJECT_DIR$/IMKit/IMKit.iml" filepath="$PROJECT_DIR$/IMKit/IMKit.iml" />
       <module fileurl="file://$PROJECT_DIR$/IMLib/IMLib.iml" filepath="$PROJECT_DIR$/IMLib/IMLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/eTu.iml" filepath="$PROJECT_DIR$/eTu.iml" />
-      <module fileurl="file://$PROJECT_DIR$/navi/navi.iml" filepath="$PROJECT_DIR$/navi/navi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/timepicker/timepicker.iml" filepath="$PROJECT_DIR$/timepicker/timepicker.iml" />
     </modules>
   </component>
 </project>

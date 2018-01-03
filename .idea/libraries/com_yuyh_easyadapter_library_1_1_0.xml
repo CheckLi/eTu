@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="com.yuyh.easyadapter:library-1.1.0">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/library-1.1.0.aar/fce19feca3d9f8ea0f716c6622afa135/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/library-1.1.0.aar/fce19feca3d9f8ea0f716c6622afa135/res" />
+      <root url="jar://D:/gradle/.gradle/caches/transforms-1/files-1.1/library-1.1.0.aar/5f55bf56dd877c6139ef81c8f151ca61/jars/classes.jar!/" />
+      <root url="file://D:/gradle/.gradle/caches/transforms-1/files-1.1/library-1.1.0.aar/5f55bf56dd877c6139ef81c8f151ca61/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.yuyh.easyadapter/library/1.1.0/d3e536fbbd150276f8f14f9ceb774489b87b6c58/library-1.1.0-sources.jar!/" />
+      <root url="jar://D:/gradle/.gradle/caches/modules-2/files-2.1/com.yuyh.easyadapter/library/1.1.0/d3e536fbbd150276f8f14f9ceb774489b87b6c58/library-1.1.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
