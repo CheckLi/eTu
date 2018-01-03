@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.yitu.etu.R;
 import com.yitu.etu.dialog.SingleTipsDialog;
@@ -35,6 +36,8 @@ public class RedPacketMessageItem extends IContainerItemProvider.MessageProvider
     public void bindView(View view, int i, PacketMessage textMessage, UIMessage uiMessage) {
         View leftImg = view.findViewById(R.id.img);
         View rightImg = view.findViewById(R.id.img2);
+        TextView content = (TextView) view.findViewById(R.id.text);
+        content.setText(textMessage.getContent());
         LinearLayout frame = (LinearLayout) view.findViewById(R.id.fl_content);
         LinearLayout group = (LinearLayout) view.findViewById(R.id.ll_content);
         if (uiMessage.getMessageDirection() == Message.MessageDirection.SEND) {

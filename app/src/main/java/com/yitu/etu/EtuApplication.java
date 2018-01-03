@@ -29,6 +29,8 @@ import com.yitu.etu.util.TextUtils;
 import com.yitu.etu.util.location.LocationUtil;
 import com.yitu.etu.widget.chat.PacketMessage;
 import com.yitu.etu.widget.chat.RedPacketMessageItem;
+import com.yitu.etu.widget.chat.ShareImageMessageItem;
+import com.yitu.etu.widget.chat.ShareMessage;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -73,7 +75,7 @@ public class EtuApplication extends Application {
         /**
          * 异常代理
          */
-        Thread.setDefaultUncaughtExceptionHandler(new CrashException());
+//        Thread.setDefaultUncaughtExceptionHandler(new CrashException());
         /**
          * 网络配置
          */
@@ -103,6 +105,9 @@ public class EtuApplication extends Application {
         //注册平安符item
         RongIM.getInstance().registerMessageType(PacketMessage.class);
         RongIM.getInstance().registerMessageTemplate(new RedPacketMessageItem());
+        //注册分享item
+        RongIM.getInstance().registerMessageType(ShareMessage.class);
+        RongIM.getInstance().registerMessageTemplate(new ShareImageMessageItem());
     }
 
     /**
@@ -124,6 +129,7 @@ public class EtuApplication extends Application {
             }
         }
     }
+
     public void initLocation() {
         LocationUtil.getInstance().startLocation(new AMapLocationListener() {
             @Override
