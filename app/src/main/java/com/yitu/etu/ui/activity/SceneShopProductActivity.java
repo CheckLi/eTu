@@ -175,6 +175,12 @@ public class SceneShopProductActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
+        dialogView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         ImageLoadUtil.getInstance().loadImage(imageView, Urls.address + data.getImage(), -1, -1);
         dialog.show();
     }

@@ -343,21 +343,20 @@
 
         <service android:name=".service.UpdateLocationService" />
 
-        <activity android:name=".ui.activity.SceneServiceActivity"/>
-        <activity android:name=".ui.activity.ManageProductActivity"/>
-        <activity android:name=".ui.activity.ManageOrderActivity"/>
-        <activity android:name=".ui.activity.ReleaseProductActivity"/>
-        <activity android:name=".ui.activity.ManageOrderDetaileActivity"/>
-        <activity android:name=".ui.activity.SearchFriendActivity"/>
-        <activity android:name=".ui.activity.FriendListActivity"/>
-        <activity android:name=".ui.activity.ReleaseMyTravelsActivity"/>
-        <activity android:name=".ui.activity.SceneShopProductActivity"/>
-        <activity android:name=".ui.activity.SceneShopProductDetailActivity"/>
-        <activity android:name=".ui.activity.ChatListActivity">
-        </activity>
+        <activity android:name=".ui.activity.SceneServiceActivity" />
+        <activity android:name=".ui.activity.ManageProductActivity" />
+        <activity android:name=".ui.activity.ManageOrderActivity" />
+        <activity android:name=".ui.activity.ReleaseProductActivity" />
+        <activity android:name=".ui.activity.ManageOrderDetaileActivity" />
+        <activity android:name=".ui.activity.SearchFriendActivity" />
+        <activity android:name=".ui.activity.FriendListActivity" />
+        <activity android:name=".ui.activity.ReleaseMyTravelsActivity" />
+        <activity android:name=".ui.activity.SceneShopProductActivity" />
+        <activity android:name=".ui.activity.SceneShopProductDetailActivity" />
+        <activity android:name=".ui.activity.ChatListActivity"></activity>
         <activity android:name=".ui.activity.ChooseReservation"></activity>
         <activity android:name=".ui.activity.ChooseTimeActivity"></activity>
-
+        <activity android:name=".ui.activity.SceneShopYwDetailActivity"></activity>
 
     </application>
 

@@ -95,9 +95,10 @@ public class SceneServiceActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i > 0) {
                     if (type == 3) {
-                        Intent intent = new Intent(context, SceneShopProductDetailActivity.class);
+                        Intent intent = new Intent(context, SceneShopYwDetailActivity.class);
                         SceneServiceEntity.ListBean data = sceneServiceAdapter.getItem(i - 1);
                         intent.putExtra("id", data.getId());
+                        intent.putExtra("type", type + 4);
                         intent.putExtra("title", data.getName());
                         startActivity(intent);
                     } else {

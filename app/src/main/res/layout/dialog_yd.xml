@@ -9,6 +9,9 @@
         android:background="@color/white"
         android:layout_gravity="center"
         android:layout_marginLeft="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:touchscreenBlocksFocus="true"
         android:layout_marginRight="20dp"
         android:orientation="vertical">
 

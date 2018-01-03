@@ -119,6 +119,7 @@ public class SceneShopProductDetailActivity extends BaseActivity {
             public void onResponse(ObjectBaseEntity<SceneShopProductDetailEntity> response, int i) {
                 hideWaitDialog();
                 if (response.success()) {
+                    findViewById(R.id.fr_content).setVisibility(View.VISIBLE);
                     shopProductEntity = response.getData().getProduct();
                     shopData = response.getData().getShop();
                     ImageLoadUtil.getInstance().loadImage(image, Urls.address + shopData.getUser().getHeader(),R.drawable.default_head, 50, 50);

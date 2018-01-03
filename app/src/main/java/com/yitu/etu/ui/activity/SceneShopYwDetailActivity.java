@@ -10,24 +10,20 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
 import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
-import com.yitu.etu.entity.BuyCar2;
 import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.SceneServiceEntity;
-import com.yitu.etu.entity.SceneShopProductDetailEntity;
+import com.yitu.etu.entity.SceneShopProductEntity;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
-import com.yitu.etu.util.BuyCarUtil;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
-import com.yitu.etu.util.pay.BuyType;
-import com.yitu.etu.util.pay.PayUtil;
 import com.yitu.etu.widget.CarouselView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.Call;
 
@@ -39,7 +35,6 @@ import okhttp3.Call;
 public class SceneShopYwDetailActivity extends BaseActivity {
 
     private TextView tv_des;
-    private BuyCar2 shopProductEntity;
     private SceneServiceEntity.ListBean shopData;
     private TextView tv_address;
     private TextView tv_price;
@@ -52,10 +47,11 @@ public class SceneShopYwDetailActivity extends BaseActivity {
     double price = 0d;
     private ImageView image;
     private int type;
+    private String id;
 
     @Override
     public int getLayout() {
-        return R.layout.activity_scene_shop_product_detail;
+        return R.layout.activity_scene_shop_yw_detail;
     }
 
     @Override
@@ -111,35 +107,39 @@ public class SceneShopYwDetailActivity extends BaseActivity {
         setTitle(getIntent().getStringExtra("title"));
 
         type=getIntent().getIntExtra("type",0);
+        id=getIntent().getIntExtra("id",0)+"";
         HashMap<String, String> params = new HashMap<>();
-        params.put("id", getIntent().getStringExtra("id") + "");
+        params.put("shop_id",id + "");
         showWaitDialog("获取中...");
-        Http.post(Urls.address + "/shop/get_product_info", params, new GsonCallback<ObjectBaseEntity<SceneShopProductDetailEntity>>() {
+        params.put("page",  "1");
+        Http.post(Urls.SHOP_GET_PRODUCT, params, new GsonCallback<ObjectBaseEntity<SceneShopProductEntity>>() {
+
+
             @Override
-            public void onError(Call call, Exception e, int i) {
+            public void onError(Call call, Exception e, int id) {
                 hideWaitDialog();
                 showToast("加载失败");
             }
 
             @Override
-            public void onResponse(ObjectBaseEntity<SceneShopProductDetailEntity> response, int i) {
-                hideWaitDialog();
+            public void onResponse(ObjectBaseEntity<SceneShopProductEntity> response, int id) {
                 if (response.success()) {
-                    shopProductEntity = response.getData().getProduct();
-                    shopData = response.getData().getShop();
+                    findViewById(R.id.fr_content).setVisibility(View.VISIBLE);
+                    shopData=response.getData().getInfo();
                     ImageLoadUtil.getInstance().loadImage(image, Urls.address + shopData.getUser().getHeader(),R.drawable.default_head, 50, 50);
-                    tv_des.setText(shopProductEntity.getDes());
+                    tv_des.setText(shopData.getDes());
                     tv_address.setText("地址：" + shopData.getAddress());
-                    tv_price.setText(shopProductEntity.getPrice() + "");
-                    price = Double.valueOf(shopProductEntity.getPrice());
-                    tv_money.setText(shopProductEntity.getPrice() + "");
+                    tv_price.setText(shopData.getPrice() + "");
+                    price = Double.valueOf(shopData.getPrice());
+                    tv_money.setText(shopData.getPrice() + "");
                     tv_ts.setText("特色：" + shopData.getTese());
                     tv_good.setText(shopData.getGood() + "");
+                    ArrayList<String> paths=new ArrayList<>();
+                    paths.add(shopData.getImage());
+                    carouselView.setPath(paths);
 
-                    carouselView.setPath(shopProductEntity.getList_image());
-                }else{
-                    showToast(response.getMessage());
                 }
+                hideWaitDialog();
 
             }
         });
@@ -156,7 +156,7 @@ public class SceneShopYwDetailActivity extends BaseActivity {
             if (shopData == null) {
                 return;
             }
-            params.put("id", shopData.getId() + "");
+            params.put("id", id + "");
             params.put("type", type+"");
             Http.post(Urls.SHOP_COLLECT, params, new GsonCallback<HttpStateEntity>() {
                 @Override
@@ -179,7 +179,7 @@ public class SceneShopYwDetailActivity extends BaseActivity {
                 return;
             }
             HashMap<String, String> params = new HashMap<>();
-            params.put("id", shopData.getId() + "");
+            params.put("id", id + "");
             params.put("type", "0");
             Http.post(Urls.SHOP_ADD_GOOD, params, new GsonCallback<HttpStateEntity>() {
                 @Override
@@ -226,17 +226,16 @@ public class SceneShopYwDetailActivity extends BaseActivity {
             startActivity(new Intent(context, BuyCarActivity.class));
         }
         if (v.getId() == R.id.btn_add_buy) {
-            shopProductEntity.setCount(number);
-            BuyCarUtil.addBuyCar(shopProductEntity);
+//            BuyCarUtil.addBuyCar(shopProductEntity);
             showToast("加入成功");
         }
 
         if (v.getId() == R.id.btn_send_order) {
-            Map<String,String> params=new HashMap<>();
-            params.put("product_id",shopProductEntity.getId()+"");
-            params.put("count",number+"");
-            PayUtil.getInstance(-1,(float) (price * number),"购买"+shopProductEntity.getName(), BuyType.INSTANCE.getTYPE_BUY_SHOP_PROJECT())
-                    .toPayActivity(this,params);
+//            Map<String,String> params=new HashMap<>();
+//            params.put("product_id",shopProductEntity.getId()+"");
+//            params.put("count",number+"");
+//            PayUtil.getInstance(-1,(float) (price * number),"购买"+shopProductEntity.getName(), BuyType.INSTANCE.getTYPE_BUY_SHOP_PROJECT())
+//                    .toPayActivity(this,params);
         }
         if (v.getId() == R.id.image) {
             Tools.startChat(shopData.getName(),shopData.getUser_id()+"","可以一起去旅行吗？",this);
