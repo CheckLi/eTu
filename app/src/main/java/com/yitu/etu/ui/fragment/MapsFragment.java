@@ -78,6 +78,7 @@ import com.yitu.etu.ui.activity.BaseActivity;
 import com.yitu.etu.ui.activity.MapSearchInputActivity;
 import com.yitu.etu.ui.activity.SearchResultOrderSceneActivity;
 import com.yitu.etu.ui.activity.SearchResultSceneActivity;
+import com.yitu.etu.ui.activity.ViewRecommentActivity;
 import com.yitu.etu.ui.adapter.ChooseAreaAdapter;
 import com.yitu.etu.util.GsonUtil;
 import com.yitu.etu.util.PermissionUtil;
@@ -887,7 +888,25 @@ public class MapsFragment extends SupportMapFragment implements
     public void showNoSceneDialog() {
         if ((!isChooseScene) && (!hasShowNoScene) && type == type_scene) {
             hasShowNoScene = true;
-            ToastUtil.showMessage("无");
+            final Dialog dialog = new Dialog(getContext(), R.style.transparentDialog);
+            View view = inflater.inflate(R.layout.dialog_no_scene, null);
+            Window window = dialog.getWindow();
+            window.getDecorView().setPadding(0, 0, 0, 0);
+            window.setGravity(Gravity.CENTER);
+            dialog.setContentView(view);
+            WindowManager.LayoutParams lp = window.getAttributes();
+            lp.width = WindowManager.LayoutParams.FILL_PARENT;
+            lp.height = WindowManager.LayoutParams.FILL_PARENT;
+            window.setAttributes(lp);
+            view.findViewById(R.id.btn_tuijian).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent= new Intent(getContext(), ViewRecommentActivity.class);
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
         }
     }
 

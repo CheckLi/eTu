@@ -2,7 +2,10 @@ package com.yitu.etu.ui.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -129,23 +132,50 @@ public class SceneShopProductActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (type == 5) {
-                    showYdDialog(manageProductAdapter.getItem(position - 1));
-                } else {
-                    Intent intent = new Intent(context, SceneShopProductDetailActivity.class);
-                    intent.putExtra("title", response.getInfo().getName());
-                    intent.putExtra("type", type);
-                    intent.putExtra("id", manageProductAdapter.getItem(position - 1).getId() + "");
-                    startActivity(intent);
+                if (position > 0) {
+                    if (type == 6) {
+                        showYdDialog(manageProductAdapter.getItem(position - 1));
+                    } else {
+                        Intent intent = new Intent(context, SceneShopProductDetailActivity.class);
+                        intent.putExtra("title", response.getInfo().getName());
+                        intent.putExtra("type", type);
+                        intent.putExtra("id", manageProductAdapter.getItem(position - 1).getId() + "");
+                        startActivity(intent);
+                    }
                 }
             }
         });
     }
 
-    public void showYdDialog(ShopProductEntity data) {
-        Dialog dialog=new Dialog(this,R.style.transparentDialog);
-        View dialogView=getLayoutInflater().inflate(R.layout.dialog_yd,null);
+    public void showYdDialog(final ShopProductEntity data) {
+        final Dialog dialog = new Dialog(this, R.style.transparentDialog);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_yd, null);
+        TextView tv_order = (TextView) dialogView.findViewById(R.id.tv_order);
+        TextView tv_price = (TextView) dialogView.findViewById(R.id.tv_price);
+        TextView tv_title = (TextView) dialogView.findViewById(R.id.tv_title);
+        TextView tv_des = (TextView) dialogView.findViewById(R.id.tv_des);
+        ImageView imageView = (ImageView) dialogView.findViewById(R.id.imageView);
+        tv_price.setText("￥" + data.getPrice());
+        tv_title.setText(data.getName());
+        tv_des.setText(data.getDes());
+        Window window = dialog.getWindow();
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        window.setGravity(Gravity.CENTER);
         dialog.setContentView(dialogView);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.FILL_PARENT;
+        lp.height = WindowManager.LayoutParams.FILL_PARENT;
+        window.setAttributes(lp);
+        tv_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(context, ChooseReservation.class);
+                intent.putExtra("data",data);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        ImageLoadUtil.getInstance().loadImage(imageView, Urls.address + data.getImage(), -1, -1);
         dialog.show();
     }
 

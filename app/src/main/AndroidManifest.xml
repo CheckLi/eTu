@@ -356,6 +356,7 @@
         <activity android:name=".ui.activity.ChatListActivity">
         </activity>
         <activity android:name=".ui.activity.ChooseReservation"></activity>
+        <activity android:name=".ui.activity.ChooseTimeActivity"></activity>
 
 
     </application>

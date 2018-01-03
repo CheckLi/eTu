@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
 import com.yitu.etu.EtuApplication;
@@ -30,7 +31,12 @@ import java.util.Map;
 
 import okhttp3.Call;
 
-public class SceneShopProductDetailActivity extends BaseActivity {
+/**
+ * TODO this class desription here
+ * <p>
+ * Created by deng meng on 2018/1/3.
+ */
+public class SceneShopYwDetailActivity extends BaseActivity {
 
     private TextView tv_des;
     private BuyCar2 shopProductEntity;
@@ -230,7 +236,7 @@ public class SceneShopProductDetailActivity extends BaseActivity {
             params.put("product_id",shopProductEntity.getId()+"");
             params.put("count",number+"");
             PayUtil.getInstance(-1,(float) (price * number),"购买"+shopProductEntity.getName(), BuyType.INSTANCE.getTYPE_BUY_SHOP_PROJECT())
-            .toPayActivity(this,params);
+                    .toPayActivity(this,params);
         }
         if (v.getId() == R.id.image) {
             Tools.startChat(shopData.getName(),shopData.getUser_id()+"","可以一起去旅行吗？",this);
