@@ -7,6 +7,8 @@ import com.yitu.etu.Iinterface.IBuyCarListener
 import com.yitu.etu.R
 import com.yitu.etu.entity.BuyCar
 import com.yitu.etu.util.Empty
+import com.yitu.etu.util.addHost
+import com.yitu.etu.util.imageLoad.ImageLoadUtil
 import kotlinx.android.synthetic.main.buy_car_item.view.*
 
 /**
@@ -22,6 +24,7 @@ class BuyCarAdapter : MyBaseAdapter<BuyCar> {
     override fun getItemView(position: Int, convertView: View, holder: ViewHolder?, parent: ViewGroup?): View {
         convertView.run {
             with(getItem(position)) {
+                ImageLoadUtil.getInstance().loadImage(iv_icon,image.addHost(),50,50)
                 cb_check.isChecked = isCheck
                 tv_count.text = count.toString()
                 tv_desc.text = des.Empty()

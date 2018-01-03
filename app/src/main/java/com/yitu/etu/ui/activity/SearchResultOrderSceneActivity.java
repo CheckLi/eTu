@@ -22,6 +22,7 @@ import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.util.pay.BuyType;
 import com.yitu.etu.util.pay.PayUtil;
 import com.yitu.etu.widget.CarouselView;
+import com.yitu.etu.widget.chat.ShareMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,8 +66,12 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
                         if (EtuApplication.getInstance().isLogin()) {
                             if (position == 0) {
                                 startActivity(new Intent(SearchResultOrderSceneActivity.this, RelaseTravelActivity.class));
-                            } else if (position == 1) {
-
+                            } else if (position == 1&&data!=null) {
+                                ShareFriendActivity.startActivity(context,
+                                        ShareMessage.obtain(data.getAddress()
+                                                ,data.name,
+                                                data.getImages().get(0),
+                                                "4",data.id+""));
                             }
                         } else {
                             ToastUtil.showMessage("请登录");

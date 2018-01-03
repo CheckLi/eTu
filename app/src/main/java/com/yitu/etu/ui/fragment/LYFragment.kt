@@ -8,6 +8,7 @@ import com.yitu.etu.ui.activity.CircleFirendActivity
 import io.rong.imkit.fragment.ConversationListFragment
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.ly_head.*
+import org.jetbrains.anko.bundleOf
 
 /**
  * @className:LYFragment
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.ly_head.*
  * @date:2017年12月09日 17:23
  */
 class LYFragment : BaseFragment() {
+    var type = 0//0不带分享，1带分享
     override fun getLayout(): Int = R.layout.fragment_ly_layout
 
     companion object {
@@ -24,9 +26,18 @@ class LYFragment : BaseFragment() {
             return ly
         }
 
+        fun getInstance(type: Int): LYFragment {
+            val ly = LYFragment()
+            ly.arguments = bundleOf("type" to type)
+            return ly
+        }
+
     }
 
     override fun initView() {
+        if(arguments!=null) {
+            type = arguments.getInt("type")
+        }
         addFragment()
     }
 

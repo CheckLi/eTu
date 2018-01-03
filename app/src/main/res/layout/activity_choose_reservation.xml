@@ -113,20 +113,23 @@
             android:paddingRight="7dp">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="姓名"
                 android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:background="@color/transparent"
                 android:hint="请填写真实姓名"
+                android:singleLine="true"
+                android:lines="1"
                 android:textColor="@color/black"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -141,21 +144,24 @@
             android:paddingRight="7dp">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="手机号"
                 android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:background="@color/transparent"
                 android:hint="请填11位有效手机号"
                 android:textColor="@color/black"
+                android:singleLine="true"
+                android:lines="1"
                 android:textSize="15sp" />
         </LinearLayout>
 

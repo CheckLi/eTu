@@ -40,25 +40,26 @@ import io.rong.imlib.model.Message;
 public class ShareImageMessageItem extends IContainerItemProvider.MessageProvider<ShareMessage> {
     @Override
     public void bindView(View view, int i, ShareMessage textMessage, UIMessage uiMessage) {
-        View leftImg = view.findViewById(R.id.img);
-        View rightImg = view.findViewById(R.id.img2);
+        ImageView leftImg = (ImageView) view.findViewById(R.id.img);
+        ImageView rightImg = (ImageView) view.findViewById(R.id.img2);
         TextView title = (TextView) view.findViewById(R.id.tv_title);
-        ImageView img = (ImageView) view.findViewById(R.id.img);
         TextView content = (TextView) view.findViewById(R.id.tv_content);
         title.setText(textMessage.getTitle());
         content.setText(textMessage.getContent());
-        ImageLoadUtil.getInstance().loadImage(img, Urls.address + textMessage.getLimage(), 50, 50);
+
         LinearLayout frame = (LinearLayout) view.findViewById(R.id.fl_content);
         LinearLayout group = (LinearLayout) view.findViewById(R.id.ll_content);
         if (uiMessage.getMessageDirection() == Message.MessageDirection.SEND) {
             leftImg.setVisibility(View.GONE);
             rightImg.setVisibility(View.VISIBLE);
             group.setGravity(Gravity.RIGHT);
+            ImageLoadUtil.getInstance().loadImage(rightImg, Urls.address + textMessage.getLimage(), 50, 50);
             frame.setGravity(Gravity.RIGHT);
         } else {
             leftImg.setVisibility(View.VISIBLE);
             rightImg.setVisibility(View.GONE);
             group.setGravity(Gravity.LEFT);
+            ImageLoadUtil.getInstance().loadImage(leftImg, Urls.address + textMessage.getLimage(), 50, 50);
             frame.setGravity(Gravity.LEFT);
         }
     }
@@ -90,14 +91,17 @@ public class ShareImageMessageItem extends IContainerItemProvider.MessageProvide
                 break;
 
             case "5":
+                bundle.putInt("id", Integer.parseInt(textMessage.getBindid()));
                 activityUtil.nextActivity(view.getContext(), SceneShopProductActivity.class, bundle, false);
                 break;
 
             case "6":
+                bundle.putInt("id", Integer.parseInt(textMessage.getBindid()));
                 activityUtil.nextActivity(view.getContext(), SceneShopProductActivity.class, bundle, false);
                 break;
 
             case "7":
+                bundle.putInt("id", Integer.parseInt(textMessage.getBindid()));
                 activityUtil.nextActivity(view.getContext(), SceneShopYwDetailActivity.class, bundle, false);
                 break;
 

@@ -40,6 +40,7 @@ public class ShareMessage extends MessageContent {
     private String limage;
     private String type;
     private String bindid;
+    private String userId;
     protected String extra;
     public static final Creator<ShareMessage> CREATOR = new Creator<ShareMessage>() {
         public ShareMessage createFromParcel(Parcel source) {
@@ -68,6 +69,7 @@ public class ShareMessage extends MessageContent {
             jsonObj.put("limage", limage);
             jsonObj.put("type", type);
             jsonObj.put("bindid", bindid);
+            jsonObj.put("userId", userId);
             if (!TextUtils.isEmpty(this.getExtra())) {
                 jsonObj.put("extra", this.getExtra());
             }
@@ -89,18 +91,21 @@ public class ShareMessage extends MessageContent {
     }
 
 
-    protected ShareMessage(String content, String title, String limage, String type,String bindid) {
+    protected ShareMessage(String userId,String content, String title, String limage, String type,String bindid) {
         setContent(content);
         setTitle(title);
         setLimage(limage);
         setType(type);
         setBindid(bindid);
-
+        setUserId(userId);
     }
 
 
     public static ShareMessage obtain(String content, String title, String limage, String type,String bindid) {
-        return new ShareMessage(content, title, limage,type,bindid);
+        return new ShareMessage("",content, title, limage,type,bindid);
+    }
+    public static ShareMessage obtain(String userId,String content, String title, String limage, String type,String bindid) {
+        return new ShareMessage(userId,content, title, limage,type,bindid);
     }
 
     public ShareMessage(byte[] data) {
@@ -121,6 +126,7 @@ public class ShareMessage extends MessageContent {
             limage = jsonObj.optString("limage");
             type = jsonObj.optString("type");
             bindid = jsonObj.optString("bindid");
+            userId = jsonObj.optString("userId");
 
             if (jsonObj.has("extra")) {
                 this.setExtra(jsonObj.optString("extra"));
@@ -152,6 +158,7 @@ public class ShareMessage extends MessageContent {
         ParcelUtils.writeToParcel(dest, this.getLimage());
         ParcelUtils.writeToParcel(dest, this.getType());
         ParcelUtils.writeToParcel(dest, this.getBindid());
+        ParcelUtils.writeToParcel(dest, this.getUserId());
     }
 
 
@@ -164,6 +171,15 @@ public class ShareMessage extends MessageContent {
         setLimage(ParcelUtils.readFromParcel(in));
         setType(ParcelUtils.readFromParcel(in));
         setBindid(ParcelUtils.readFromParcel(in));
+        setUserId(ParcelUtils.readFromParcel(in));
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {

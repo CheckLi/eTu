@@ -24,17 +24,15 @@ object BuyCarUtil {
             val temp = arrayListOf(buycar)
             temp.clear()
             buys.forEachIndexed { index, Car ->
-                if (Car.id != buycar.id) {
-                    temp.add(buycar)
-                    buys.addAll(temp)
-                    PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buys)
-                    return
-                } else {
-                    Car.count++
+                if (Car.id == buycar.id) {
+                    Car.count += buycar?.count
                     PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buys)
                     return
                 }
             }
+            temp.add(buycar)
+            buys.addAll(temp)
+            PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buys)
         }
 
     }
@@ -75,8 +73,8 @@ object BuyCarUtil {
     fun saveBuyCar(buycar: MutableList<BuyCar>?) {
         if (buycar != null && buycar.size > 0) {
             PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buycar)
-        }else{
-            PrefrersUtil.getInstance().saveValue(AppConstant.PARAM_SAVE_BUY_CAR,"[]")
+        } else {
+            PrefrersUtil.getInstance().saveValue(AppConstant.PARAM_SAVE_BUY_CAR, "[]")
         }
     }
 }

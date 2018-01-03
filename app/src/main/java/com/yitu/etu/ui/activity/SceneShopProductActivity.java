@@ -32,6 +32,7 @@ import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.CarouselView;
 import com.yitu.etu.widget.ListSlideView;
+import com.yitu.etu.widget.chat.ShareMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +83,12 @@ public class SceneShopProductActivity extends BaseActivity {
                             if (position == 2) {
                                 shopCollect();
                             }
-                            if (position == 3) {
+                            if (position == 3&&data!=null) {
+                                ShareFriendActivity.startActivity(context,
+                                        ShareMessage.obtain(data.getAddress()
+                                                ,data.getName(),
+                                                data.getImage(),
+                                                type+"",data.getId()+""));
                             }
                         }
                     }, null).showAsDropDown(v, 0, 0);

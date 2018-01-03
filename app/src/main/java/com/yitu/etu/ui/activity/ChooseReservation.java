@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,11 +15,15 @@ import com.yitu.etu.R;
 import com.yitu.etu.entity.ShopProductEntity;
 import com.yitu.etu.util.DateUtil;
 import com.yitu.etu.util.TextUtils;
+import com.yitu.etu.util.pay.BuyType;
+import com.yitu.etu.util.pay.PayUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TODO this class desription here
@@ -94,13 +99,14 @@ public class ChooseReservation extends BaseActivity {
             @Override
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(context, R.style.transparentDialog);
-                LinearLayout dialogView = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_room_num, null);
+                FrameLayout dialogView = (FrameLayout) getLayoutInflater().inflate(R.layout.dialog_room_num, null);
                 final LoopView wheelView = (LoopView) dialogView.findViewById(R.id.loopView);
                 dialogView.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         room_num_int=wheelView.getSelectedItem()+1;
                         room_num.setText(room_num_int+"间");
+                        setPrice();
                         dialog.dismiss();
                     }
                 });
@@ -134,18 +140,27 @@ public class ChooseReservation extends BaseActivity {
                 } else if (TextUtils.isEmpty(tv_phone.getText().toString())) {
                     showToast("请填写手机号码");
                 } else {
-
+                    Map<String, String> params = new HashMap<>();
+                    params.put("product_id", data.getId() + "");
+                    params.put("count", data.getId() + "");
+                    PayUtil.getInstance(-1, room_num_int*time_number*Float.parseFloat(data.getPrice()), data.getName()+"住宿" +time_num.getText().toString()+ room_num.getText().toString(),-1, BuyType.INSTANCE.getTYPE_BUY_SHOP_PROJECT())
+                            .toPayActivity(ChooseReservation.this, params);
                 }
             }
         });
     }
 
+    int time_number=1;
     public void setTimeText() {
         start_time.setText(DateUtil.getTime(start + "", "MM-dd"));
         end_time.setText(DateUtil.getTime(end + "", "MM-dd"));
-        time_num.setText(((int) (end - start) / (60 * 60 * 24)) + "晚");
+        time_number=((int) (end - start) / (60 * 60 * 24));
+        time_num.setText(time_number + "晚");
+        setPrice();
     }
-
+public void setPrice(){
+        tv_price.setText("￥"+room_num_int*time_number*Float.parseFloat(data.getPrice()));
+}
     long start;
     long end;
 

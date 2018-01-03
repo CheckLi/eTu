@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
 import com.yitu.etu.EtuApplication;
@@ -24,6 +25,7 @@ import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.util.pay.BuyType;
 import com.yitu.etu.util.pay.PayUtil;
 import com.yitu.etu.widget.CarouselView;
+import com.yitu.etu.widget.chat.ShareMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +77,12 @@ public class SceneShopProductDetailActivity extends BaseActivity {
                             if (position == 2) {
                                 shopProductCollect();
                             }
-                            if (position == 3) {
+                            if (position == 3&&shopData!=null) {
+                                ShareFriendActivity.startActivity(context,
+                                        ShareMessage.obtain(shopData.getAddress()
+                                                ,shopData.getName(),
+                                                shopData.getImage(),
+                                                type+"",shopData.getId()+""));
                             }
                         }
                     }, null).showAsDropDown(v, 0, 0);

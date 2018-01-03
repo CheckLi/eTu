@@ -10,20 +10,27 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
 import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
+import com.yitu.etu.entity.BuyCar;
 import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.SceneServiceEntity;
-import com.yitu.etu.entity.SceneShopProductEntity;
+import com.yitu.etu.entity.ShopProductEntity;
+import com.yitu.etu.entity.YWBean;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.util.BuyCarUtil;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
+import com.yitu.etu.util.pay.BuyType;
+import com.yitu.etu.util.pay.PayUtil;
 import com.yitu.etu.widget.CarouselView;
+import com.yitu.etu.widget.chat.ShareMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 
@@ -35,6 +42,7 @@ import okhttp3.Call;
 public class SceneShopYwDetailActivity extends BaseActivity {
 
     private TextView tv_des;
+    private ShopProductEntity product ;
     private SceneServiceEntity.ListBean shopData;
     private TextView tv_address;
     private TextView tv_price;
@@ -77,7 +85,12 @@ public class SceneShopYwDetailActivity extends BaseActivity {
                             if (position == 2) {
                                 shopProductCollect();
                             }
-                            if (position == 3) {
+                            if (position == 3&&shopData!=null) {
+                                ShareFriendActivity.startActivity(context,
+                                        ShareMessage.obtain(shopData.getAddress()
+                                                ,shopData.getName(),
+                                                shopData.getImage(),
+                                                type+"",shopData.getId()+""));
                             }
                         }
                     }, null).showAsDropDown(v, 0, 0);
@@ -109,10 +122,9 @@ public class SceneShopYwDetailActivity extends BaseActivity {
         type=getIntent().getIntExtra("type",0);
         id=getIntent().getIntExtra("id",0)+"";
         HashMap<String, String> params = new HashMap<>();
-        params.put("shop_id",id + "");
+        params.put("id",id + "");
         showWaitDialog("获取中...");
-        params.put("page",  "1");
-        Http.post(Urls.SHOP_GET_PRODUCT, params, new GsonCallback<ObjectBaseEntity<SceneShopProductEntity>>() {
+        Http.post(Urls.SHOP_GET_SHOP_INFO, params, new GsonCallback<ObjectBaseEntity<YWBean>>() {
 
 
             @Override
@@ -122,20 +134,21 @@ public class SceneShopYwDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onResponse(ObjectBaseEntity<SceneShopProductEntity> response, int id) {
+            public void onResponse(ObjectBaseEntity<YWBean> response, int id) {
                 if (response.success()) {
                     findViewById(R.id.fr_content).setVisibility(View.VISIBLE);
-                    shopData=response.getData().getInfo();
+                    shopData=response.getData().getShop();
+                    product=response.getData().getProduct();
                     ImageLoadUtil.getInstance().loadImage(image, Urls.address + shopData.getUser().getHeader(),R.drawable.default_head, 50, 50);
                     tv_des.setText(shopData.getDes());
                     tv_address.setText("地址：" + shopData.getAddress());
-                    tv_price.setText(shopData.getPrice() + "");
-                    price = Double.valueOf(shopData.getPrice());
-                    tv_money.setText(shopData.getPrice() + "");
+                    tv_price.setText(product.getPrice() + "");
+                    price = Double.valueOf(product.getPrice());
+                    tv_money.setText(product.getPrice() + "");
                     tv_ts.setText("特色：" + shopData.getTese());
                     tv_good.setText(shopData.getGood() + "");
                     ArrayList<String> paths=new ArrayList<>();
-                    paths.add(shopData.getImage());
+                    paths.add(product.getList_image());
                     carouselView.setPath(paths);
 
                 }
@@ -226,16 +239,19 @@ public class SceneShopYwDetailActivity extends BaseActivity {
             startActivity(new Intent(context, BuyCarActivity.class));
         }
         if (v.getId() == R.id.btn_add_buy) {
-//            BuyCarUtil.addBuyCar(shopProductEntity);
+            BuyCar car=new BuyCar(product.getId(),product.getShop_id(),product.getName(),product.getList_image(),product.getList_image()
+                    ,product.getFxdes(),product.getDes(),product.getSalecount(),Float.parseFloat(product.getPrice()),product.getIs_del(),product.getCreated(),product.getUpdated());
+            car.setCount(number);
+            BuyCarUtil.addBuyCar(car);
             showToast("加入成功");
         }
 
         if (v.getId() == R.id.btn_send_order) {
-//            Map<String,String> params=new HashMap<>();
-//            params.put("product_id",shopProductEntity.getId()+"");
-//            params.put("count",number+"");
-//            PayUtil.getInstance(-1,(float) (price * number),"购买"+shopProductEntity.getName(), BuyType.INSTANCE.getTYPE_BUY_SHOP_PROJECT())
-//                    .toPayActivity(this,params);
+            Map<String,String> params=new HashMap<>();
+            params.put("product_id",product.getId()+"");
+            params.put("count",number+"");
+            PayUtil.getInstance(-1,(float) (price * number),"购买"+product.getName(), BuyType.INSTANCE.getTYPE_BUY_SHOP_PROJECT())
+                    .toPayActivity(this,params);
         }
         if (v.getId() == R.id.image) {
             Tools.startChat(shopData.getName(),shopData.getUser_id()+"","可以一起去旅行吗？",this);

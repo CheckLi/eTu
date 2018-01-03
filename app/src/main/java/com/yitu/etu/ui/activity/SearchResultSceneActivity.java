@@ -39,6 +39,7 @@ import com.yitu.etu.widget.ListSlideView;
 import com.yitu.etu.widget.MListView;
 import com.yitu.etu.widget.MgridView;
 import com.yitu.etu.widget.SendMsgView;
+import com.yitu.etu.widget.chat.ShareMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,6 +99,13 @@ public class SearchResultSceneActivity extends BaseActivity {
                             }
                             if (position == 3) {
                                 spotCollect();
+                            }
+                            if (position == 4&&spotBean!=null) {
+                                ShareFriendActivity.startActivity(context,
+                                        ShareMessage.obtain(spotBean.getAddress()
+                                                ,spotBean.title,
+                                                spotBean.getImages().get(0),
+                                                "1",spotBean.id+""));
                             }
                         }
                     }, null).showAsDropDown(v, 0, 0);
