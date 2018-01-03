@@ -3,13 +3,17 @@ package com.yitu.etu.ui.activity
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.Iinterface.IDelListener
 import com.yitu.etu.R
+import com.yitu.etu.R.id.layout_refresh
+import com.yitu.etu.R.id.listview
 import com.yitu.etu.entity.ArrayBaseEntity
 import com.yitu.etu.entity.MyCollectBean
 import com.yitu.etu.entity.MyRouteBean
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.tools.GsonCallback
+import com.yitu.etu.tools.Http.post
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.adapter.CollectAdapter
+import com.yitu.etu.util.activityUtil.nextActivity
 import com.yitu.etu.util.post
 import kotlinx.android.synthetic.main.activity_my_travels.*
 import okhttp3.Call
@@ -78,7 +82,8 @@ class MyCollectActivity : BaseActivity() {
             when (adapter.getItem(position).type) {
                 2 -> nextActivity<SearchResultSceneActivity>("id" to adapter.getItem(position).pid.toString())
                 3 -> nextActivity<SearchResultOrderSceneActivity>("id" to adapter.getItem(position).pid.toString(), "title" to adapter.getItem(position).name)
-                5,6,7 -> nextActivity<SceneShopProductActivity>("id" to adapter.getItem(position).pid, "title" to adapter.getItem(position).name,"type" to adapter.getItem(position).type)
+                5,6 -> nextActivity<SceneShopProductActivity>("id" to adapter.getItem(position).pid, "title" to adapter.getItem(position).name,"type" to adapter.getItem(position).type)
+                7 -> nextActivity<SceneShopYwDetailActivity>("id" to adapter.getItem(position).pid, "title" to adapter.getItem(position).name,"type" to adapter.getItem(position).type)
                 else -> showToast("开发中")
             }
 

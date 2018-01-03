@@ -10,7 +10,7 @@
                   android:id="@+id/rc_layout_item_message"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:background="@drawable/rc_5dp_red_red"
+                  android:background="@drawable/rc_5dp_blue"
                   android:orientation="horizontal"
                   android:padding="5dp">
 
@@ -35,18 +35,19 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/text"
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="平安符赠送"
-                android:textColor="@color/white"/>
+                android:text="平安符赠送"/>
 
             <TextView
+                android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="点击领取"
-                android:textColor="@color/white"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textSize="12sp"/>
         </LinearLayout>
 
