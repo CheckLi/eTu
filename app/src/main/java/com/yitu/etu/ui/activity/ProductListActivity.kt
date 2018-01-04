@@ -1,5 +1,6 @@
 package com.yitu.etu.ui.activity
 
+import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import com.yitu.etu.entity.ArrayBaseEntity
 import com.yitu.etu.entity.ProductListBean
@@ -69,8 +70,7 @@ class ProductListActivity : BaseActivity() {
             refresh(false)
         }
         listview.setOnItemClickListener { parent, view, position, id ->
-            showToast("开发中")
-
+            nextActivity<ExchangeProductDetailActivity>("data" to adapter.getItem(position))
         }
     }
 

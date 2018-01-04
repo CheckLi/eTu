@@ -74,7 +74,7 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
         if (data.getUser().getId() == myId) {
             viewHolder.tv_delete.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.tv_delete.setVisibility(View.GONE);
+            viewHolder.tv_delete.setVisibility(View.INVISIBLE);
         }
         for (String img : data.getImages()) {
             imageUrl.add(img);

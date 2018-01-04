@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:divider="@drawable/div_1dp_width_8b9da"
+    android:gravity="center_vertical"
+    android:showDividers="middle">
+
+    <TextView
+        style="@style/tab_style2"
+        android:text="" />
+
+    <TextView
+        style="@style/tab_style"
+        android:text="" />
+
+    <TextView
+        style="@style/tab_style"
+        android:text="" />
+
+    <TextView
+        style="@style/tab_style"
+        android:text="" />
+</TableRow>
