@@ -27,8 +27,8 @@ data class UserInfo(
 		@SerializedName("password") var password: String="", //be64e7e18decd33bae11dec86209e94d
 		@SerializedName("address") var address: String="",
 		@SerializedName("nomap") var nomap: Int=0,//1关闭探友
-		@SerializedName("lat") var lat: String="", //0
-		@SerializedName("lng") var lng: String="", //0
+		@SerializedName("lat") var lat: Double=0.0, //0
+		@SerializedName("lng") var lng: Double=0.0, //0
 		@SerializedName("last_lat") var lastLat: String="", //30.654762
 		@SerializedName("last_lng") var lastLng: String="", //104.098471
 		@SerializedName("map_id") var mapId: Int=0, //0

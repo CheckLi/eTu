@@ -29,6 +29,7 @@ public class Urls {
     public static final String URL_SAVE_USER_SHOP_DETAIL = address + "/shop/saveShopInfo";//保存店铺信息
     public static final String URL_CREATE_LOCATION = address + "/chat/createLocation";//创建位置共享
     public static final String URL_GET_CHAT_ID = address + "/chat/getChatId";//获取聊天id
+    public static final String URL_GET_GETLOCATION = address + "/chat/getLocation";//获取聊天id
 
     /**
      * 个人中心相关

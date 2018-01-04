@@ -85,7 +85,7 @@ public class EtuApplication extends Application {
         /**
          * 异常代理
          */
-//        Thread.setDefaultUncaughtExceptionHandler(new CrashException());
+        Thread.setDefaultUncaughtExceptionHandler(new CrashException());
         /**
          * 网络配置
          */

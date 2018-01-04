@@ -61,6 +61,13 @@ class ActionBarView : FrameLayout {
         iv_right.setOnClickListener(onClick)
     }
 
+    fun setRightImage(@DrawableRes drawableId: Int,color:Int, onClick: OnClickListener) {
+        checkRightVisibile(iv_right)
+        iv_right.setImageResource(drawableId)
+        iv_right.setColorFilter(color)
+        iv_right.setOnClickListener(onClick)
+    }
+
     fun setRightImage(onClick: OnClickListener) {
         checkRightVisibile(iv_right)
         iv_right.setOnClickListener(onClick)

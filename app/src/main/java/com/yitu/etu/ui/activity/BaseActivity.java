@@ -306,6 +306,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * 按钮点击事件
+     *
+     * @param listener
+     */
+    public void setRightClick(@DrawableRes int drawable,int color, View.OnClickListener listener) {
+        mActionBarView.setRightImage(drawable,color, listener);
+    }
+
+    /**
      * 设置左侧文字按钮点击事件
      *
      * @param text

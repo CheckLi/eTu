@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment
 import android.text.InputType
 import android.view.Gravity
 import com.amap.api.maps.model.LatLng
+import com.huizhuang.zxsq.utils.nextActivity
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
@@ -20,6 +21,7 @@ import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.ui.activity.AMapRealTimeActivity
 import com.yitu.etu.ui.activity.BaseActivity
 import com.yitu.etu.ui.activity.MainActivity
 import com.yitu.etu.ui.activity.MapActivity
@@ -78,8 +80,9 @@ class MyPlugin(val type: Int) : IPluginModule {
                 }
                 1->p0.nextActivityFromFragment<MapActivity>(1001)
                 2->{
+                    createLocationShare(activity)
 //                   val result= RongIMClient.getInstance().getRealTimeLocation(Conversation.ConversationType.PRIVATE, mTargetId)
-                    RongIMClient.getInstance().startRealTimeLocation(Conversation.ConversationType.PRIVATE, mTargetId)
+//                    RongIMClient.getInstance().startRealTimeLocation(Conversation.ConversationType.PRIVATE, mTargetId)
                 }
                 else -> {
 
@@ -119,17 +122,14 @@ class MyPlugin(val type: Int) : IPluginModule {
     /**
      * 创建位置共享
      */
-    fun createLocationShare(peopleCount: String, count: String, activity: BaseActivity) {
+    fun createLocationShare(activity: BaseActivity) {
         activity.showWaitDialog("获取中...")
-        Http.post(Urls.URL_CREATE_LOCATION, hashMapOf("count" to count, "people" to peopleCount), object : GsonCallback<ObjectBaseEntity<PinAnBean>>() {
-            override fun onResponse(response: ObjectBaseEntity<PinAnBean>, id: Int) {
+        Http.post(Urls.URL_CREATE_LOCATION, hashMapOf("chat_id" to mTargetId), object : GsonCallback<ObjectBaseEntity<String>>() {
+            override fun onResponse(response: ObjectBaseEntity<String>, id: Int) {
                 activity.hideWaitDialog()
                 if (response.success()) {
                     with(response.data) {
-                        val mes = PacketMessage.obtain("平安符赠送",count,people,idPin)
-                        val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, mes)
-                        sendMessage(message)
-                        EventBus.getDefault().post(EventRefresh(MainActivity::class.java.simpleName))
+                        activity.nextActivity<AMapRealTimeActivity>("id" to this)
                     }
                 } else {
                     activity.showToast(response.message)
