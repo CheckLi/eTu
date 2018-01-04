@@ -1,15 +1,13 @@
 package com.yitu.etu.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
 import com.yitu.etu.R;
-import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.OrderDetail;
 import com.yitu.etu.entity.Product2;
@@ -29,6 +27,7 @@ public class ManageOrderDetaileActivity extends BaseActivity {
     private TableRow tr_order;
     private TextView tv_address;
     private TextView tv_phone;
+    private TableLayout tableLayout;
 
     @Override
     public int getLayout() {
@@ -42,6 +41,7 @@ public class ManageOrderDetaileActivity extends BaseActivity {
         tr_order = (TableRow) findViewById(R.id.tr_order);
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_phone = (TextView) findViewById(R.id.tv_phone);
+        tableLayout=(TableLayout)findViewById(R.id.tableLayout);
     }
 
     @Override
@@ -64,11 +64,15 @@ public class ManageOrderDetaileActivity extends BaseActivity {
                 public void onResponse(ObjectBaseEntity<OrderDetail> response, int id) {
                     if (response.success()) {
                         final OrderDetail data= response.getData();
-                        Product2 product= data.getProduct().get(0);
-                        ((TextView) tr_order.getChildAt(0)).setText(product.getName()+"("+product.getCount()+"份)");
-                        ((TextView) tr_order.getChildAt(1)).setText(data.getId()+"");
-                        ((TextView) tr_order.getChildAt(2)).setText(data.getPrice()+"");
-                        ((TextView) tr_order.getChildAt(3)).setText(DateUtil.getTime(data.getUpdated()+"",null));
+                        for (int i=0;i<data.getProduct().size();i++) {
+                            Product2 product= data.getProduct().get(i);
+                            TableRow tableRow=(TableRow)getLayoutInflater().inflate(R.layout.item_table_row,null);
+                            ((TextView) tableRow.getChildAt(0)).setText(product.getName()+"("+product.getCount()+"份)");
+                            ((TextView) tableRow.getChildAt(1)).setText(data.getId()+"");
+                            ((TextView) tableRow.getChildAt(2)).setText(data.getPrice()+"");
+                            ((TextView) tableRow.getChildAt(3)).setText(DateUtil.getTime(data.getUpdated()+"",null));
+                            tableLayout.addView(tableRow,i+1);
+                        }
                         tv_phone.setText("电话："+data.getShop().getPhone());
                         tv_address.setText("地址："+data.getShop().getAddress());
                         tv_address.setOnClickListener(new View.OnClickListener() {

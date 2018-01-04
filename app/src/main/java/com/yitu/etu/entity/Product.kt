@@ -1,5 +1,6 @@
 package com.yitu.etu.entity
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 /**
@@ -21,4 +22,4 @@ data class ProductListBean(
 		@SerializedName("sort") val sort: Int = 0, //0
 		@SerializedName("created") val created: Int = 0, //1512888322
 		@SerializedName("updated") val updated: Int = 0 //1512888594
-)
+):Serializable
