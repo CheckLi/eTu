@@ -82,10 +82,7 @@ dependencies {
     //网络库
     implementation project(':IMKit')
     //    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:1.5.0@aar'
-    implementation files('libs/AMap3DMap_5.6.0_AMapNavi_5.5.0_AMapSearch_5.5.0_AMapLocation_3.6.1_20171130.jar')
-    implementation files('libs/Msc.jar')
     implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation files('libs/zxing-3.3.0.jar')
     //    密码输入框
     implementation 'com.jungly:gridPasswordView:0.3'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-4'
@@ -95,8 +92,13 @@ dependencies {
     compile 'com.jingtianxiaozhi.firework:firework-core:1.0.0'
     implementation project(':CalendarView')
     compile 'com.weigan:loopView:0.1.2'
+    implementation files('libs/AMap3DMap_5.6.0_AMapNavi_5.5.0_AMapSearch_5.5.0_AMapLocation_3.6.1_20171130 (1).jar')
+    implementation files('libs/Amap_2DMap_V5.2.0_20170627.jar')
 }
 
 task showMeCache << {
     configurations.compile.each { println it }
+}
+configurations.all {
+    resolutionStrategy.force 'com.android.support:support-annotations:23.1.0'
 }

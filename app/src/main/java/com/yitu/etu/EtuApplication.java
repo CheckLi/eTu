@@ -1,11 +1,15 @@
 package com.yitu.etu;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Poi;
 import com.autonavi.amap.mapcore.FileUtil;
 import com.bumptech.glide.Glide;
@@ -22,10 +26,13 @@ import com.yitu.etu.service.UpdateLocationService;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.activity.SearchResultUserActivity;
 import com.yitu.etu.ui.fragment.Chat.MyExtensionModule;
 import com.yitu.etu.util.LogUtil;
 import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
+import com.yitu.etu.util.Tools;
+import com.yitu.etu.util.activityUtil;
 import com.yitu.etu.util.location.LocationUtil;
 import com.yitu.etu.widget.chat.PacketMessage;
 import com.yitu.etu.widget.chat.RedPacketMessageItem;
@@ -44,6 +51,9 @@ import io.rong.imkit.IExtensionModule;
 import io.rong.imkit.RongExtensionManager;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.Message;
+import io.rong.message.LocationMessage;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
@@ -108,6 +118,44 @@ public class EtuApplication extends Application {
         //注册分享item
         RongIM.getInstance().registerMessageType(ShareMessage.class);
         RongIM.getInstance().registerMessageTemplate(new ShareImageMessageItem());
+        /**
+         * 设置会话界面操作的监听器。
+         */
+        RongIM.setConversationBehaviorListener(new RongIM.ConversationBehaviorListener() {
+            @Override
+            public boolean onUserPortraitClick(Context context, Conversation.ConversationType conversationType, io.rong.imlib.model.UserInfo userInfo) {
+                Bundle bundle=new Bundle();
+                bundle.putString("user_id",userInfo.getUserId());
+                activityUtil.nextActivity(context,SearchResultUserActivity.class,bundle,false);
+                return true;
+            }
+
+            @Override
+            public boolean onUserPortraitLongClick(Context context, Conversation.ConversationType conversationType, io.rong.imlib.model.UserInfo userInfo) {
+                return false;
+            }
+
+            @Override
+            public boolean onMessageClick(Context context, View view, Message message) {
+                if(message.getContent() instanceof LocationMessage){
+                    LocationMessage message1= (LocationMessage) message.getContent();
+                    Poi end = new Poi(message1.getPoi(), new LatLng(message1.getLat(), message1.getLng()), "");
+                    Tools.navi(context, end);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onMessageLinkClick(Context context, String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onMessageLongClick(Context context, View view, Message message) {
+                return false;
+            }
+        });
     }
 
     /**

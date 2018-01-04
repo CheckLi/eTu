@@ -16,10 +16,12 @@ import com.yitu.etu.R
 import com.yitu.etu.dialog.InputPriceDialog
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.PinAnBean
+import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.activity.BaseActivity
+import com.yitu.etu.ui.activity.MainActivity
 import com.yitu.etu.ui.activity.MapActivity
 import com.yitu.etu.util.userInfo
 import com.yitu.etu.widget.chat.PacketMessage
@@ -34,6 +36,7 @@ import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.LocationMessage
 import okhttp3.Call
+import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.lang.Exception
 
@@ -69,14 +72,17 @@ class MyPlugin(val type: Int) : IPluginModule {
                     xy.text = "当前余量：${activity.userInfo()?.safecount}"
                     dialog.setRightBtnResultText("确认", "请输入平安符数量") {
                         sendPan("1", it, activity)
+                        dialog.dismiss()
                     }
                     dialog.showDialog()
                 }
                 1->p0.nextActivityFromFragment<MapActivity>(1001)
+                2->{
+//                   val result= RongIMClient.getInstance().getRealTimeLocation(Conversation.ConversationType.PRIVATE, mTargetId)
+                    RongIMClient.getInstance().startRealTimeLocation(Conversation.ConversationType.PRIVATE, mTargetId)
+                }
                 else -> {
-                    val mes = PacketMessage.obtain("李佳明的平安符","1","1","22")
-                    val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, mes)
-                    sendMessage(message)
+
                 }
 
             }
@@ -96,6 +102,34 @@ class MyPlugin(val type: Int) : IPluginModule {
                         val mes = PacketMessage.obtain("平安符赠送",count,people,idPin)
                         val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, mes)
                         sendMessage(message)
+                        EventBus.getDefault().post(EventRefresh(MainActivity::class.java.simpleName))
+                    }
+                } else {
+                    activity.showToast(response.message)
+                }
+            }
+
+            override fun onError(call: Call?, e: Exception?, id: Int) {
+                activity.hideWaitDialog()
+                activity.showToast("发送失败")
+            }
+
+        })
+    }
+    /**
+     * 创建位置共享
+     */
+    fun createLocationShare(peopleCount: String, count: String, activity: BaseActivity) {
+        activity.showWaitDialog("获取中...")
+        Http.post(Urls.URL_CREATE_LOCATION, hashMapOf("count" to count, "people" to peopleCount), object : GsonCallback<ObjectBaseEntity<PinAnBean>>() {
+            override fun onResponse(response: ObjectBaseEntity<PinAnBean>, id: Int) {
+                activity.hideWaitDialog()
+                if (response.success()) {
+                    with(response.data) {
+                        val mes = PacketMessage.obtain("平安符赠送",count,people,idPin)
+                        val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, mes)
+                        sendMessage(message)
+                        EventBus.getDefault().post(EventRefresh(MainActivity::class.java.simpleName))
                     }
                 } else {
                     activity.showToast(response.message)

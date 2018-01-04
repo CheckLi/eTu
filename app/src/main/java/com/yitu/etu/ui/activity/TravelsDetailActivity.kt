@@ -1,15 +1,17 @@
 package com.yitu.etu.ui.activity
 
+import android.view.View
 import android.webkit.WebView
+import android.widget.AdapterView
+import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 import com.yitu.etu.entity.MyTravelsDetail
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
-import com.yitu.etu.util.addHost
-import com.yitu.etu.util.getTime
+import com.yitu.etu.util.*
 import com.yitu.etu.util.imageLoad.ImageLoadUtil
-import com.yitu.etu.util.post
+import kotlinx.android.synthetic.main.actionbar_layout.view.*
 import kotlinx.android.synthetic.main.activity_travels_detail.*
 import okhttp3.Call
 import java.lang.Exception
@@ -45,6 +47,7 @@ class TravelsDetailActivity : BaseActivity() {
                         web=WebView(this@TravelsDetailActivity)
                         ll_content.addView(web)
                         web?.loadDataWithBaseURL(null,text, "text/html","utf-8",null)
+                        setRight(this)
                     }
                 }else{
                     showToast(response.message)
@@ -52,6 +55,28 @@ class TravelsDetailActivity : BaseActivity() {
             }
 
         })
+    }
+
+    fun setRight(bean:MyTravelsDetail){
+        if(userInfo().id!=bean.userId){
+            setRightClick(R.drawable.icon145){
+                val pop = Tools.getPopupWindow(this@TravelsDetailActivity, arrayOf("加入收藏", "发送给好友"), object : AdapterView.OnItemClickListener {
+                    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        if (!isLogin()) {
+                            showToast("请先登录")
+                        } else {
+                            when (position) {
+                                0 -> nextActivity<SearchFriendActivity>()
+                                1 -> nextActivity<FriendListActivity>()
+                                else -> ""
+                            }
+                        }
+                    }
+
+                }, "right")
+                pop.showAsDropDown(mActionBarView.iv_right, 20, 0)
+            }
+        }
     }
 
     override fun initListener() {

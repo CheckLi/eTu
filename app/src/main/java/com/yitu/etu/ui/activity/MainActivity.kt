@@ -13,6 +13,7 @@ import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
+import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.fragment.AccountFragment
@@ -30,6 +31,8 @@ import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.actionbar_layout.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.Call
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.io.File
 import java.lang.Exception
 
@@ -46,6 +49,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun initView() {
+        EventBus.getDefault().register(this)
         viewPager.adapter = MyPagerAdapter(supportFragmentManager)
         tab_select.setViewPager(viewPager, intArrayOf(R.drawable.icon136, -1, R.drawable.icon130))
         viewPager.offscreenPageLimit = 2
@@ -67,6 +71,7 @@ class MainActivity : BaseActivity() {
         getsize(file)
         buff.append("缓存目录1$cacheDir 大小 ${file.length() / 1024.0f}kb ${lenght}kb\n")
         LogUtil.e("cache", buff.toString())
+        refreshMyInfo()
     }
 
     var lenght = 0.0f
@@ -186,32 +191,38 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
         Glide.get(this).clearMemory()
         RongIM.getInstance().disconnect()
         RongIM.getInstance().removeUnReadMessageCountChangedObserver(unReadListener)
         super.onDestroy()
     }
 
+
     fun refreshMyInfo() {
-        showWaitDialog("获取中...")
         post(Urls.URL_GET_USER_INFO, hashMapOf(), object : GsonCallback<ObjectBaseEntity<UserInfo>>() {
             override fun onResponse(response: ObjectBaseEntity<UserInfo>, id: Int) {
-                hideWaitDialog()
-                if (response.success()) {
+                if (response.success() && response.data != null && response.data.id != 0) {
                     with(response.data) {
-
+                        EtuApplication.getInstance().userInfo.setUserinfo(response.data)
                     }
-                } else {
-                    showToast(response.message)
                 }
             }
 
             override fun onError(call: Call?, e: Exception?, id: Int) {
-                hideWaitDialog()
-                showToast("获取失败")
             }
 
         })
+    }
+
+    /**
+     * 刷新用户数据
+     */
+    @Subscribe
+    fun onEventRefreshMyInfo(event: EventRefresh) {
+        if (event.classname == className) {
+            refreshMyInfo()
+        }
     }
 }
 

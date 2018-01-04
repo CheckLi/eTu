@@ -27,6 +27,8 @@ public class Urls {
     public static final String URL_GET_ID_USER_INFO = address + "/user/infobyid";//获取指定用户信息
     public static final String URL_GET_USER_SHOP_DETAIL = address + "/shop/getShopInfo";//获取店铺信息
     public static final String URL_SAVE_USER_SHOP_DETAIL = address + "/shop/saveShopInfo";//保存店铺信息
+    public static final String URL_CREATE_LOCATION = address + "/chat/createLocation";//创建位置共享
+    public static final String URL_GET_CHAT_ID = address + "/chat/getChatId";//获取聊天id
 
     /**
      * 个人中心相关
@@ -108,4 +110,8 @@ public class Urls {
      时传⼊）
      */
     public static final String URL_SHOP_PROJECT=address+"/shop/create_order";
+    /**
+     * 抢平安符
+     */
+    public static final String URL_PACKET_GET=address+"/chat/getPacket";
 }

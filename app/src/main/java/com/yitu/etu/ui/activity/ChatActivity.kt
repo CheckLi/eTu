@@ -30,13 +30,13 @@ class ChatActivity : BaseActivity() {
     override fun getLayout(): Int = R.layout.activity_chat
 
     override fun initActionBar() {
-        title=intent.data.getQueryParameter("title")
-        setRightClick(R.drawable.icon145){
+        title = intent.data.getQueryParameter("title")
+        setRightClick(R.drawable.icon145) {
             val pop = Tools.getPopupWindow(this@ChatActivity, arrayOf("旅友圈", "加为好友"), object : AdapterView.OnItemClickListener {
                 override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    if(!isLogin()){
+                    if (!isLogin()) {
                         showToast("请先登录")
-                    }else {
+                    } else {
                         when (position) {
                             0 -> nextActivity<SearchResultUserActivity>(
                                     "user_id" to intent.data.getQueryParameter("targetId")
@@ -47,20 +47,23 @@ class ChatActivity : BaseActivity() {
                     }
                 }
 
-            },"right")
-            pop.showAsDropDown(mActionBarView.iv_right,20,0)
+            }, "right")
+            pop.showAsDropDown(mActionBarView.iv_right, 20, 0)
         }
     }
 
     override fun initView() {
         EventBus.getDefault().register(this)
+    }
+
+    fun playAnimation() {
         /**
          * 添加烟花曾
          */
         yanhua = FireWorkView(this@ChatActivity, R.drawable.icon1)
         val params = FrameLayout.LayoutParams(-1, -1)
         (window.decorView as ViewGroup).addView(yanhua, params)
-        yanhua.visibility=View.GONE
+        yanhua.playAnim()
     }
 
     override fun getData() {
@@ -105,24 +108,24 @@ class ChatActivity : BaseActivity() {
 
     override fun onDestroy() {
         EventBus.getDefault().unregister(this)
+        hand.removeCallbacks(run)
         super.onDestroy()
     }
 
-    val hand=Handler()
-    val run= Runnable {
+    val hand = Handler()
+    val run = Runnable {
         yanhua.stopAnim()
-        yanhua.visibility=View.GONE
+        (window.decorView as ViewGroup).removeView(yanhua)
     }
 
     @Subscribe
-    fun onEventPlay(event: EventPlayYanHua){
-        if(event.play){
-            yanhua.visibility=View.VISIBLE
-            yanhua.playAnim()
-            hand.removeCallbacks(run)
-            hand.postDelayed(run,3000)
-        }else{
+    fun onEventPlay(event: EventPlayYanHua) {
+        if (event.play) {
+            playAnimation()
+            hand.postDelayed(run, 6000)
+        } else {
             yanhua.stopAnim()
+            (window.decorView as ViewGroup).removeView(yanhua)
         }
     }
 }
