@@ -54,7 +54,7 @@ public class SceneServiceActivity extends BaseActivity {
             setTitle("美食");
         } else if (type == 2) {
             setTitle("住宿");
-        } else if (type == 2) {
+        } else if (type == 3) {
             setTitle("游玩");
         }
     }

@@ -35,6 +35,14 @@
                 android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▶"
+                android:textColor="#FF17426C"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="2dp"
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -101,6 +109,15 @@
                 android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▶"
+                android:textColor="#FF17426C"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="2dp"
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <LinearLayout

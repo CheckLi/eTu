@@ -17,7 +17,7 @@ import com.codbking.widget.genview.WheelGeneralAdapter;
 /**
  * Created by codbking on 2016/8/11.
  */
- abstract class BaseWheelPick
+ public abstract class BaseWheelPick
         extends LinearLayout
         implements OnWheelChangedListener
         , OnWheelScrollListener

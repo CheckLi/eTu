@@ -33,8 +33,9 @@
             android:id="@+id/loopView"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             app:awv_isLoop="false"
+            android:layout_marginBottom="10dp"
             app:awv_textsize="18" />
     </LinearLayout>
 </FrameLayout>

@@ -87,10 +87,11 @@
                     android:gravity="top"
                     android:hint="游记内容"
                     android:minLines="5"
+                    android:visibility="gone"
                     android:textColor="@color/color_333333"
                     android:textSize="14sp" />
 
-                <com.yitu.etu.widget.MgridView
+                <com.yitu.etu.widget.tablayout.ReleaseMyTravelsGridView
                     android:id="@+id/image_select"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -99,7 +100,7 @@
                     android:horizontalSpacing="10dp"
                     android:numColumns="1"
                     android:verticalSpacing="10dp"
-                    android:visibility="gone" />
+                     />
 
             </RelativeLayout>
         </LinearLayout>
