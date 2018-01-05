@@ -906,6 +906,12 @@ public class MapsFragment extends SupportMapFragment implements
                     dialog.dismiss();
                 }
             });
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
             dialog.show();
         }
     }
