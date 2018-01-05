@@ -37,6 +37,7 @@ import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Message
 import io.rong.message.ImageMessage
 import io.rong.message.LocationMessage
+import io.rong.message.TextMessage
 import okhttp3.Call
 import org.greenrobot.eventbus.EventBus
 import java.io.File
@@ -124,12 +125,17 @@ class MyPlugin(val type: Int) : IPluginModule {
      */
     fun createLocationShare(activity: BaseActivity) {
         activity.showWaitDialog("获取中...")
-        Http.post(Urls.URL_CREATE_LOCATION, hashMapOf("chat_id" to mTargetId), object : GsonCallback<ObjectBaseEntity<String>>() {
+        Http.post(Urls.URL_CREATE_LOCATION, hashMapOf("chat_id" to ""
+        ,"target_id" to mTargetId), object : GsonCallback<ObjectBaseEntity<String>>() {
             override fun onResponse(response: ObjectBaseEntity<String>, id: Int) {
                 activity.hideWaitDialog()
                 if (response.success()) {
                     with(response.data) {
-                        activity.nextActivity<AMapRealTimeActivity>("id" to this)
+                        val mes = TextMessage.obtain(" 我发起了位置共享")
+                        mes.extra="RCZXJRLMap"
+                        val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, mes)
+                        sendMessage(message)
+                        activity.nextActivity<AMapRealTimeActivity>("chat_id" to this,"type" to Message.MessageDirection.SEND)
                     }
                 } else {
                     activity.showToast(response.message)

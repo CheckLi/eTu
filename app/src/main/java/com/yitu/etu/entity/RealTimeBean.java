@@ -20,7 +20,8 @@ public class RealTimeBean {
     @SerializedName("user_id")
     public int userId;
     @SerializedName("data")
-    public List<UserInfo> data;
+    public List<RealTimeListBean> data;
+
 
     @Override
     public String toString() {

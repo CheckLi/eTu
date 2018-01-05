@@ -16,7 +16,7 @@
     <TextView
         android:id="@+id/tv_count"
         android:layout_width="match_parent"
-        android:text="0人正在共享位置"
+        android:text="1人正在共享位置"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="16sp"

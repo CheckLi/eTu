@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
+import com.yitu.etu.dialog.LoadingDialog;
 import com.yitu.etu.entity.AppConstant;
 import com.yitu.etu.entity.ChatToken;
 import com.yitu.etu.entity.ObjectBaseEntity;
@@ -26,15 +27,19 @@ import com.yitu.etu.service.UpdateLocationService;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.activity.AMapRealTimeActivity;
 import com.yitu.etu.ui.activity.SearchResultUserActivity;
 import com.yitu.etu.ui.fragment.Chat.MyExtensionModule;
 import com.yitu.etu.util.LogUtil;
 import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
+import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.activityUtil;
 import com.yitu.etu.util.location.LocationUtil;
 import com.yitu.etu.widget.chat.PacketMessage;
+import com.yitu.etu.widget.chat.RealTimeLocationEndMessage;
+import com.yitu.etu.widget.chat.RealTimeLocationMessageEndItem;
 import com.yitu.etu.widget.chat.RedPacketMessageItem;
 import com.yitu.etu.widget.chat.ShareImageMessageItem;
 import com.yitu.etu.widget.chat.ShareMessage;
@@ -54,6 +59,7 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
 import io.rong.message.LocationMessage;
+import io.rong.message.TextMessage;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
@@ -118,15 +124,18 @@ public class EtuApplication extends Application {
         //注册分享item
         RongIM.getInstance().registerMessageType(ShareMessage.class);
         RongIM.getInstance().registerMessageTemplate(new ShareImageMessageItem());
+        //注册结束共享item
+        RongIM.getInstance().registerMessageType(RealTimeLocationEndMessage.class);
+        RongIM.getInstance().registerMessageTemplate(new RealTimeLocationMessageEndItem());
         /**
          * 设置会话界面操作的监听器。
          */
         RongIM.setConversationBehaviorListener(new RongIM.ConversationBehaviorListener() {
             @Override
             public boolean onUserPortraitClick(Context context, Conversation.ConversationType conversationType, io.rong.imlib.model.UserInfo userInfo) {
-                Bundle bundle=new Bundle();
-                bundle.putString("user_id",userInfo.getUserId());
-                activityUtil.nextActivity(context,SearchResultUserActivity.class,bundle,false);
+                Bundle bundle = new Bundle();
+                bundle.putString("user_id", userInfo.getUserId());
+                activityUtil.nextActivity(context, SearchResultUserActivity.class, bundle, false);
                 return true;
             }
 
@@ -136,11 +145,39 @@ public class EtuApplication extends Application {
             }
 
             @Override
-            public boolean onMessageClick(Context context, View view, Message message) {
-                if(message.getContent() instanceof LocationMessage){
-                    LocationMessage message1= (LocationMessage) message.getContent();
+            public boolean onMessageClick(final Context context, View view, final Message message) {
+                if (message.getContent() instanceof LocationMessage) {
+                    LocationMessage message1 = (LocationMessage) message.getContent();
                     Poi end = new Poi(message1.getPoi(), new LatLng(message1.getLat(), message1.getLng()), "");
                     Tools.navi(context, end);
+                    return true;
+                    //如果是接收方并且是共享位置消息，需要跳转到自己的共享页
+                } else if (message.getContent() instanceof TextMessage && ((TextMessage) message.getContent()).getExtra().equals("RCZXJRLMap") && message.getMessageDirection() == Message.MessageDirection.RECEIVE) {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("target_id", message.getSenderUserId());
+                    final LoadingDialog dialog = new LoadingDialog(context, "加入中...");
+                    dialog.show();
+                    Http.post(Urls.URL_GET_CHAT_ID, map, new GsonCallback<ObjectBaseEntity<Object>>() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            ToastUtil.showMessage("共享已结束");
+                            dialog.hideDialog();
+                        }
+
+                        @Override
+                        public void onResponse(ObjectBaseEntity<Object> response, int id) {
+                            dialog.hideDialog();
+                            if (response.success()) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("chat_id", response.data.toString());
+                                bundle.putSerializable("type", Message.MessageDirection.RECEIVE);
+                                activityUtil.nextActivity(context, AMapRealTimeActivity.class, bundle, false);
+                            } else {
+                                ToastUtil.showMessage(response.getMessage());
+                            }
+                        }
+                    });
+
                     return true;
                 }
                 return false;

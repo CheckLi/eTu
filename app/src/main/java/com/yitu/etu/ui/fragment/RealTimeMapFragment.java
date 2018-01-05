@@ -3,10 +3,13 @@ package com.yitu.etu.ui.fragment;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -20,7 +23,6 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.SupportMapFragment;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.squareup.picasso.Picasso;
@@ -29,14 +31,13 @@ import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.RealTimeBean;
+import com.yitu.etu.entity.RealTimeListBean;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
-import com.yitu.etu.util.LogUtil;
+import com.yitu.etu.util.ToastUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import okhttp3.Call;
 
@@ -50,23 +51,23 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
 
     private View mRoot;
     private MapView mMapView;
+    private TextView mCount;
     private AMap mAmap;
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
-    private List<Marker> mMarkers;
-    private String id="";
+    private SparseArray<RealTimeListBean> mMarkers;
+    private String id = "";
     private LatLng mLatLng;
     MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
 
-    private Marker marker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(getArguments()!=null){
-            id=getArguments().getString("id");
+        if (getArguments() != null) {
+            id = getArguments().getString("chat_id");
         }
-        mMarkers=new ArrayList<>();
+        mMarkers = new SparseArray<>();
         mRoot = inflater.inflate(R.layout.real_time_map, container,
                 false);
         mMapView = (MapView) mRoot.findViewById(R.id.map);
@@ -83,17 +84,23 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         return mRoot;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        mCount = (TextView) view.findViewById(R.id.tv_count);
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     /**
      * 刷新数据
      */
-    private void refresh(){
-        if(mLatLng==null){
+    private void refresh() {
+        if (mLatLng == null) {
             return;
         }
-        HashMap<String,String> params=new HashMap<>();
-        params.put("lat",mLatLng.latitude+"");
-        params.put("lng",mLatLng.longitude+"");
-        params.put("chat_id",id);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("lat", mLatLng.latitude + "");
+        params.put("lng", mLatLng.longitude + "");
+        params.put("chat_id", id);
         Http.post(Urls.URL_GET_GETLOCATION, params, new GsonCallback<ObjectBaseEntity<RealTimeBean>>() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -102,11 +109,70 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
 
             @Override
             public void onResponse(ObjectBaseEntity<RealTimeBean> response, int id) {
-                if(response.success()){
-                   LogUtil.e("获取数据","获取数据"+response.getData().toString());
+                if (response.success() && response.getData() != null) {
+//                    mMarkers = response.getData().data;
+                    if (response.getData().data != null && response.getData().data.size() > 0) {
+                        /**
+                         * 判断marker，如果有就移动，没有就添加
+                         */
+                        for (int i = 0; i < response.getData().data.size(); i++) {
+                            RealTimeListBean bean = response.getData().data.get(i);
+                            if (mMarkers.indexOfKey(bean.id) < 0) {
+                                mMarkers.append(bean.id, bean);
+                                addMarker(bean.lat, bean.lng, bean.id, bean.header);
+                            } else if (mMarkers.get(bean.id).mMarker != null && (bean.lat != mMarkers.get(bean.id).lat || bean.lng != mMarkers.get(bean.id).lng)) {
+                                mMarkers.get(bean.id).mMarker.setPosition(new LatLng(bean.lat, bean.lng));
+                            } else if (mMarkers.get(bean.id).mMarker == null) {
+                                RealTimeListBean bean2 = mMarkers.get(bean.id);
+                                addMarker(bean2.lat, bean2.lng, bean2.id, bean2.header);
+                            }
+                        }
+                        /**
+                         * 去除列表中已经离开的marker
+                         */
+                        for (int i = 0; i < mMarkers.size(); i++) {
+                            int key = mMarkers.keyAt(i);
+                            int filterKey = -1;
+                            for (int j = 0; j < response.getData().data.size(); j++) {
+                                RealTimeListBean bean2 = response.getData().data.get(j);
+                                if (key == bean2.id) {
+                                    filterKey = -1;
+                                    break;
+                                } else {
+                                    filterKey = bean2.id;
+                                }
+                                if (filterKey >= 0) {
+                                    remove(key);
+                                }
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < mMarkers.size(); i++) {
+                            int key = mMarkers.keyAt(i);
+                            if (mMarkers.get(key).id != EtuApplication.getInstance().getUserInfo().getId()) {
+                                remove(key);
+                            } else if (mMarkers.get(key).mMarker == null && mMarkers.get(key).id == EtuApplication.getInstance().getUserInfo().getId()) {
+                                RealTimeListBean bean2 = mMarkers.get(key);
+                                addMarker(bean2.lat, bean2.lng, bean2.id, bean2.header);
+                            }
+                        }
+                    }
+                } else {
+                    ToastUtil.showMessage(response.getMessage());
+                    getActivity().finish();
                 }
+                mCount.setText(mMarkers.size() + "人正在共享位置");
             }
         });
+    }
+
+    private void remove(int key) {
+        if (mMarkers.size() > 0 && mMarkers.get(key).id != EtuApplication.getInstance().getUserInfo().getId()) {
+            if (mMarkers.get(key).mMarker != null) {
+                mMarkers.get(key).mMarker.remove();
+            }
+            mMarkers.remove(key);
+        }
     }
 
     /**
@@ -128,7 +194,7 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         // 设置是否允许模拟位置,默认为false，不允许模拟位置
         mLocationOption.setMockEnable(false);
         // 设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(2000);
+        mLocationOption.setInterval(5000);
         // 给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
         // 启动定位
@@ -177,6 +243,8 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
+        mAmap.clear();
+        mMarkers.clear();
         super.onDestroy();
     }
 
@@ -216,25 +284,35 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         }
     }
 
+    private boolean isCreate = true;
+
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
-            if (aMapLocation.getErrorCode() == 0 && marker == null) {
+            if (aMapLocation.getErrorCode() == 0 && isCreate) {
+                isCreate = false;
                 /**
                  * 添加本人位置
                  */
-                mLatLng=new LatLng(aMapLocation.getLatitude(),aMapLocation.getLongitude());
+                mLatLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
                 mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
                 mAmap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude())));
-                addMarker(aMapLocation, Urls.address + EtuApplication.getInstance().getUserInfo().getHeader());
-                refresh();
+                RealTimeListBean bean = new RealTimeListBean();
+                bean.header = Urls.address + EtuApplication.getInstance().getUserInfo().getHeader();
+                bean.id = EtuApplication.getInstance().getUserInfo().getId();
+                bean.lat = mLatLng.latitude;
+                bean.lng = mLatLng.longitude;
+                mMarkers.append(bean.id, bean);
+                addMarker(aMapLocation.getLatitude(), aMapLocation.getLongitude(), bean.id, bean.header);
+//                refresh();
             }
+            refresh();
         }
     }
 
-    private void addMarker(AMapLocation aMapLocation, String url) {
+    private void addMarker(double lat, double lng, final int userId, String url) {
         final MarkerOptions markerOption = new MarkerOptions();
-        markerOption.position(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude()));
+        markerOption.position(new LatLng(lat, lng));
         markerOption.draggable(true);//设置Marker可拖动
         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
         markerOption.setFlat(true);//设置marker平贴地图效果
@@ -247,7 +325,8 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
                 ImageView image = (ImageView) view.findViewById(R.id.image);
                 image.setImageBitmap(bitmap);
                 markerOption.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view)));
-                marker = mAmap.addMarker(markerOption);
+                mMarkers.get(userId).mMarker = mAmap.addMarker(markerOption);
+
             }
 
             @Override
@@ -274,4 +353,6 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         Bitmap bitmap = view.getDrawingCache();
         return bitmap;
     }
+
+
 }

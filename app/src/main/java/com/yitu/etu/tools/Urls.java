@@ -30,6 +30,8 @@ public class Urls {
     public static final String URL_CREATE_LOCATION = address + "/chat/createLocation";//创建位置共享
     public static final String URL_GET_CHAT_ID = address + "/chat/getChatId";//获取聊天id
     public static final String URL_GET_GETLOCATION = address + "/chat/getLocation";//获取聊天id
+    public static final String URL_CANCEL_LOCATION = address + "/chat/cancelLocation";//退出位置共享
+    public static final String URL_DEL_LOCATION = address + "/chat/delLocation";//删除位置共享
 
     /**
      * 个人中心相关

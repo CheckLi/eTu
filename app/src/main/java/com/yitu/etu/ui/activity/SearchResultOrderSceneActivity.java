@@ -154,16 +154,18 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
 
     //活动详情
     public void ActionInfo() {
+        showWaitDialog("获取中...");
         HashMap<String, String> params = new HashMap<>();
         params.put("id", id);
         Http.post(Urls.ACTION_INFO, params, new GsonCallback<ObjectBaseEntity<OrderSceneEntity>>() {
             @Override
             public void onError(Call call, Exception e, int i) {
-
+                hideWaitDialog();
             }
 
             @Override
             public void onResponse(ObjectBaseEntity<OrderSceneEntity> response, int i) {
+                hideWaitDialog();
                 if (response.success()) {
                     li_content.setVisibility(View.VISIBLE);
                     data = response.getData();
