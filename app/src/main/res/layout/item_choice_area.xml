@@ -9,5 +9,7 @@
     android:paddingTop="7dp"
     android:paddingBottom="7dp"
     android:textColor="@color/black"
+    android:lines="1"
+    android:singleLine="true"
     android:layout_height="wrap_content" />
 </LinearLayout>

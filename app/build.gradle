@@ -93,7 +93,6 @@ dependencies {
     implementation project(':CalendarView')
     compile 'com.weigan:loopView:0.1.2'
     implementation files('libs/AMap3DMap_5.6.0_AMapNavi_5.5.0_AMapSearch_5.5.0_AMapLocation_3.6.1_20171130 (1).jar')
-    implementation files('libs/Amap_2DMap_V5.2.0_20170627.jar')
 }
 
 task showMeCache << {

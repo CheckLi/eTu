@@ -361,6 +361,7 @@
         <activity android:name=".ui.activity.ExchangeProductDetailActivity"/>
         <activity android:name=".ui.activity.AMapRealTimeActivity">
         </activity>
+        <activity android:name=".ui.activity.ShareMyLocationActivity"/>
     </application>
 
 </manifest>
