@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by liqi on 2017/12/30.
  */
 
-public class ShopOrderEntity implements Serializable{
+public class ShopOrderEntity implements Serializable {
 
     /**
      * id : 30
@@ -26,7 +26,7 @@ public class ShopOrderEntity implements Serializable{
      * updated : 1513922031
      * user : {"name":"创新动力","phone":"13408570875","header":"/assets/data/20171128/15118462276464.jpg"}
      */
-
+    private int is_check;
     private int id;
     private String paytype;
     private int shop_id;
@@ -43,6 +43,14 @@ public class ShopOrderEntity implements Serializable{
     private int created;
     private int updated;
     private UserBean user;
+
+    public int getIs_check() {
+        return is_check;
+    }
+
+    public void setIs_check(int is_check) {
+        this.is_check = is_check;
+    }
 
     public int getId() {
         return id;
@@ -172,7 +180,7 @@ public class ShopOrderEntity implements Serializable{
         this.user = user;
     }
 
-    public static class UserBean implements  Serializable{
+    public static class UserBean implements Serializable {
         /**
          * name : 创新动力
          * phone : 13408570875

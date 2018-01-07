@@ -16,24 +16,24 @@ import java.util.List;
  * <p>
  * Created by deng meng on 2017/12/21.
  */
-public class MgridView extends GridView {
+public class MgridView1 extends GridView {
     public static final int REQUEST_LIST_CODE = 0;
     public static final int REQUEST_CAMERA_CODE = 1;
     private int curPosition = 0;
     private boolean isRepleace = false;
     private ChooseImageAdapter adapter;
 
-    public MgridView(Context context) {
+    public MgridView1(Context context) {
         super(context);
         init();
     }
 
-    public MgridView(Context context, AttributeSet attrs) {
+    public MgridView1(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MgridView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MgridView1(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

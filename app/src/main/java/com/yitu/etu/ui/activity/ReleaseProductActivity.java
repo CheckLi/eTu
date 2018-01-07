@@ -16,7 +16,7 @@ import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.FileUtil;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
-import com.yitu.etu.widget.MgridView;
+import com.yitu.etu.widget.MgridView1;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +29,7 @@ public class ReleaseProductActivity extends BaseActivity {
     private TextView tv_name;
     private TextView tv_intro;
     private TextView tv_price;
-    private MgridView image_select;
+    private MgridView1 image_select;
     private ImageView btn_img;
     boolean isChoosebtn_img;
     private String shop_id;
@@ -57,7 +57,7 @@ public class ReleaseProductActivity extends BaseActivity {
     public void initView() {
         data = (ShopProductEntity) getIntent().getSerializableExtra("data");
         shop_id = getIntent().getStringExtra("shop_id");
-        image_select = (MgridView) findViewById(R.id.image_select);
+        image_select = (MgridView1) findViewById(R.id.image_select);
         btn_img = (ImageView) findViewById(R.id.btn_img);
         tv_name = (TextView) findViewById(R.id.tv_name);
         tv_intro = (TextView) findViewById(R.id.tv_intro);

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="@drawable/alpha_height_5dp"
+    android:orientation="vertical"
+    android:showDividers="middle"
+    tools:context="com.yitu.etu.ui.activity.ChatGroupActivity">
+
+
+    <GridView
+        android:id="@+id/gv_heads"
+        style="@style/MyListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:horizontalSpacing="10dp"
+        android:numColumns="4"
+        android:padding="10dp"
+        android:scrollbars="none"
+        android:verticalSpacing="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="群聊名称"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="xxxxx"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_see_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:text="查看活动"/>
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="35dp"
+        android:background="@drawable/selector_d44041_click_round_bg"
+        android:text="删除并退出"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+
+</LinearLayout>

@@ -93,11 +93,13 @@ dependencies {
     implementation project(':CalendarView')
     compile 'com.weigan:loopView:0.1.2'
     implementation files('libs/AMap3DMap_5.6.0_AMapNavi_5.5.0_AMapSearch_5.5.0_AMapLocation_3.6.1_20171130 (1).jar')
+    /*添加依赖*/
+    compile 'com.mylhyl:zxingscanner:2.1.0'
+    //    微信支付
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    implementation files('libs/alipaySdk-20170922.jar')
 }
 
 task showMeCache << {
     configurations.compile.each { println it }
-}
-configurations.all {
-    resolutionStrategy.force 'com.android.support:support-annotations:23.1.0'
 }

@@ -65,7 +65,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="15dp">
-                <com.yitu.etu.widget.MgridView
+                <com.yitu.etu.widget.MgridView1
                     android:id="@+id/image_select"
                     android:layout_width="match_parent"
                     android:numColumns="3"

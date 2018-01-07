@@ -129,12 +129,35 @@
     </style>
     <style name="transparentActivity" parent="@style/AppTheme">
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/black</item>
+        <item name="colorPrimary">@color/transparent</item>
+        <item name="colorPrimaryDark">@color/transparent</item>
+        <item name="colorAccent">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
     <style name="FullScreenActivity" parent="@style/AppTheme">
         <item name="android:windowFullscreen">true</item>
 
+    </style>
+
+    <style name="style_emoji">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/emoji_rb_selector</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">@color/emoji_selector</item>
+    </style>
+
+    <style name="alpha0" parent="@style/AppTheme">
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+    <style name="transparentActivity2" parent="@style/AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="colorPrimary">@color/transparent</item>
+        <item name="colorPrimaryDark">@color/transparent</item>
+        <item name="colorAccent">@color/transparent</item>
     </style>
 </resources>

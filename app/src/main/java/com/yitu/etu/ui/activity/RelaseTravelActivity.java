@@ -16,7 +16,7 @@ import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.TextUtils;
-import com.yitu.etu.widget.MgridView;
+import com.yitu.etu.widget.MgridView1;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,7 +32,7 @@ import okhttp3.Call;
 
 public class RelaseTravelActivity extends BaseActivity {
 
-    private MgridView image_select;
+    private MgridView1 image_select;
     //    private ShowImagAdapter2 showImagAdapter;
     private SceneEntity.SpotBean data;
     boolean showAdd = true;
@@ -82,7 +82,7 @@ public class RelaseTravelActivity extends BaseActivity {
         join_endtime = (TextView) findViewById(R.id.join_endtime);
         end_time = (TextView) findViewById(R.id.end_time);
         start_time = (TextView) findViewById(R.id.start_time);
-        image_select = (MgridView) findViewById(R.id.image_select);
+        image_select = (MgridView1) findViewById(R.id.image_select);
 //        showImagAdapter = new ShowImagAdapter2(this);
         if (!showAdd) {
             lat = data.getAddress_lat();

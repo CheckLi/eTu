@@ -25,6 +25,7 @@ public class Urls {
     public static final String URL_GET_USER_INFO = address + "/user/getinfo";//获取用户信息，包含钱包信息
     public static final String URL_SEND_PIN_A_FU = address + "/chat/sendPacket";//发送平安符
     public static final String URL_GET_ID_USER_INFO = address + "/user/infobyid";//获取指定用户信息
+    public static final String URL_GET_GROUP_INFO_HEAD = address + "/action/getIcon";//获取群组头像信息
     public static final String URL_GET_USER_SHOP_DETAIL = address + "/shop/getShopInfo";//获取店铺信息
     public static final String URL_SAVE_USER_SHOP_DETAIL = address + "/shop/saveShopInfo";//保存店铺信息
     public static final String URL_CREATE_LOCATION = address + "/chat/createLocation";//创建位置共享
@@ -32,6 +33,7 @@ public class Urls {
     public static final String URL_GET_GETLOCATION = address + "/chat/getLocation";//获取聊天id
     public static final String URL_CANCEL_LOCATION = address + "/chat/cancelLocation";//退出位置共享
     public static final String URL_DEL_LOCATION = address + "/chat/delLocation";//删除位置共享
+    public static final String URL_ACTION_CREATE_CHAT = address + "/action/addchatid";//活动详情中发起者创建群聊
 
     /**
      * 个人中心相关
@@ -58,6 +60,8 @@ public class Urls {
     public static final String URL_ADD_FRIEND=address+"/chat/applyFrend";//添加好友
     public static final String URL_CHANG_BEIZHU=address+"/chat/saveName";//修改好友备注
     public static final String URL_FRIEND_LIST=address+"/chat/get_frend_list";//获取好友列表
+    public static final String URL_GET_GROUP_INFO=address+"/chat/getusers";//传入token、users（传入英文逗号间隔的id）、chat_id
+
     /**
      * 类型rechargetype（0为余额充
      值、1为平安符购买、2为活动参
@@ -117,4 +121,6 @@ public class Urls {
      * 抢平安符
      */
     public static final String URL_PACKET_GET=address+"/chat/getPacket";
+    public static final String URL_LOGIN_WEIXIN=address+"/user/wxlogin";
+    public static final String URL_LOGIN_WEIBO=address+"/user/wblogin";
 }

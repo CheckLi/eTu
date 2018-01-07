@@ -20,10 +20,12 @@ import java.lang.Exception
 
 class AMapRealTimeActivity : BaseActivity() {
     var type: Message.MessageDirection? = null
+    var chatType: Conversation.ConversationType? = null
     var chatId: String? = null
     override fun getLayout(): Int = R.layout.activity_amap_real_time
 
     override fun initActionBar() {
+        title=intent.getStringExtra("title")
         setRightClick(R.drawable.icon146, resources.getColor(R.color.white)) {
             finish()
         }
@@ -31,6 +33,7 @@ class AMapRealTimeActivity : BaseActivity() {
 
     override fun initView() {
         type = intent.getSerializableExtra("type") as Message.MessageDirection?
+        chatType = intent.getSerializableExtra("chatType") as Conversation.ConversationType?
         chatId = intent.getStringExtra("chat_id")
         val fragment = RealTimeMapFragment()
         fragment.arguments = bundleOf("chat_id" to chatId)
@@ -48,7 +51,7 @@ class AMapRealTimeActivity : BaseActivity() {
     override fun onDestroy() {
         if (type == Message.MessageDirection.SEND) {
             val message1 = RealTimeLocationEndMessage.obtain("位置共享结束")
-            val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, message1)
+            val message = Message.obtain(mTargetId, chatType, message1)
             sendMessage(message)
             cancel(Urls.URL_CANCEL_LOCATION, hashMapOf("chat_id" to chatId.Empty()))
         } else {

@@ -35,7 +35,7 @@ class TwoCodeActivity : BaseActivity() {
             }
 
             override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-                tv_two_code.setImageBitmap(addLogo(generateBitmap("个人信息", (150 * resources.displayMetrics.density).toInt(), (150 * resources.displayMetrics.density).toInt()), bitmap)
+                tv_two_code.setImageBitmap(addLogo(generateBitmap("etuXs72hfjepIdnv76://ID"+userInfo().id, (150 * resources.displayMetrics.density).toInt(), (150 * resources.displayMetrics.density).toInt()), bitmap)
                 )
             }
 

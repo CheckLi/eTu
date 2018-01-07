@@ -1,19 +1,29 @@
 package com.yitu.etu.util.pay
 
+import android.os.Message
 import android.support.v7.app.AppCompatActivity
-import com.yitu.etu.entity.ObjectBaseEntity
+import com.alipay.sdk.app.PayTask
+import com.tencent.mm.opensdk.modelpay.PayReq
+import com.yitu.etu.EtuApplication
 import com.yitu.etu.entity.PayBean
+import com.yitu.etu.entity.PayResultBean
 import com.yitu.etu.eventBusItem.EventRefresh
-import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http.post
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.activity.PayOrderActivity
 import com.yitu.etu.util.Empty
+import com.yitu.etu.util.JsonUtil
 import com.yitu.etu.util.activityUtil
+import com.zhy.http.okhttp.callback.StringCallback
 import okhttp3.Call
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.bundleOf
+import org.json.JSONObject
 import java.lang.Exception
+import java.util.*
+import kotlin.concurrent.thread
+
+
 
 /**
  * @className:PayUtil
@@ -109,21 +119,50 @@ class PayUtil(val id: Int, val price: Float, val desc: String, val rechargetype:
     }
 
     private fun payTicket(url: String, params: HashMap<String, String>, activity: PayOrderActivity, type: Int) {
-        post(url, params, object : GsonCallback<ObjectBaseEntity<Any>>() {
-            override fun onResponse(response: ObjectBaseEntity<Any>, id: Int) {
+        post(url, params, object : StringCallback() {
+            override fun onResponse(response: String, id: Int) {
+                val json = JSONObject(response)
+
                 if (!activity.isFinishing) {
                     activity.hideWaitDialog()
-                    if (response.success()) {
+                    if (json.getInt("status") == 1) {
+
                         if (type == 0) {
                             activity.showToast("支付成功")
                             activity.dialog.dismiss()
                             activity.finish()
                             EventBus.getDefault().post(EventRefresh(classname))
-                        } else {
-                            activity.showToast("支付数据获取成功")
+                        } else if (type == 1) {
+                            thread {
+                                val alipay = PayTask(activity)
+                                val result =alipay.payV2(json.optJSONObject("data").optString("parstr"), true)
+                                activity.runOnUiThread {
+                                    val msg = Message()
+                                    msg.what = 1
+                                    msg.obj = result
+                                    activity.sendMessage(msg)
+                                }
+
+                            }
+                        } else if (type == 2) {
+                            val bean = JsonUtil.getInstance().getJsonBean(json.optString("data"), PayResultBean::class.java)
+                            EtuApplication.getInstance().apP_ID = bean.parstr.appid.Empty(EtuApplication.getInstance().apP_ID)
+                            val result = bean.parstr
+                            val pay = PayReq()
+                            result?.run {
+                                pay.appId = appid
+                                pay.partnerId = partnerid
+                                pay.prepayId = prepayid
+                                pay.packageValue = packageX
+                                pay.nonceStr = noncestr
+                                pay.timeStamp = timestamp
+                                pay.sign = sign
+                                EtuApplication.getInstance().mIWXAPI.sendReq(pay)
+                            }
+
                         }
                     } else {
-                        activity.showToast(response.message)
+                        activity.showToast(json.optString("message"))
                         activity.dialog.clearPassword()
                     }
                 }

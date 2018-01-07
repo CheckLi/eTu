@@ -22,7 +22,7 @@ public abstract class BaseAdapter<T, E extends BaseAdapter.abstractViewHodler> e
     public BaseAdapter(Context context,
                        List<T> data) {
         this(context);
-        this.data = data;
+        this.data = data == null ? new ArrayList<T>() : data;
     }
 
     public Context getContext() {

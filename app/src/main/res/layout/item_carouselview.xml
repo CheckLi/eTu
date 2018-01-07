@@ -149,24 +149,24 @@
 
             android:onClick="onClick"
             android:orientation="horizontal">
-
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:src="@drawable/icon61"/>
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="7dp"
                 android:layout_marginTop="10dp"
                 android:adjustViewBounds="true"
+                android:layout_marginRight="7dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/icon29"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:src="@drawable/icon61"/>
+
         </LinearLayout>
     </FrameLayout>
 </FrameLayout>

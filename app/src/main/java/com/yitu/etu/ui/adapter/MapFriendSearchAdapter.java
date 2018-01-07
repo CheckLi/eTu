@@ -9,7 +9,7 @@ import com.yitu.etu.R;
 import com.yitu.etu.entity.MapFriendEntity;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.Tools;
-import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 
 /**
  * TODO this class desription here
@@ -52,12 +52,7 @@ public class MapFriendSearchAdapter extends BaseAdapter<MapFriendEntity, MapFrie
         MapFriendEntity data = getItem(position);
         viewHolder.tv_title.setText(data.title);
         viewHolder.tv_address.setText(data.address);
-
-        GlideApp.with(getContext())
-                .load(Urls.address + data.getImage())
-                .centerCrop()
-                .error(R.drawable.etu_default)
-                .placeholder(R.drawable.etu_default).into(viewHolder.image);
+        ImageLoadUtil.getInstance().loadImage(viewHolder.image, Urls.address + data.getImage(), 50, 50);
         viewHolder.tv_price.setVisibility(View.INVISIBLE);
     }
 

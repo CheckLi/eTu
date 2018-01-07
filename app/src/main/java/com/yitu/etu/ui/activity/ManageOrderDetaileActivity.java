@@ -42,6 +42,7 @@ public class ManageOrderDetaileActivity extends BaseActivity {
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_phone = (TextView) findViewById(R.id.tv_phone);
         tableLayout=(TableLayout)findViewById(R.id.tableLayout);
+        findViewById(R.id.tv_number).setVisibility(View.GONE);
     }
 
     @Override

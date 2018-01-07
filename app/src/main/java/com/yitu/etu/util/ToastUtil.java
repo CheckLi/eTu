@@ -47,4 +47,5 @@ public class ToastUtil {
         toast.setGravity(Gravity.CENTER, 0, 0);
         return toast;
     }
+
 }

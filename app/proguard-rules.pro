@@ -218,3 +218,14 @@
 -libraryjars libs/zxing_apply.jar
 -keep class com.google.zxing.** {*;}
 -dontwarn com.google.zxing.**
+
+#微信支付
+-keep class com.tencent.mm.opensdk.** {
+   *;
+}
+-keep class com.tencent.wxop.** {
+   *;
+}
+-keep class com.tencent.mm.sdk.** {
+   *;
+}

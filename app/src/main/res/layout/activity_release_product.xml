@@ -141,7 +141,7 @@
                 android:textSize="14sp" />
 
 
-            <com.yitu.etu.widget.MgridView
+            <com.yitu.etu.widget.MgridView1
                 android:id="@+id/image_select"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

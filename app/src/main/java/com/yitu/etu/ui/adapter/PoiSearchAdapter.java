@@ -29,7 +29,7 @@ public class PoiSearchAdapter extends BaseAdapter<PoiItem, PoiSearchAdapter.View
 
     @Override
     public PoiItem getItem(int position) {
-        return isEmpty?null:super.getItem(position);
+        return isEmpty ? null : super.getItem(position);
     }
 
     @Override
@@ -49,22 +49,39 @@ public class PoiSearchAdapter extends BaseAdapter<PoiItem, PoiSearchAdapter.View
         }
         if (data == null || data.size() == 0) {
             isEmpty = true;
-            data=new ArrayList<>();
-        }
-        else{
+            data = new ArrayList<>();
+        } else {
             isEmpty = false;
+            selectStr=data.get(0);
         }
         super.addData(data);
+    }
+
+    PoiItem selectStr=null;
+
+    public void select(PoiItem str) {
+        selectStr = str;
+        notifyDataSetChanged();
+    }
+
+    public PoiItem getSelectStr() {
+        return selectStr;
     }
 
 
     @Override
     public void bindData(int position, View convertView, ViewHolder viewHolder) {
-        if (getItem(position)==null) {
+        if (getItem(position) == null) {
             viewHolder.text.setText("     ");
         } else {
             viewHolder.text.setText(getItem(position).getSnippet());
+            if (getItem(position)==selectStr) {
+                viewHolder.text.setCompoundDrawablesWithIntrinsicBounds(null, null, convertView.getResources().getDrawable(R.drawable.gou_location), null);
+            } else {
+                viewHolder.text.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
         }
+        convertView.setPadding(20, 20, 20, 20);
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {

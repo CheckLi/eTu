@@ -13,7 +13,7 @@ import com.yitu.etu.entity.UserInfo;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
-import com.yitu.etu.widget.MgridView;
+import com.yitu.etu.widget.MgridView1;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +22,7 @@ import okhttp3.Call;
 
 public class HairDynamicActivity extends BaseActivity {
 
-    private MgridView gridView;
+    private MgridView1 gridView;
     private EditText text;
 
     @Override
@@ -47,7 +47,9 @@ public class HairDynamicActivity extends BaseActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        params.put("images", gridView.getImagePutString());
+//                        if (gridView.getAdapter().getCount() != 1) {
+                            params.put("images", gridView.getImagePutString());
+//                        }
                         Http.post(Urls.CIRCLE_ADD, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity.CircleBean>>() {
                             @Override
                             public void onError(Call call, Exception e, int i) {
@@ -83,7 +85,7 @@ public class HairDynamicActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        gridView = (MgridView) findViewById(R.id.gridView);
+        gridView = (MgridView1) findViewById(R.id.gridView);
         text = (EditText) findViewById(R.id.text);
     }
 
@@ -106,4 +108,5 @@ public class HairDynamicActivity extends BaseActivity {
     public void initListener() {
 
     }
+
 }

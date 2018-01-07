@@ -30,7 +30,7 @@
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
-            <com.yitu.etu.widget.MgridView
+            <com.yitu.etu.widget.MgridView1
                 android:id="@+id/gridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                 android:numColumns="3"
                 android:verticalSpacing="5dp">
 
-            </com.yitu.etu.widget.MgridView>
+            </com.yitu.etu.widget.MgridView1>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

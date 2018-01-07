@@ -22,6 +22,7 @@ import io.rong.imkit.widget.provider.IContainerItemProvider;
 @ProviderTag(
         messageContent = RealTimeLocationEndMessage.class,
         showReadState = true,centerInHorizontal = true,showPortrait = false
+        ,showSummaryWithName = false
 )
 public class RealTimeLocationMessageEndItem extends IContainerItemProvider.MessageProvider<RealTimeLocationEndMessage> {
     @Override
@@ -31,7 +32,7 @@ public class RealTimeLocationMessageEndItem extends IContainerItemProvider.Messa
 
     @Override
     public Spannable getContentSummary(RealTimeLocationEndMessage textMessage) {
-        return new SpannableString(textMessage.getContent());
+         if(textMessage!=null&&textMessage.getContent()!=null) return new SpannableString(textMessage.getContent()); else  return new SpannableString("");
     }
 
     @Override

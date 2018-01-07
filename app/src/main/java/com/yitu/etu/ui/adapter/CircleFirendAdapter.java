@@ -1,11 +1,7 @@
 package com.yitu.etu.ui.adapter;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,13 +13,14 @@ import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.activity.InputContentActivity;
 import com.yitu.etu.util.DateUtil;
 import com.yitu.etu.util.TextUtils;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
+import com.yitu.etu.util.activityUtil;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
-import com.yitu.etu.widget.MgridView;
-import com.yitu.etu.widget.SendMsgView;
+import com.yitu.etu.widget.MgridView1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,14 +34,15 @@ import okhttp3.Call;
  */
 public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBean, CircleFirendAdapter.ViewHolder> {
     boolean isOther;
-    int myId=-1;
+    int myId = -1;
 
     public CircleFirendAdapter(Context context, boolean isOther) {
         super(context);
         this.isOther = isOther;
-        if(EtuApplication.getInstance().isLogin()){
-        myId = EtuApplication.getInstance().getUserInfo().getId();
-    }}
+        if (EtuApplication.getInstance().isLogin()) {
+            myId = EtuApplication.getInstance().getUserInfo().getId();
+        }
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(int position) {
@@ -53,8 +51,8 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
 
     @Override
     public void initItemView(int position, View convertView, ViewHolder viewHolder) {
-        viewHolder.imageGridView = (MgridView) convertView.findViewById(R.id.gridView);
-        viewHolder.chartGridView = (MgridView) convertView.findViewById(R.id.chartGridView);
+        viewHolder.imageGridView = (MgridView1) convertView.findViewById(R.id.gridView);
+        viewHolder.chartGridView = (MgridView1) convertView.findViewById(R.id.chartGridView);
         viewHolder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
         viewHolder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
         viewHolder.tv_good = (TextView) convertView.findViewById(R.id.tv_good);
@@ -66,6 +64,41 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
 
 
     }
+
+
+    public void sendMsg(String text) {
+        final CircleFirendEntity.CircleBean data = getItem(plPosition);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("circle_id", data.getId() + "");
+        params.put("puser_id", myId + "");
+        params.put("text", text);
+        Http.post(Urls.CIRCLE_ADD_COMMENT, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity.CommentBean>>() {
+            @Override
+            public void onError(Call call, Exception e, int i) {
+
+            }
+
+            @Override
+            public void onResponse(ObjectBaseEntity<CircleFirendEntity.CommentBean> response, int i) {
+                if (response.success()) {
+                    CircleFirendEntity.UserBean user = new CircleFirendEntity.UserBean();
+                    user.setName(EtuApplication.getInstance().getUserInfo().getName());
+                    response.getData().setUser(user);
+                    if (data.getComment() == null) {
+                        data.setComment(new ArrayList<CircleFirendEntity.CommentBean>());
+                    }
+                    data.getComment().add(response.getData());
+                    notifyDataSetChanged();
+                } else {
+                    ToastUtil.showMessage(response.getMessage());
+                }
+
+            }
+        });
+
+    }
+
+    public int plPosition = -1;
 
     @Override
     public void bindData(final int position, View convertView, ViewHolder viewHolder) {
@@ -158,61 +191,16 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
             viewHolder.img_pl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Dialog dialog = new Dialog(getContext(), R.style.transparentDialog);
-                    View view=getLayoutInflater().inflate(R.layout.dialog_send_msg,null);
-                    Window window = dialog.getWindow();
-                    SendMsgView sendMsgView = ( SendMsgView)view.findViewById(R.id.send_msg);
-                    sendMsgView.setSendMsg(new SendMsgView.SendMsgListener() {
-                        @Override
-                        public void send(String text) {
-                            HashMap<String, String> params = new HashMap<>();
-                            params.put("circle_id", data.getId() + "");
-                            params.put("puser_id", myId + "");
-                            params.put("text", text);
-                            Http.post(Urls.CIRCLE_ADD_COMMENT, params, new GsonCallback<ObjectBaseEntity<CircleFirendEntity.CommentBean>>() {
-                                @Override
-                                public void onError(Call call, Exception e, int i) {
-
-                                }
-
-                                @Override
-                                public void onResponse(ObjectBaseEntity<CircleFirendEntity.CommentBean> response, int i) {
-                                    if (response.success()) {
-                                        CircleFirendEntity.UserBean user = new CircleFirendEntity.UserBean();
-                                        user.setName(EtuApplication.getInstance().getUserInfo().getName());
-                                        response.getData().setUser(user);
-                                        if (data.getComment() == null) {
-                                            data.setComment(new ArrayList<CircleFirendEntity.CommentBean>());
-                                        }
-                                        data.getComment().add(response.getData());
-                                        notifyDataSetChanged();
-                                    } else {
-                                        ToastUtil.showMessage(response.getMessage());
-                                    }
-
-                                }
-                            });
-
-                        }
-                    });
-                    window.getDecorView().setPadding(0, 0, 0, 0);
-                    window.setGravity(Gravity.BOTTOM);
-                    dialog.setContentView(view);
-                    WindowManager.LayoutParams lp = window.getAttributes();
-                    lp.width = WindowManager.LayoutParams.FILL_PARENT;
-                    lp.height = WindowManager.LayoutParams.FILL_PARENT;
-                    window.setAttributes(lp);
-                    dialog.show();
-
-
+                    plPosition = position;
+                    activityUtil.nextActivity(getContext(),InputContentActivity.class,null,10001,false,R.anim.actionsheet_dialog_in,R.anim.actionsheet_dialog_out);
                 }
             });
         }
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {
-        MgridView imageGridView;
-        MgridView chartGridView;
+        MgridView1 imageGridView;
+        MgridView1 chartGridView;
         TextView tv_name, tv_time, tv_good, text, tv_delete;
         ImageView image, img_pl, img_dz;
 

@@ -21,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/transparent"
-            android:text="武侯"
             android:hint="搜索您需要的内容"
             android:padding="10dp"
             android:textColor="@color/black"

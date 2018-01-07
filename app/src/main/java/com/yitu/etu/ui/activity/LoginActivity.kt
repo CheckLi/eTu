@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import com.huizhuang.zxsq.utils.nextActivity
+import com.umeng.socialize.UMShareAPI
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.entity.AppConstant
@@ -12,6 +13,7 @@ import com.yitu.etu.entity.UserInfo
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http.post
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.util.LoginUtil
 import com.yitu.etu.util.PrefrersUtil
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.Call
@@ -64,6 +66,19 @@ class LoginActivity : BaseActivity() {
         tv_forget_password.setOnClickListener {
             nextActivity<ForgetPasswordActivity>(1001)
         }
+        /**
+         * 微信登陆
+         */
+        iv_login_weixin.setOnClickListener {
+            LoginUtil.getInstance(this@LoginActivity).startLogin(LoginUtil.TYPE_LOGIN_WEIXIN)
+        }
+
+        /**
+         * 微博d登陆
+         */
+        iv_login_weibo.setOnClickListener {
+            LoginUtil.getInstance(this@LoginActivity).startLogin(LoginUtil.TYPE_LOGIN_WEIBO)
+        }
     }
 
     /**
@@ -107,5 +122,11 @@ class LoginActivity : BaseActivity() {
             tv_password.setText(password)
             btn_login.performClick()
         }
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onDestroy() {
+        LoginUtil.getInstance(this).onDestory()
+        super.onDestroy()
     }
 }

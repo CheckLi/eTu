@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.adapter_item_friend_list.view.*
  * @author: JIAMING.LI
  * @date:2017年12月14日 22:32
  */
-class FriendListAdapter(list: List<UserInfo>,val select:Boolean) : MyBaseAdapter<UserInfo>(list) {
+class FriendListAdapter(list: List<UserInfo>, val select: Boolean) : MyBaseAdapter<UserInfo>(list) {
     override fun getItemResource(pos: Int): Int = R.layout.adapter_item_friend_list
     override fun getItemView(position: Int, convertView: View, holder: ViewHolder?, parent: ViewGroup?): View {
         convertView.run {
@@ -29,7 +29,7 @@ class FriendListAdapter(list: List<UserInfo>,val select:Boolean) : MyBaseAdapter
                 }
             }
         }
-        if(select){
+        if (select) {
             convertView.setOnClickListener {
                 select(position)
             }
@@ -37,32 +37,35 @@ class FriendListAdapter(list: List<UserInfo>,val select:Boolean) : MyBaseAdapter
         return convertView
     }
 
-    fun select(position:Int){
-        if(!data[position].isCheck) {
+    fun select(position: Int) {
+        if (!data[position].isCheck) {
             data.forEachIndexed { index, userInfo ->
-                userInfo.isCheck = index == position
+                if (index == position) {
+                    userInfo.isCheck = true
+                    return@forEachIndexed
+                }
             }
             notifyDataSetChanged()
         }
     }
 
-    fun getIds():MutableList<String>{
-        val list= mutableListOf<String>()
+    fun getIds(): MutableList<String> {
+        val list = mutableListOf<String>()
         data.forEach {
-            if(it.isCheck){
+            if (it.isCheck) {
                 list.add(it.id.toString())
             }
         }
         return list
     }
 
-    fun getNames():String{
-        val buff=StringBuffer("群聊信息:")
+    fun getNames(): String {
+        val buff = StringBuffer("群聊信息:")
         data.forEach {
-            if(it.isCheck){
+            if (it.isCheck) {
                 buff.append("${it.name},")
             }
         }
-        return if(buff.length>1) buff.substring(0,buff.length-1) else buff.toString()
+        return if (buff.length > 1) buff.substring(0, buff.length - 1) else buff.toString()
     }
 }

@@ -8,6 +8,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.yitu.etu.R;
+import com.yitu.etu.tools.Urls;
 
 import java.io.File;
 
@@ -49,6 +50,9 @@ public class ImageLoadUtil {
     public void loadImage(ImageView img, String url, int width, int height, @DrawableRes int displayError, @DrawableRes int displayLoadding, Callback listener) {
         RequestCreator creator = null;
         if (url.contains("http:") || url.contains("https:")) {
+            if (url.startsWith(Urls.address + "http")) {
+                url = url.replace(Urls.address, "");
+            }
             creator = Picasso.with(img.getContext()).load(url);
         } else {
             creator = Picasso.with(img.getContext()).load(new File(url));

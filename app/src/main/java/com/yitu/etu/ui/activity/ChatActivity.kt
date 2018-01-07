@@ -14,15 +14,22 @@ import com.yitu.etu.entity.UserInfo
 import com.yitu.etu.eventBusItem.EventPlayYanHua
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.ui.fragment.Chat.uri
+import com.yitu.etu.util.Empty
 import com.yitu.etu.util.Tools
 import com.yitu.etu.util.isLogin
 import com.yitu.etu.util.post
+import io.rong.imkit.RongIM
 import io.rong.imkit.fragment.ConversationFragment
+import io.rong.imlib.RongIMClient
+import io.rong.imlib.model.Conversation
+import io.rong.imlib.model.Discussion
 import kotlinx.android.synthetic.main.actionbar_layout.view.*
 import okhttp3.Call
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.lang.Exception
+import java.util.*
 
 
 class ChatActivity : BaseActivity() {
@@ -32,23 +39,49 @@ class ChatActivity : BaseActivity() {
     override fun initActionBar() {
         title = intent.data.getQueryParameter("title")
         setRightClick(R.drawable.icon145) {
-            val pop = Tools.getPopupWindow(this@ChatActivity, arrayOf("旅友圈", "加为好友"), object : AdapterView.OnItemClickListener {
-                override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    if (!isLogin()) {
-                        showToast("请先登录")
-                    } else {
-                        when (position) {
-                            0 -> nextActivity<SearchResultUserActivity>(
-                                    "user_id" to intent.data.getQueryParameter("targetId")
-                            )
-                            1 -> addFriend()
-                            else -> ""
+            uri = intent.data
+            var mConversationType: Conversation.ConversationType? = null
+            val typeStr = uri?.lastPathSegment?.toUpperCase(Locale.US)
+            mConversationType = Conversation.ConversationType.valueOf(typeStr.Empty())
+            if (mConversationType == Conversation.ConversationType.PRIVATE) {
+                val pop = Tools.getPopupWindow(this@ChatActivity, arrayOf("旅友圈", "加为好友"), object : AdapterView.OnItemClickListener {
+                    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        if (!isLogin()) {
+                            showToast("请先登录")
+                        } else {
+                            when (position) {
+                                0 -> nextActivity<SearchResultUserActivity>(
+                                        "user_id" to intent.data.getQueryParameter("targetId")
+                                )
+                                1 -> addFriend()
+                                else -> ""
+                            }
                         }
                     }
-                }
 
-            }, "right")
-            pop.showAsDropDown(mActionBarView.iv_right, 20, 0)
+                }, "right")
+                pop.showAsDropDown(mActionBarView.iv_right, 20, 0)
+            } else {
+                RongIM.getInstance().getDiscussion(intent.data.getQueryParameter("targetId"), object : RongIMClient.ResultCallback<Discussion>() {
+                    override fun onSuccess(p0: Discussion?) {
+                        if (p0 == null) {
+                            return
+                        }
+                        val s = StringBuffer("")
+                        p0?.memberIdList?.forEach {
+                            s.append(it + ",")
+                        }
+                        nextActivity<ChatGroupActivity>("users" to if(s.length>1) s.toString().substring(0,s.length-1) else ""
+                                , "chat_id" to intent.data.getQueryParameter("targetId"),
+                                "title" to intent.data.getQueryParameter("title")
+                        ,"sendId" to p0?.creatorId?.toInt())
+                    }
+
+                    override fun onError(p0: RongIMClient.ErrorCode?) {
+                    }
+
+                })
+            }
         }
     }
 
@@ -67,6 +100,7 @@ class ChatActivity : BaseActivity() {
     }
 
     override fun getData() {
+
     }
 
     override fun initListener() {

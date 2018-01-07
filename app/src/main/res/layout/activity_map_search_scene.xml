@@ -292,7 +292,7 @@
             android:textColor="@color/color_3478F5"
             android:textSize="15sp"/>
 
-        <com.yitu.etu.widget.MgridView
+        <com.yitu.etu.widget.MgridView1
             android:id="@+id/gridView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -300,7 +300,7 @@
             android:horizontalSpacing="10dp"
             android:listSelector="@color/transparent"
             android:numColumns="4"
-            android:verticalSpacing="10dp"></com.yitu.etu.widget.MgridView>
+            android:verticalSpacing="10dp"></com.yitu.etu.widget.MgridView1>
 
     </LinearLayout>
 

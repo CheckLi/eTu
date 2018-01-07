@@ -66,26 +66,17 @@ public class ShareMyLocationActivity extends BaseActivity {
 
     public void getAddress() {
         if (point != null) {
-            GeocodeSearch geocoderSearch = new GeocodeSearch(ShareMyLocationActivity.this);
-            geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
-                @Override
-                public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+            Intent intent = new Intent();
 
-                    Intent intent = new Intent();
-                    intent.putExtra("address", regeocodeResult.getRegeocodeAddress().getFormatAddress());
-                    LatLng latLng = new LatLng(regeocodeResult.getRegeocodeQuery().getPoint().getLatitude(), regeocodeResult.getRegeocodeQuery().getPoint().getLongitude());
-                    intent.putExtra("latLng", latLng);
-                    intent.putExtra("image", getMapUrl(latLng.latitude, latLng.longitude));
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-
-                @Override
-                public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-                }
-            });
-            RegeocodeQuery query = new RegeocodeQuery(point, 200, GeocodeSearch.AMAP);
-            geocoderSearch.getFromLocationAsyn(query);
+            PoiItem data = mapsFragment.poiSearchAdapter.getSelectStr();
+            if (data != null) {
+                intent.putExtra("address", data.getSnippet());
+                LatLng latLng = new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude());
+                intent.putExtra("latLng", latLng);
+                intent.putExtra("image", getMapUrl(latLng.latitude, latLng.longitude));
+                setResult(RESULT_OK, intent);
+                finish();
+            }
         }
     }
 
@@ -127,7 +118,7 @@ public class ShareMyLocationActivity extends BaseActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            mRoot = (ScrollView)inflater.inflate(R.layout.activity_share_my_location, container,
+            mRoot = (ScrollView) inflater.inflate(R.layout.activity_share_my_location, container,
                     false);
             ListView listView = (ListView) mRoot.findViewById(R.id.listView);
             MapContainer head = (MapContainer) mRoot.findViewById(R.id.mapContainer);
@@ -150,10 +141,11 @@ public class ShareMyLocationActivity extends BaseActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     PoiItem data = poiSearchAdapter.getItem(position);
                     if (data != null) {
-                        mRoot.scrollTo(0,0);
-                        mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
-                        LatLng latLng = new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude());
-                        mAmap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
+                        poiSearchAdapter.select(data);
+//                        mRoot.scrollTo(0,0);
+//                        mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
+//                        LatLng latLng = new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude());
+//                        mAmap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
 
                     }
                 }
@@ -360,7 +352,7 @@ public class ShareMyLocationActivity extends BaseActivity {
 
     private Uri getMapUrl(double x, double y) {
         String url = "http://restapi.amap.com/v3/staticmap?location=" + y + "," + x +
-                "&zoom=17&scale=2&size=600*400&markers=mid,,A:" + y + ","
+                "&zoom=17&scale=2&size=300*200&markers=mid,,A:" + y + ","
                 + x + "&key=" + "be40ebd66fbbe4358c331c58d69ae086";
         return Uri.parse(url);
     }

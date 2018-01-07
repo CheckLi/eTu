@@ -86,8 +86,17 @@ public class OrderSceneEntity {
     public String status_name;
     public int is_join;
     public List<String> images;
-//    public List<?> userlist;
+    public List<UserInfo> userlist;
 //    public List<?> orderlist;
+
+
+    public List<UserInfo> getUserlist() {
+        return userlist;
+    }
+
+    public void setUserlist(List<UserInfo> userlist) {
+        this.userlist = userlist;
+    }
 
     public int getId() {
         return id;

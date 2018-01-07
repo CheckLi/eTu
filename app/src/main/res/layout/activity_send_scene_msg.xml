@@ -18,7 +18,7 @@
         android:background="@drawable/rc_corner_popup_dialog_style"
         android:gravity="top"
         android:minLines="5"/>
-    <com.yitu.etu.widget.MgridView
+    <com.yitu.etu.widget.MgridView1
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:numColumns="3"

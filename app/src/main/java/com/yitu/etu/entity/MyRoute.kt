@@ -141,3 +141,19 @@ data class Ticket(
 data class PayBean(var id:Int,var price:Float,var desc:String,var rechargetype: Int,var classname: String,var buyType: Int,var params:MutableMap<String,String>):Serializable{
 	constructor( id:Int, price:Float, desc:String, rechargetype: Int, classname: String, buyType: Int):this(id,price,desc,rechargetype,classname,buyType, mutableMapOf())
 }
+
+
+data class PayResultBean(
+		@SerializedName("parstr") val parstr: Parstr = Parstr()
+)
+
+data class Parstr(
+		@SerializedName("appid") val appid: String = "", //wx0f5237d79cf12c32
+		@SerializedName("noncestr") val noncestr: String = "", //sbBOSC04iGYpTnMe
+		@SerializedName("package") val packageX: String = "", //Sign=WXPay
+		@SerializedName("partnerid") val partnerid: String = "", //1494209072
+		@SerializedName("prepayid") val prepayid: String = "", //wx20180107134248084769e4a50274309450
+		@SerializedName("timestamp") val timestamp: String = "", //1515303768
+		@SerializedName("sign") val sign: String = "", //F5AE846D76E29DE8864FCBD5CF95B2B8
+		@SerializedName("order_id") val orderId: String = "" //PAF249
+)

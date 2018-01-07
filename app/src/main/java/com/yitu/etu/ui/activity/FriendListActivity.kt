@@ -14,6 +14,7 @@ import com.yitu.etu.ui.adapter.FriendListAdapter
 import com.yitu.etu.util.Empty
 import com.yitu.etu.util.Tools
 import com.yitu.etu.util.post
+import com.yitu.etu.util.userInfo
 import io.rong.imkit.RongIM
 import kotlinx.android.synthetic.main.activity_friend_list.*
 import okhttp3.Call
@@ -33,10 +34,11 @@ class FriendListActivity : BaseActivity() {
     override fun initActionBar() {
         title = "好友列表"
         if (select) {
-            setRightText("创建群聊") {
+            setRightText("发起群聊") {
                 val list = adapter.getIds()
-                if (list.size > 1) {
-                    Tools.startChatGroup(this@FriendListActivity, list, adapter.getNames())
+                list.add("22")
+                if (list.size > 0) {
+                    Tools.startChatGroup(this@FriendListActivity, list, userInfo().name+"的群聊")
                 } else {
                     showToast("请选择用户")
                 }

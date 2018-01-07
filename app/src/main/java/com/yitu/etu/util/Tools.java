@@ -273,6 +273,14 @@ public class Tools {
         activityUtil.nextActivity(context, FriendListActivity.class, bundle, false);
     }
 
+    /**
+     * 开始群聊
+     * @param context
+     */
+    public static void startGroupChat(Context context,String groupId,String title) {
+       RongIM.getInstance().startDiscussionChat(context,groupId,title);
+    }
+
     public static void sendMessage(ShareMessage msg, final Activity activity) {
         /* 生成 Message 对象。
          * "7127" 为目标 Id。根据不同的 conversationType，可能是用户 Id、讨论组 Id、群组 Id 或聊天室 Id。

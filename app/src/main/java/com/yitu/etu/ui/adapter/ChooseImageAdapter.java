@@ -122,17 +122,20 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
     }
 
     public String getPutString() {
-        StringBuffer buffer = new StringBuffer("");
-        for (String s : data) {
-            if (s.contains("https:") || s.contains("http:")) {
-                if (images.containsKey(s)) {
-                    buffer.append(images.get(s) + "|");
+        if(data!=null) {
+            StringBuffer buffer = new StringBuffer("");
+            for (String s : data) {
+                if (s.contains("https:") || s.contains("http:")) {
+                    if (images.size() > 0 && images.containsKey(s)) {
+                        buffer.append(images.get(s) + "|");
+                    }
+                } else {
+                    buffer.append(FileUtil.GetImageStr(s) + "|");
                 }
-            } else {
-                buffer.append(FileUtil.GetImageStr(s) + "|");
             }
+            return buffer.length() > 0 ? buffer.toString().substring(0, buffer.length() - 1) : "";
         }
-        return buffer.length() > 0 ? buffer.toString().substring(0, buffer.length() - 1) : "";
+        return "";
     }
 
     public void showAdd(boolean isShow) {

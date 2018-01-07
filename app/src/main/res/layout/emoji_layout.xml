@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#dcdcdc"
+    android:visibility="gone"
+    android:orientation="vertical"
+    android:paddingTop="4dp">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:text="自然"
+        android:textColor="#625e66"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp">
+
+        <RadioGroup
+            android:id="@+id/rg_emoji"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:divider="@drawable/alpha_width_15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <RadioButton
+                android:id="@+id/rb_emoji_rw"
+                style="@style/style_emoji"
+                android:checked="true"
+                android:text="人物"/>
+
+            <RadioButton
+                android:id="@+id/rb_emoji_zr"
+                style="@style/style_emoji"
+                android:text="自然"/>
+
+            <RadioButton
+                android:id="@+id/rb_emoji_rc"
+                style="@style/style_emoji"
+                android:text="日常"/>
+
+            <RadioButton
+                android:id="@+id/rb_emoji_jt"
+                style="@style/style_emoji"
+                android:text="交通"/>
+
+            <RadioButton
+                android:id="@+id/rb_emoji_fh"
+                style="@style/style_emoji"
+                android:text="符号"/>
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/iv_back_del"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:src="@drawable/back_del"/>
+    </LinearLayout>
+
+</LinearLayout>

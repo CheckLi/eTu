@@ -43,6 +43,7 @@ data class UserInfo(
 		@SerializedName("token") var token: String="" //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGkuOTFldG8uY29tIiwiaWF0IjoxNTEzNDExODc0LCJpZCI6MzF9.s-UtStiEgghabcAN8idmWrlC2EqXwN5puKUPyL9uQUI
 ):Serializable{
 	var isCheck=false
+	var viewType=0//0普通，1添加按钮，2删除按钮
 	fun setUserinfo(userInfo:UserInfo){
 		if(userInfo.id!=id){
 			id=userInfo.id

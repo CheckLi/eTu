@@ -3,6 +3,8 @@ package com.yitu.etu.ui.activity
 import android.view.View
 import com.huizhuang.zxsq.utils.nextActivity
 import com.huizhuang.zxsq.utils.nextCheckLoginActivity
+import com.umeng.socialize.UMShareAPI
+import com.umeng.socialize.bean.SHARE_MEDIA
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.dialog.PayPasswordDialog
@@ -118,6 +120,8 @@ class AccountManageActivity : BaseActivity() {
             val dialog=TipsDialog(this,"温馨提示")
             dialog.setMessage("确认要退出登陆吗？")
             dialog.setRightBtn("确认"){
+                UMShareAPI.get(this).deleteOauth(this@AccountManageActivity, SHARE_MEDIA.WEIXIN, null)
+                UMShareAPI.get(this).deleteOauth(this@AccountManageActivity, SHARE_MEDIA.SINA, null)
                 EtuApplication.getInstance().loginOut()
                 finish()
             }

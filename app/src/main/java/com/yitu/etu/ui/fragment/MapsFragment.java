@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -698,7 +699,8 @@ public class MapsFragment extends SupportMapFragment implements
 
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
-
+        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
+        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.user_position));
         mAmap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
 //aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
@@ -845,7 +847,7 @@ public class MapsFragment extends SupportMapFragment implements
         view.findViewById(R.id.tv_chat).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Tools.startChat(data.title,data.id,"可以一起去旅游吗?",getActivity());
+                Tools.startChat(data.title, data.id, "可以一起去旅游吗?", getActivity());
             }
         });
         GlideApp.with(MapsFragment.this)
@@ -901,7 +903,7 @@ public class MapsFragment extends SupportMapFragment implements
             view.findViewById(R.id.btn_tuijian).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent= new Intent(getContext(), ViewRecommentActivity.class);
+                    Intent intent = new Intent(getContext(), ViewRecommentActivity.class);
                     startActivity(intent);
                     dialog.dismiss();
                 }
@@ -1284,8 +1286,12 @@ public class MapsFragment extends SupportMapFragment implements
                     }
                 }
             };
+            String url = merchantEntity.getImage();
+            if (!url.startsWith("http")) {
+                url = address + url;
+            }
             GlideApp.with(MapsFragment.this)
-                    .load(address + merchantEntity.getImage())
+                    .load(url)
                     .circleCrop()
                     .placeholder(R.drawable.icon17)
                     .listener(new RequestListener<Drawable>() {

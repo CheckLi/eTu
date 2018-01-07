@@ -68,6 +68,24 @@ public class ManageOrderAdapter extends BaseAdapter<ShopOrderEntity, ManageOrder
             viewHolder.tv_state.setOnClickListener(new View.OnClickListener() {
                 @Override
                     public void onClick(View view) {
+                    if(data.getIs_check()==1){
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("order_id", data.getId() + "");
+                        Http.post(Urls.CHECK_SHOP_ORDER, hashMap, new GsonCallback<HttpStateEntity>() {
+                            @Override
+                            public void onError(Call call, Exception e, int id) {
+
+                            }
+
+                            @Override
+                            public void onResponse(HttpStateEntity response, int id) {
+                                if (response.success()) {
+                                    removeByPosition(position);
+                                }
+
+                            }
+                        });
+                    }
                     InputPriceDialog inputPriceDialog = new InputPriceDialog(getContext(), "订单核销");
                     inputPriceDialog.setHint("已到核销期限，可直接核销",false);
                     inputPriceDialog.setRightBtn("取消", new Function1<View, Unit>() {
@@ -76,11 +94,12 @@ public class ManageOrderAdapter extends BaseAdapter<ShopOrderEntity, ManageOrder
                             return null;
                         }
                     });
-                    inputPriceDialog.setLeftBtn("确认", new Function1<View, Unit>() {
+                    inputPriceDialog.setLeftBtnResultText("确认","请输入内容", new Function1<String, Unit>() {
                         @Override
-                        public Unit invoke(View view) {
+                        public Unit invoke(String content) {
                             HashMap<String, String> hashMap = new HashMap<>();
                             hashMap.put("order_id", data.getId() + "");
+                            hashMap.put("sn", content);
                             Http.post(Urls.CHECK_SHOP_ORDER, hashMap, new GsonCallback<HttpStateEntity>() {
                                 @Override
                                 public void onError(Call call, Exception e, int id) {

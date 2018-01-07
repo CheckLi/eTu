@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -43,13 +44,6 @@ public class MapActivity extends BaseActivity {
 
     @Override
     public void initActionBar() {
-        setTitle("地址选择");
-        setRightText("完成", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getAddress();
-            }
-        });
     }
 
 
@@ -62,9 +56,9 @@ public class MapActivity extends BaseActivity {
 
                     Intent intent = new Intent();
                     intent.putExtra("address", regeocodeResult.getRegeocodeAddress().getFormatAddress());
-                    LatLng latLng=new LatLng(regeocodeResult.getRegeocodeQuery().getPoint().getLatitude(), regeocodeResult.getRegeocodeQuery().getPoint().getLongitude());
+                    LatLng latLng = new LatLng(regeocodeResult.getRegeocodeQuery().getPoint().getLatitude(), regeocodeResult.getRegeocodeQuery().getPoint().getLongitude());
                     intent.putExtra("latLng", latLng);
-                    intent.putExtra("image",getMapUrl(latLng.latitude,latLng.longitude));
+                    intent.putExtra("image", getMapUrl(latLng.latitude, latLng.longitude));
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -83,6 +77,18 @@ public class MapActivity extends BaseActivity {
         mapsFragment = new MapsFragment2();
         Bundle bundle = new Bundle();
         bundle.putParcelable("data", (LatLng) getIntent().getParcelableExtra("data"));
+        bundle.putString("address", getIntent().getStringExtra("address"));
+        if (getIntent().getParcelableExtra("data") == null) {
+            setTitle("地址选择");
+            setRightText("完成", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getAddress();
+                }
+            });
+        } else {
+            setTitle("位置信息");
+        }
         mapsFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.rl_content, mapsFragment).commit();
     }
@@ -129,17 +135,32 @@ public class MapActivity extends BaseActivity {
             mAmap.getUiSettings().setZoomControlsEnabled(false);
             Bundle bundle = getArguments();
             if (bundle.getParcelable("data") != null) {
+                final String address = bundle.getString("address");
                 MarkerOptions markerOption = new MarkerOptions();
                 mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
-                LatLng latLng=  (LatLng) bundle.getParcelable("data");
+                LatLng latLng = (LatLng) bundle.getParcelable("data");
                 mAmap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
                 markerOption.position(latLng);
                 markerOption.draggable(false);//设置Marker可拖动
                 markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                        .decodeResource(getResources(), R.drawable.icon0)));
+                        .decodeResource(getResources(), R.drawable.marker_location)));
                 // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-                markerOption.setFlat(true);//设置marker平贴地图效果
-                mAmap.addMarker(markerOption);
+                markerOption.setFlat(false);//设置marker平贴地图效果
+                mAmap.setInfoWindowAdapter(new AMap.InfoWindowAdapter() {
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        View view = LayoutInflater.from(getContext()).inflate(R.layout.mark_pop_window, null);
+                        TextView name = (TextView) view.findViewById(R.id.text);
+                        name.setText(address);
+                        return view;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        return null;
+                    }
+                });
+                mAmap.addMarker(markerOption).showInfoWindow();
             } else {
                 mAmap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
                     @Override

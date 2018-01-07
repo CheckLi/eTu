@@ -15,6 +15,7 @@ import com.huizhuang.zxsq.utils.nextActivityFromFragment
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.dialog.InputPriceDialog
+import com.yitu.etu.dialog.InputPriceTwoDialog
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.PinAnBean
 import com.yitu.etu.eventBusItem.EventRefresh
@@ -24,7 +25,8 @@ import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.activity.AMapRealTimeActivity
 import com.yitu.etu.ui.activity.BaseActivity
 import com.yitu.etu.ui.activity.MainActivity
-import com.yitu.etu.ui.activity.MapActivity
+import com.yitu.etu.ui.activity.ShareMyLocationActivity
+import com.yitu.etu.util.Empty
 import com.yitu.etu.util.userInfo
 import com.yitu.etu.widget.chat.PacketMessage
 import io.rong.imkit.DefaultExtensionModule
@@ -42,6 +44,7 @@ import okhttp3.Call
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.lang.Exception
+import java.util.*
 
 
 /**
@@ -53,14 +56,19 @@ import java.lang.Exception
  *
  */
 var mTargetId = ""
+var mConversationType: Conversation.ConversationType? = null
+var uri: Uri? = null
 
 /**
  * 自定义面板，0拍摄，1位置，2位置共享，3平安符
  */
 class MyPlugin(val type: Int) : IPluginModule {
     override fun onClick(p0: Fragment, p1: RongExtension?) {
-        val activity: Activity = p0.activity
+        val activity: Activity = (p0.activity as Activity?)!!
+        uri = activity.intent.data
         mTargetId = activity.intent.data.getQueryParameter("targetId")
+        val typeStr = uri?.lastPathSegment?.toUpperCase(Locale.US)
+        mConversationType = Conversation.ConversationType.valueOf(typeStr.Empty())
         if (activity is BaseActivity) {
             when (type) {
                 0 -> {
@@ -70,18 +78,35 @@ class MyPlugin(val type: Int) : IPluginModule {
                     }
                 }
                 3 -> {
-                    val dialog = InputPriceDialog(p0.activity, "发送平安符")
-                    val xy = dialog.setHint("输入平安符数量", true, Gravity.CENTER_HORIZONTAL, InputType.TYPE_CLASS_PHONE)
-                    xy.text = "当前余量：${activity.userInfo()?.safecount}"
-                    dialog.setRightBtnResultText("确认", "请输入平安符数量") {
-                        sendPan("1", it, activity)
-                        dialog.dismiss()
+                    /**
+                     * 如果是单聊没有输入人数选项
+                     */
+                    if (mConversationType == Conversation.ConversationType.PRIVATE) {
+                        val dialog = InputPriceDialog(p0.activity, "发送平安符")
+                        val xy = dialog.setHint("输入平安符数量", true, Gravity.CENTER_HORIZONTAL, InputType.TYPE_CLASS_PHONE)
+                        xy.text = "当前余量：${activity.userInfo()?.safecount}"
+                        dialog.setRightBtnResultText("确认", "请输入平安符数量") {
+                            sendPan("1", it, activity)
+                            dialog.dismiss()
+                        }
+                        dialog.setXieYiClickNull()
+                        dialog.showDialog()
+                    } else {
+                        val dialog = InputPriceTwoDialog(p0.activity, "发送平安符")
+                        val xy = dialog.setHint("输入平安符数量", true, Gravity.CENTER_HORIZONTAL, InputType.TYPE_CLASS_PHONE)
+                        xy.text = "当前余量：${activity.userInfo()?.safecount}"
+                        dialog.setRightBtnResultText("确认", "请输入平安符数量") { price, count ->
+                            sendPan(count, price, activity)
+                            dialog.dismiss()
+                        }
+                        dialog.setXeonClickNull()
+                        dialog.showDialog()
                     }
-                    dialog.showDialog()
+
                 }
-                1->p0.nextActivityFromFragment<MapActivity>(1001)
-                2->{
-                    createLocationShare(activity)
+                1 -> p0.nextActivityFromFragment<ShareMyLocationActivity>(1001)
+                2 -> {
+                    createLocationShare(activity, mConversationType!!)
 //                   val result= RongIMClient.getInstance().getRealTimeLocation(Conversation.ConversationType.PRIVATE, mTargetId)
 //                    RongIMClient.getInstance().startRealTimeLocation(Conversation.ConversationType.PRIVATE, mTargetId)
                 }
@@ -103,7 +128,7 @@ class MyPlugin(val type: Int) : IPluginModule {
                 activity.hideWaitDialog()
                 if (response.success()) {
                     with(response.data) {
-                        val mes = PacketMessage.obtain("平安符赠送",count,people,idPin)
+                        val mes = PacketMessage.obtain("平安符赠送", count, people, idPin)
                         val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, mes)
                         sendMessage(message)
                         EventBus.getDefault().post(EventRefresh(MainActivity::class.java.simpleName))
@@ -120,22 +145,31 @@ class MyPlugin(val type: Int) : IPluginModule {
 
         })
     }
+
     /**
      * 创建位置共享
      */
-    fun createLocationShare(activity: BaseActivity) {
+    fun createLocationShare(activity: BaseActivity, type: Conversation.ConversationType) {
         activity.showWaitDialog("获取中...")
-        Http.post(Urls.URL_CREATE_LOCATION, hashMapOf("chat_id" to ""
-        ,"target_id" to mTargetId), object : GsonCallback<ObjectBaseEntity<String>>() {
+        val params = hashMapOf<String, String>()
+        if (type == Conversation.ConversationType.PRIVATE) {
+            params.put("target_id", mTargetId)
+            params.put("chat_id", "")
+        } else {
+            params.put("chat_id", mTargetId)
+        }
+        Http.post(Urls.URL_CREATE_LOCATION, params, object : GsonCallback<ObjectBaseEntity<String>>() {
             override fun onResponse(response: ObjectBaseEntity<String>, id: Int) {
                 activity.hideWaitDialog()
                 if (response.success()) {
                     with(response.data) {
                         val mes = TextMessage.obtain(" 我发起了位置共享")
-                        mes.extra="RCZXJRLMap"
-                        val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, mes)
+                        mes.extra = "RCZXJRLMap"
+                        val message = Message.obtain(mTargetId, type, mes)
                         sendMessage(message)
-                        activity.nextActivity<AMapRealTimeActivity>("chat_id" to this,"type" to Message.MessageDirection.SEND)
+                        activity.nextActivity<AMapRealTimeActivity>(
+                                "title" to activity.intent.data.getQueryParameter("title"),
+                                "chat_id" to this, "type" to Message.MessageDirection.SEND,"chatType" to type)
                     }
                 } else {
                     activity.showToast(response.message)
@@ -211,12 +245,12 @@ class MyExtensionModule : DefaultExtensionModule() {
  * 发送图片
  */
 fun sendImageMessage(path: String) {
-    RongIM.getInstance().sendImageMessage(Conversation.ConversationType.PRIVATE, mTargetId, ImageMessage.obtain(Uri.fromFile(File(path)), Uri.fromFile(File(path)), false), null, null, null)
+    RongIM.getInstance().sendImageMessage(mConversationType, mTargetId, ImageMessage.obtain(Uri.fromFile(File(path)), Uri.fromFile(File(path)), false), null, null, null)
 }
 
 fun sendLocation(lat: Double, lng: Double, poi: String, thumb: Uri) {
     val locationMessage = LocationMessage.obtain(lat, lng, poi, thumb)
-    val message = Message.obtain(mTargetId, Conversation.ConversationType.PRIVATE, locationMessage)
+    val message = Message.obtain(mTargetId, mConversationType, locationMessage)
     sendMessage(message)
 }
 
@@ -247,7 +281,8 @@ fun sendMessage(myMessage: Message) {
         }
     })
 }
-fun sendMessage(myMessage: Message,pushContent:String) {
+
+fun sendMessage(myMessage: Message, pushContent: String) {
     /**
      * <p>发送消息。
      * 通过 {@link io.rong.imlib.IRongCallback.ISendMessageCallback}

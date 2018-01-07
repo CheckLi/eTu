@@ -22,6 +22,7 @@ import com.zhy.http.okhttp.callback.Callback
 inline fun <reified T : Any> Fragment.post(url: String, params: HashMap<String, String>, callback: Callback<T>) {
     Http.post(url, params, callback)
 }
+
 /**
  * 进入下一个activity
  */
@@ -35,6 +36,7 @@ inline fun <reified T : Any> Context.post(url: String, params: HashMap<String, S
 fun Fragment.isLogin(): Boolean {
     return EtuApplication.getInstance().isLogin
 }
+
 /**
  * 判断是否登陆
  */
@@ -42,6 +44,10 @@ fun Context.isLogin(): Boolean {
     return EtuApplication.getInstance().isLogin
 }
 
-fun String.addHost():String{
-    return Urls.address+this
+fun String.addHost(): String {
+    return if (this.contains(kotlin.text.Regex("http:|https:"))) {
+        this
+    } else {
+        Urls.address + this
+    }
 }

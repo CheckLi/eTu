@@ -131,5 +131,10 @@ public class CircleFirendActivity extends BaseActivity {
             CircleFirendEntity.CircleBean mdata=(CircleFirendEntity.CircleBean)data.getSerializableExtra("data");
             circleFirendAdapter.addToFirst(mdata);
         }
+        if (requestCode == 10001 && resultCode == RESULT_OK) {
+            circleFirendAdapter.sendMsg(data.getStringExtra("text"));
+
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 package com.yitu.etu.ui.adapter;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -62,7 +63,7 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (null == convertView) {
-			convertView = View.inflate(parent.getContext(), getItemResource(position), null);
+			convertView = LayoutInflater.from(parent.getContext()).inflate(getItemResource(position), parent, false);
 			holder = new ViewHolder(convertView);
 			convertView.setTag(holder);
 		} else {

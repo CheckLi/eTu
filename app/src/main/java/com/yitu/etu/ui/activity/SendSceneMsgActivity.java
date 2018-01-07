@@ -12,7 +12,7 @@ import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.ToastUtil;
-import com.yitu.etu.widget.MgridView;
+import com.yitu.etu.widget.MgridView1;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +22,7 @@ import okhttp3.Call;
 public class SendSceneMsgActivity extends BaseActivity {
 
     private EditText err_msg;
-    private MgridView gridView;
+    private MgridView1 gridView;
     private TextView tv_lat_lng;
     private TextView tv_address;
     private int type;
@@ -50,7 +50,7 @@ public class SendSceneMsgActivity extends BaseActivity {
         type = getIntent().getIntExtra("type", 0);
         id = getIntent().getStringExtra("id");
         err_msg = (EditText) findViewById(R.id.err_msg);
-        gridView = (MgridView) findViewById(R.id.gridView);
+        gridView = (MgridView1) findViewById(R.id.gridView);
         View btn_location = findViewById(R.id.btn_location);
         tv_lat_lng = (TextView) findViewById(R.id.tv_lat_lng);
         tv_address = (TextView) findViewById(R.id.tv_address);

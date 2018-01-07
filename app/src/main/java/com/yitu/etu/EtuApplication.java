@@ -1,5 +1,6 @@
 package com.yitu.etu;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,8 @@ import com.amap.api.maps.model.Poi;
 import com.autonavi.amap.mapcore.FileUtil;
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.yitu.etu.dialog.LoadingDialog;
@@ -28,13 +31,13 @@ import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.ui.activity.AMapRealTimeActivity;
+import com.yitu.etu.ui.activity.MapActivity;
 import com.yitu.etu.ui.activity.SearchResultUserActivity;
 import com.yitu.etu.ui.fragment.Chat.MyExtensionModule;
 import com.yitu.etu.util.LogUtil;
 import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
 import com.yitu.etu.util.ToastUtil;
-import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.activityUtil;
 import com.yitu.etu.util.location.LocationUtil;
 import com.yitu.etu.widget.chat.PacketMessage;
@@ -55,8 +58,8 @@ import io.rong.imkit.DefaultExtensionModule;
 import io.rong.imkit.IExtensionModule;
 import io.rong.imkit.RongExtensionManager;
 import io.rong.imkit.RongIM;
-import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.Group;
 import io.rong.imlib.model.Message;
 import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
@@ -75,7 +78,8 @@ public class EtuApplication extends Application {
     private String chatToken;
     private AMapLocation mLocation;
     public Poi myLocationPoi;//导航起点
-
+    private  String APP_ID="wx0f5237d79cf12c32";
+    public IWXAPI mIWXAPI;
     public static EtuApplication getInstance() {
         return mInstance;
     }
@@ -111,6 +115,24 @@ public class EtuApplication extends Application {
         share();
         Picasso.with(this).setIndicatorsEnabled(true);
         initLocation();//获取定位信息
+        initWeixinPay();//初始化微信支付
+    }
+
+    public String getAPP_ID() {
+        return APP_ID;
+    }
+
+    public void setAPP_ID(String APP_ID) {
+        this.APP_ID = APP_ID;
+        initWeixinPay();
+    }
+
+    /**
+     * 初始化微信支付
+     */
+    public void initWeixinPay(){
+        mIWXAPI= WXAPIFactory.createWXAPI(this,APP_ID,true);
+        mIWXAPI.registerApp(APP_ID);
     }
 
     private void initChat() {
@@ -148,36 +170,51 @@ public class EtuApplication extends Application {
             public boolean onMessageClick(final Context context, View view, final Message message) {
                 if (message.getContent() instanceof LocationMessage) {
                     LocationMessage message1 = (LocationMessage) message.getContent();
-                    Poi end = new Poi(message1.getPoi(), new LatLng(message1.getLat(), message1.getLng()), "");
-                    Tools.navi(context, end);
+//                    Poi end = new Poi(message1.getPoi(), new LatLng(message1.getLat(), message1.getLng()), "");
+                    Bundle bundle=new Bundle();
+                    bundle.putString("address",message1.getPoi());
+                    bundle.putParcelable("data",new LatLng(message1.getLat(), message1.getLng()));
+                    activityUtil.nextActivity(context, MapActivity.class,bundle,false);
+//                    Tools.navi(context, end);
                     return true;
                     //如果是接收方并且是共享位置消息，需要跳转到自己的共享页
                 } else if (message.getContent() instanceof TextMessage && ((TextMessage) message.getContent()).getExtra().equals("RCZXJRLMap") && message.getMessageDirection() == Message.MessageDirection.RECEIVE) {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("target_id", message.getSenderUserId());
-                    final LoadingDialog dialog = new LoadingDialog(context, "加入中...");
-                    dialog.show();
-                    Http.post(Urls.URL_GET_CHAT_ID, map, new GsonCallback<ObjectBaseEntity<Object>>() {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            ToastUtil.showMessage("共享已结束");
-                            dialog.hideDialog();
-                        }
-
-                        @Override
-                        public void onResponse(ObjectBaseEntity<Object> response, int id) {
-                            dialog.hideDialog();
-                            if (response.success()) {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("chat_id", response.data.toString());
-                                bundle.putSerializable("type", Message.MessageDirection.RECEIVE);
-                                activityUtil.nextActivity(context, AMapRealTimeActivity.class, bundle, false);
-                            } else {
-                                ToastUtil.showMessage(response.getMessage());
+                    final Activity activity= (Activity) context;
+                    if(message.getConversationType()== Conversation.ConversationType.PRIVATE) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("target_id", message.getSenderUserId());
+                        final LoadingDialog dialog = new LoadingDialog(context, "加入中...");
+                        dialog.show();
+                        Http.post(Urls.URL_GET_CHAT_ID, map, new GsonCallback<ObjectBaseEntity<Object>>() {
+                            @Override
+                            public void onError(Call call, Exception e, int id) {
+                                ToastUtil.showMessage("共享已结束");
+                                dialog.hideDialog();
                             }
-                        }
-                    });
 
+                            @Override
+                            public void onResponse(ObjectBaseEntity<Object> response, int id) {
+                                dialog.hideDialog();
+                                if (response.success()) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("chat_id", response.data.toString());
+                                    bundle.putString("title",activity.getIntent().getData().getQueryParameter("title"));
+                                    bundle.putSerializable("type", Message.MessageDirection.RECEIVE);
+                                    bundle.putSerializable("chatType", message.getConversationType());
+                                    activityUtil.nextActivity(context, AMapRealTimeActivity.class, bundle, false);
+                                } else {
+                                    ToastUtil.showMessage(response.getMessage());
+                                }
+                            }
+                        });
+                    }else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("chat_id", message.getTargetId());
+                        bundle.putSerializable("type", Message.MessageDirection.RECEIVE);
+                        bundle.putString("title",activity.getIntent().getData().getQueryParameter("title"));
+                        bundle.putSerializable("chatType", message.getConversationType());
+                        activityUtil.nextActivity(context, AMapRealTimeActivity.class, bundle, false);
+                    }
                     return true;
                 }
                 return false;
@@ -230,9 +267,9 @@ public class EtuApplication extends Application {
      */
     public void share() {
         UMShareAPI.get(this);
-        PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
+        PlatformConfig.setWeixin("wx0f5237d79cf12c32", "de07142da052f2467dbf501b0aecbde8");
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
-        PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad", "http://sns.whalecloud.com");
+        PlatformConfig.setSinaWeibo("642370776", "18b581dfed58148df4192595a236fa12", "http://91eto.com");
     }
 
     /**
@@ -289,6 +326,7 @@ public class EtuApplication extends Application {
         PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_BUY_CAR);
         EventBus.getDefault().post(new LoginSuccessEvent(null));
         RongIM.getInstance().logout();
+
        /* RongIM.getInstance().clearConversations(
                 new RongIMClient.ResultCallback() {
                     @Override
@@ -369,29 +407,9 @@ public class EtuApplication extends Application {
     }
 
     private void connect() {
-        RongIM.connect(chatToken, new RongIMClient.ConnectCallback() {
-            /**
-             * Token 错误。可以从下面两点检查 1.  Token 是否过期，如果过期您需要向 App Server 重新请求一个新的 Token
-             * 2.  token 对应的 appKey 和工程里设置的 appKey 是否一致
-             */
-            @Override
-            public void onTokenIncorrect() {
-                LogUtil.e("chatConnect", "Token 错误。可以从下面两点检查 1.  Token 是否过期，如果过期您需要向 App Server 重新请求一个新的 Token\n" +
-                        "             * 2.  token 对应的 appKey 和工程里设置的 appKey 是否一致");
-            }
-
-            @Override
-            public void onSuccess(String s) {
-                LogUtil.e("chatConnect", "聊天链接成功");
-            }
-
-            @Override
-            public void onError(RongIMClient.ErrorCode errorCode) {
-                LogUtil.e("chatConnect", "聊天链接失败" + errorCode.getMessage() + " " + errorCode.getValue());
-            }
-        });
+        RongIM.connect(chatToken, null);
         /**
-         * 设置用户信息的提供者，供 RongIM 调用获取用户名称和头像信息。
+         * 设置用户信者，供 RongIM 调用获取用户名称和头像信息。
          *
          * @param userInfoProvider 用户信息提供者。
          * @param isCacheUserInfo  设置是否由 IMKit 来缓存用户信息。<br>
@@ -415,13 +433,35 @@ public class EtuApplication extends Application {
          */
         RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
             @Override
-            public io.rong.imlib.model.UserInfo getUserInfo(String s) {
+            public io.rong.imlib.model.UserInfo getUserInfo(final String s) {
+
                 HashMap<String, String> map = new HashMap<>();
                 map.put("user_id", s);
                 Http.post(Urls.URL_GET_ID_USER_INFO, map, new GsonCallback<ObjectBaseEntity<UserInfo>>() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        LogUtil.e(e.getLocalizedMessage());
+                        if(s.length()>5){
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put("chat_id", s);
+                            Http.post(Urls.URL_GET_GROUP_INFO_HEAD, map, new GsonCallback<ObjectBaseEntity<UserInfo>>() {
+                                @Override
+                                public void onError(Call call, Exception e, int id) {
+                                    LogUtil.e(e.getLocalizedMessage());
+                                }
 
+                                @Override
+                                public void onResponse(ObjectBaseEntity<UserInfo> response, int id) {
+                                    if (response.success()) {
+                                        UserInfo info = response.data;
+                                        io.rong.imlib.model.UserInfo userInfo = new io.rong.imlib.model.UserInfo(String.valueOf(info.getId()), info.getName(), Uri.parse(Urls.address + info.getHeader()));
+                                        RongIM.getInstance().refreshUserInfoCache(userInfo);
+                                     /*   Discussion discussion=new Discussion(s,"这是讨论组");
+                                        RongIM.getInstance().refreshDiscussionCache(discussion);*/
+                                    }
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -436,6 +476,12 @@ public class EtuApplication extends Application {
                 return null;
             }
         }, true);
+        RongIM.setGroupInfoProvider(new RongIM.GroupInfoProvider() {
+            @Override
+            public Group getGroupInfo(String s) {
+                return null;
+            }
+        },true);
     }
 
     public void stopUpLocationService() {

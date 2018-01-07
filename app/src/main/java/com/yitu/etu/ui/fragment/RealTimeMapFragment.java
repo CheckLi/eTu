@@ -23,6 +23,7 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.SupportMapFragment;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.squareup.picasso.Picasso;
@@ -58,6 +59,7 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
     private SparseArray<RealTimeListBean> mMarkers;
     private String id = "";
     private LatLng mLatLng;
+    private LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();//存放所有点的经纬度
     MyLocationStyle myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
 
 
@@ -295,7 +297,7 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
                  * 添加本人位置
                  */
                 mLatLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
-                mAmap.moveCamera(CameraUpdateFactory.zoomTo(14));
+                mAmap.moveCamera(CameraUpdateFactory.zoomTo(16));
                 mAmap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude())));
                 RealTimeListBean bean = new RealTimeListBean();
                 bean.header = Urls.address + EtuApplication.getInstance().getUserInfo().getHeader();
@@ -326,7 +328,13 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
                 image.setImageBitmap(bitmap);
                 markerOption.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view)));
                 mMarkers.get(userId).mMarker = mAmap.addMarker(markerOption);
-
+                for(int i=0;i<mMarkers.size();i++){
+                    int key=mMarkers.keyAt(i);
+                    if(mMarkers.get(key)!=null&&mMarkers.get(key).mMarker!=null) {
+                        boundsBuilder.include(mMarkers.get(key).mMarker.getPosition());//把所有点都include进去（LatLng类型）
+                    }
+                }
+                mAmap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));//第二个参数为四周留空宽度
             }
 
             @Override
