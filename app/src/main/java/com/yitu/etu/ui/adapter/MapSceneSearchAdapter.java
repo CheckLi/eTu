@@ -9,7 +9,7 @@ import com.yitu.etu.R;
 import com.yitu.etu.entity.MapSceneEntity;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.Tools;
-import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 
 /**
  * TODO this class desription here
@@ -52,12 +52,8 @@ public class MapSceneSearchAdapter extends BaseAdapter<MapSceneEntity, MapSceneS
         viewHolder.tv_title.setText(data.title);
         viewHolder.tv_address.setText(data.address);
         viewHolder.tv_price.setText("人均："+data.price+"￥");
-        GlideApp.with(getContext())
-                .load(Urls.address + data.getImage())
-                .centerCrop()
-                .error(R.drawable.etu_default)
-                .placeholder(R.drawable.etu_default)
-                .placeholder(R.drawable.icon17).into(viewHolder.image);
+        ImageLoadUtil.getInstance().loadImage(viewHolder.image, Urls.address+data.getImage(),R.drawable.etu_default,-1,-1);
+
 
     }
 

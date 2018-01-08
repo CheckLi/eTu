@@ -60,7 +60,11 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
     @Override
     public void initItemView(int position, View convertView, ViewHolder viewHolder) {
         viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
+        viewHolder.btn_delete = (ImageView) convertView.findViewById(R.id.btn_delete);
+
     }
+
+    boolean showDelete = false;
 
     @Override
     public void bindData(final int position, View convertView, final ViewHolder viewHolder) {
@@ -77,6 +81,8 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
                     }
                 }
             });
+            viewHolder.btn_delete.setVisibility(View.GONE);
+            convertView.setOnLongClickListener(null);
 
         } else {
 //            convertView.setPadding(0, 0, 0, 0);
@@ -108,12 +114,31 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
                     }
                 }
             });
+            if (showDelete) {
+                viewHolder.btn_delete.setVisibility(View.VISIBLE);
+                viewHolder.btn_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        images.remove(getItem(position));
+                        removeByPosition(position);
+                    }
+                });
+            }
+            convertView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showDelete = true;
+                    notifyDataSetChanged();
+                    return true;
+                }
+            });
         }
 //        ((ImageView)convertView).setImageResource();
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {
         ImageView imageView;
+        ImageView btn_delete;
 
         @Override
         int getItemLayoutID(int type) {
@@ -122,7 +147,7 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
     }
 
     public String getPutString() {
-        if(data!=null) {
+        if (data != null) {
             StringBuffer buffer = new StringBuffer("");
             for (String s : data) {
                 if (s.contains("https:") || s.contains("http:")) {

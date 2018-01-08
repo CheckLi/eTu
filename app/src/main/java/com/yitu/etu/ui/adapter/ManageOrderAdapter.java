@@ -14,7 +14,7 @@ import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.DateUtil;
 import com.yitu.etu.util.Tools;
-import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 
 import java.util.HashMap;
 
@@ -60,15 +60,12 @@ public class ManageOrderAdapter extends BaseAdapter<ShopOrderEntity, ManageOrder
         viewHolder.tv_time.setText(DateUtil.getTime(data.getUpdated() + "", null));
         viewHolder.tv_price.setText("付款:" + data.getPrice());
         viewHolder.tv_state.setText(data.getStatus());
-        GlideApp.with(getContext())
-                .load(Urls.address + data.getUser().getHeader())
-                .error(R.drawable.etu_default)
-                .placeholder(R.drawable.etu_default).into(viewHolder.image);
-        if (type ==1) {
+        ImageLoadUtil.getInstance().loadImage(viewHolder.image, Urls.address + data.getUser().getHeader(), R.drawable.etu_default, -1, -1);
+        if (type == 1) {
             viewHolder.tv_state.setOnClickListener(new View.OnClickListener() {
                 @Override
-                    public void onClick(View view) {
-                    if(data.getIs_check()==1){
+                public void onClick(View view) {
+                    if (data.getIs_check() == 1) {
                         HashMap<String, String> hashMap = new HashMap<>();
                         hashMap.put("order_id", data.getId() + "");
                         Http.post(Urls.CHECK_SHOP_ORDER, hashMap, new GsonCallback<HttpStateEntity>() {
@@ -85,40 +82,40 @@ public class ManageOrderAdapter extends BaseAdapter<ShopOrderEntity, ManageOrder
 
                             }
                         });
-                    }
-                    InputPriceDialog inputPriceDialog = new InputPriceDialog(getContext(), "订单核销");
-                    inputPriceDialog.setHint("已到核销期限，可直接核销",false);
-                    inputPriceDialog.setRightBtn("取消", new Function1<View, Unit>() {
-                        @Override
-                        public Unit invoke(View view) {
-                            return null;
-                        }
-                    });
-                    inputPriceDialog.setLeftBtnResultText("确认","请输入内容", new Function1<String, Unit>() {
-                        @Override
-                        public Unit invoke(String content) {
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("order_id", data.getId() + "");
-                            hashMap.put("sn", content);
-                            Http.post(Urls.CHECK_SHOP_ORDER, hashMap, new GsonCallback<HttpStateEntity>() {
-                                @Override
-                                public void onError(Call call, Exception e, int id) {
+                    } else {
+                        InputPriceDialog inputPriceDialog = new InputPriceDialog(getContext(), "订单核销");
+                        inputPriceDialog.setHint("已到核销期限，可直接核销", false);
+                        inputPriceDialog.setRightBtn("取消", new Function1<View, Unit>() {
+                            @Override
+                            public Unit invoke(View view) {
+                                return null;
+                            }
+                        });
+                        inputPriceDialog.setLeftBtnResultText("确认", "请输入内容", new Function1<String, Unit>() {
+                            @Override
+                            public Unit invoke(String content) {
+                                HashMap<String, String> hashMap = new HashMap<>();
+                                hashMap.put("order_id", data.getId() + "");
+                                hashMap.put("sn", content);
+                                Http.post(Urls.CHECK_SHOP_ORDER, hashMap, new GsonCallback<HttpStateEntity>() {
+                                    @Override
+                                    public void onError(Call call, Exception e, int id) {
 
-                                }
-
-                                @Override
-                                public void onResponse(HttpStateEntity response, int id) {
-                                    if (response.success()) {
-                                        removeByPosition(position);
                                     }
 
-                                }
-                            });
-                            return null;
-                        }
-                    });
-                    inputPriceDialog.showDialog();
+                                    @Override
+                                    public void onResponse(HttpStateEntity response, int id) {
+                                        if (response.success()) {
+                                            removeByPosition(position);
+                                        }
 
+                                    }
+                                });
+                                return null;
+                            }
+                        });
+                        inputPriceDialog.showDialog();
+                    }
                 }
             });
 

@@ -62,7 +62,8 @@
                 android:id="@+id/image"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="false"
                 android:src="@drawable/etu_default"
                 app:x_radius="8dp"
                 app:y_radius="8dp"/>

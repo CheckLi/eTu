@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.yitu.etu.R;
-import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.SmoothImageView;
 
 /**
@@ -34,11 +34,7 @@ public class ImageShowActivity extends BaseActivity {
         int mHeight = getIntent().getIntExtra("height", 0);
         imageView.setOriginalInfo(mWidth, mHeight, mLocationX, mLocationY);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        GlideApp.with(this)
-                .load(path)
-                .placeholder(R.drawable.ic_default_image)
-                .error(R.drawable.ic_default_image)
-                .into(imageView);
+        ImageLoadUtil.getInstance().loadImage(imageView,path,R.drawable.ic_default_image,-1,-1);
 
         imageView.transformIn();
 

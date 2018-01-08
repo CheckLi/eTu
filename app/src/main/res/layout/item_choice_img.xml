@@ -13,7 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        android:src="@drawable/etu_default2"
+        android:scaleType="centerCrop"
         app:x_radius="5dp"
         app:y_radius="5dp" />
+    <ImageView
+        android:id="@+id/btn_delete"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:padding="7dp"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        android:adjustViewBounds="true"
+        android:layout_gravity="right"
+        android:src="@drawable/icon121"/>
 </com.yitu.etu.widget.SquareView>

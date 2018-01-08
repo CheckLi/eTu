@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import com.yitu.etu.R;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.Tools;
-import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 
 import java.util.List;
 
@@ -39,11 +39,7 @@ public class ImageAdapter extends BaseAdapter<String, ImageAdapter.ViewHolder> {
                 Tools.showImage(getContext(), Urls.address+getItem(position), viewHolder.imageView);
             }
         });
-        GlideApp.with(getContext())
-                .load(Urls.address+getItem(position))
-                .placeholder(R.drawable.ic_default_image)
-                .error(R.drawable.ic_default_image)
-                .into(viewHolder.imageView);
+        ImageLoadUtil.getInstance().loadImage(viewHolder.imageView,Urls.address+getItem(position),R.drawable.ic_default_image,-1,-1);
 
     }
 

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
@@ -12,6 +13,7 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.yitu.etu.R;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.Tools;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.image.RoundImageView2;
 
 import java.util.List;
@@ -97,18 +99,14 @@ public class CarouselView extends FrameLayout {
         public View createView(Context context) {
             imageView = new RoundImageView2(context);
             imageView.setTopRadius(topRadius);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             return imageView;
         }
 
         @Override
         public void UpdateUI(Context context, final int position, String data) {
             if(!data.startsWith(".%")){
-            GlideApp.with(getContext())
-                    .load(Urls.address + data)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_default_image)
-                    .error(R.drawable.ic_default_image)
-                    .into(imageView);
+                ImageLoadUtil.getInstance().loadImage(imageView,Urls.address + data,R.drawable.ic_default_image,-1,-1);
             }
             else{
                 imageView.setImageDrawable(getResources().getDrawable(Integer.parseInt(data.replace(".%",""))));

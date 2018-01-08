@@ -10,14 +10,14 @@ import com.yitu.etu.R;
 import com.yitu.etu.entity.ShopProductEntity;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.Tools;
-import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 
 /**
  * TODO this class desription here
  * <p>
  * Created by deng meng on 2017/12/29.
  */
-public class ManageProductAdapter2 extends BaseAdapter<ShopProductEntity,ManageProductAdapter2.ViewHolder>{
+public class ManageProductAdapter2 extends BaseAdapter<ShopProductEntity, ManageProductAdapter2.ViewHolder> {
 
     public final int px;
 
@@ -38,7 +38,7 @@ public class ManageProductAdapter2 extends BaseAdapter<ShopProductEntity,ManageP
         viewHolder.tv_address = (TextView) convertView.findViewById(R.id.tv_address);
         viewHolder.image = (ImageView) convertView.findViewById(R.id.image);
         viewHolder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
-        viewHolder.li_content=(LinearLayout) convertView.findViewById(R.id.li_content);
+        viewHolder.li_content = (LinearLayout) convertView.findViewById(R.id.li_content);
 
 
     }
@@ -46,26 +46,23 @@ public class ManageProductAdapter2 extends BaseAdapter<ShopProductEntity,ManageP
     @Override
     public void bindData(final int position, final View convertView, ViewHolder viewHolder) {
         viewHolder.li_content.setPadding(px, 0, px, px);
-        LinearLayout.LayoutParams liParams= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams liParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        liParams.leftMargin=px;
-        liParams.rightMargin=px;  viewHolder.li_content.setLayoutParams(liParams);
-        ShopProductEntity data= getItem(position);
+        liParams.leftMargin = px;
+        liParams.rightMargin = px;
+        viewHolder.li_content.setLayoutParams(liParams);
+        ShopProductEntity data = getItem(position);
         viewHolder.tv_title.setText(data.getName());
 
-        viewHolder.tv_price.setText("价格:"+data.getPrice()+"元");
+        viewHolder.tv_price.setText("价格:" + data.getPrice() + "元");
 
         viewHolder.tv_address.setText(data.getDes());
-        GlideApp.with(getContext())
-                .load(Urls.address + data.getImage())
-                .centerCrop()
-                .error(R.drawable.etu_default)
-                .placeholder(R.drawable.etu_default).into(viewHolder.image);
+        ImageLoadUtil.getInstance().loadImage(viewHolder.image, Urls.address + data.getImage(), R.drawable.etu_default, -1, -1);
 
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {
-        TextView tv_title, tv_address, tv_price,tvDelete;
+        TextView tv_title, tv_address, tv_price, tvDelete;
         ImageView image;
         LinearLayout li_content;
 

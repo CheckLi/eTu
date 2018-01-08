@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.SceneEntity;
 import com.yitu.etu.tools.Urls;
-import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 
 /**
  * TODO this class desription here
@@ -32,13 +32,7 @@ public class YjImageAdapter extends BaseAdapter<SceneEntity.TitlelistBean, YjIma
 
     @Override
     public void bindData(final int position, View convertView, final ViewHolder viewHolder) {
-
-        GlideApp.with(getContext())
-                .load(Urls.address + getItem(0).getUser().getHeader())
-                .placeholder(R.drawable.default_head)
-                .error(R.drawable.default_head)
-                .into(viewHolder.imageView);
-
+        ImageLoadUtil.getInstance().loadImage(viewHolder.imageView,Urls.address + getItem(0).getUser().getHeader(),R.drawable.default_head,100,100);
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {

@@ -1206,7 +1206,7 @@ public class MapsFragment extends SupportMapFragment implements
         LatLng startLatlng = new LatLng(mMyLocationPoint.getLatitude(), mMyLocationPoint.getLongitude());
         float distance = AMapUtils.calculateLineDistance(startLatlng, endLatlng);
         if (distance < 1000f) {
-            return "距离你" + distance + "m";
+             return "距离你" + (int)distance + "m";
         } else {
             BigDecimal b = new BigDecimal(((double) distance) / 1000);
             float f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();

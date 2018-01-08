@@ -13,7 +13,7 @@ import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.Tools;
-import com.yitu.etu.widget.GlideApp;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.ListSlideView;
 
 import java.util.HashMap;
@@ -64,11 +64,7 @@ public class ManageProductAdapter extends BaseAdapter<ShopProductEntity,ManagePr
         viewHolder.tv_price.setText("价格:"+data.getPrice()+"元");
 
         viewHolder.tv_address.setText(data.getDes());
-        GlideApp.with(getContext())
-                .load(Urls.address + data.getImage())
-                .centerCrop()
-                .error(R.drawable.etu_default)
-                .placeholder(R.drawable.etu_default).into(viewHolder.image);
+        ImageLoadUtil.getInstance().loadImage(viewHolder.image,Urls.address + data.getImage(),R.drawable.etu_default,-1,-1);
         viewHolder.tvDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
