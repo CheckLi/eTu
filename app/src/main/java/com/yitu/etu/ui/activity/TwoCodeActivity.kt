@@ -3,26 +3,38 @@ package com.yitu.etu.ui.activity
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.yitu.etu.R
+import com.yitu.etu.util.ImageUtil
 import com.yitu.etu.util.addHost
 import com.yitu.etu.util.userInfo
 import com.yitu.etu.widget.image.QRCodeWriter
+import io.rong.message.ImageMessage
 import kotlinx.android.synthetic.main.activity_two_code.*
+import java.io.File
 
 
 class TwoCodeActivity : BaseActivity() {
 
-
+    var bitmap:Bitmap?=null
+    var path:String=""
     override fun getLayout(): Int = R.layout.activity_two_code
     override fun initActionBar() {
         title = "我的二维码"
+        path=filesDir.absolutePath+"/twocode.png"
         setRightText("发到聊天") {
-            showToast("发送到聊天")
+            if(bitmap!=null) {
+                ImageUtil.saveBitmap(path, bitmap)
+                val mes = ImageMessage.obtain(Uri.fromFile(File(path)), Uri.fromFile(File(path)))
+                ShareFriendActivity.startActivity(this,mes)
+            }else{
+                showToast("请重新打开二维码页面")
+            }
         }
     }
 
@@ -35,8 +47,7 @@ class TwoCodeActivity : BaseActivity() {
             }
 
             override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-                tv_two_code.setImageBitmap(addLogo(generateBitmap("etuXs72hfjepIdnv76://ID"+userInfo().id, (150 * resources.displayMetrics.density).toInt(), (150 * resources.displayMetrics.density).toInt()), bitmap)
-                )
+                tv_two_code.setImageBitmap(addLogo(generateBitmap("etuXs72hfjepIdnv76://ID"+userInfo().id, (150 * resources.displayMetrics.density).toInt(), (150 * resources.displayMetrics.density).toInt()), bitmap))
             }
 
         }
@@ -102,6 +113,12 @@ class TwoCodeActivity : BaseActivity() {
         canvas.scale(sx, sx, qrBitmapWidth * 0.5f, qrBitmapHeight * 0.5f)
         canvas.drawBitmap(logoBitmap, (qrBitmapWidth - logoBitmapWidth) * 0.5f, (qrBitmapHeight - logoBitmapHeight) * 0.5f, null)
         canvas.restore()
+        bitmap=blankBitmap
         return blankBitmap
+    }
+
+    override fun onDestroy() {
+        bitmap=null
+        super.onDestroy()
     }
 }

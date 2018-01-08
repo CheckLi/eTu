@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/fl_real_time_parent"
+    android:layout_height="281dp"
     tools:context="com.yitu.etu.ui.activity.MapActivity">
 
     <com.amap.api.maps.MapView
@@ -13,15 +14,44 @@
         android:layout_width="match_parent"
 
         android:layout_height="match_parent" />
-    <TextView
-        android:id="@+id/tv_count"
-        android:layout_width="match_parent"
-        android:text="1人正在共享位置"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:padding="5dp"
-        android:layout_gravity="bottom"
-        android:background="#3f78ba"
-        android:layout_height="wrap_content"/>
+   <RelativeLayout
+       android:id="@+id/rl_real_time_content"
+       android:layout_width="match_parent"
+       android:layout_gravity="bottom"
+       android:background="#3f78ba"
+       android:layout_height="40dp">
+
+       <TextView
+           android:id="@+id/tv_count"
+           android:singleLine="true"
+           android:layout_toLeftOf="@+id/iv_right_chang"
+           android:layout_toRightOf="@+id/iv_left_chang"
+           android:layout_width="match_parent"
+           android:text="1人正在共享位置"
+           android:gravity="center"
+           android:layout_centerVertical="true"
+           android:textColor="@color/white"
+           android:textSize="16sp"
+           android:layout_gravity="center"
+           android:padding="5dp"
+           android:layout_height="wrap_content"/>
+       <ImageView
+           android:id="@+id/iv_left_chang"
+           android:layout_width="wrap_content"
+           android:layout_centerVertical="true"
+           android:src="@drawable/icon127"
+           android:paddingTop="5dp"
+           android:paddingBottom="5dp"
+           android:layout_height="match_parent"/>
+       <ImageView
+           android:id="@+id/iv_right_chang"
+           android:layout_width="wrap_content"
+           android:src="@drawable/icon147"
+           android:layout_gravity="right"
+           android:layout_centerVertical="true"
+           android:paddingTop="5dp"
+           android:paddingBottom="5dp"
+           android:layout_alignParentRight="true"
+           android:layout_height="match_parent"/>
+   </RelativeLayout>
 </FrameLayout>

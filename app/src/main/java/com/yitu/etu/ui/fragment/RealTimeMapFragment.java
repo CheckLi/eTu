@@ -1,5 +1,7 @@
 package com.yitu.etu.ui.fragment;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -33,11 +35,15 @@ import com.yitu.etu.R;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.RealTimeBean;
 import com.yitu.etu.entity.RealTimeListBean;
+import com.yitu.etu.eventBusItem.EventOpenRealTime;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.util.ToastUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import okhttp3.Call;
@@ -49,10 +55,12 @@ import okhttp3.Call;
  * @date:2018年01月04日 22:39
  */
 public class RealTimeMapFragment extends SupportMapFragment implements AMapLocationListener, LocationSource {
-
+    private int statusBarHeight=0;
     private View mRoot;
     private MapView mMapView;
     private TextView mCount;
+    private View parent;
+    private View bottomView;
     private AMap mAmap;
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
@@ -89,7 +97,93 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mCount = (TextView) view.findViewById(R.id.tv_count);
+        parent = view.findViewById(R.id.fl_real_time_parent);
+        bottomView = view.findViewById(R.id.rl_real_time_content);
+        initListener();
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    /**
+     * 初始化监听事件
+     */
+    private void initListener() {
+        /**
+         * 左侧改变大小按钮
+         */
+        getView().findViewById(R.id.iv_left_chang).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animation(true);
+            }
+        });
+
+        /**
+         * 右侧改变大小按钮
+         */
+        getView().findViewById(R.id.iv_right_chang).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animation(false);
+            }
+        });
+        statusBarHeight=getStatusBarHeight();
+       /* int screenHeight = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.actionBarSize)-statusBarHeight;
+        ViewGroup.LayoutParams params = parent.getLayoutParams();
+        params.height = (int) (screenHeight*0.5f);
+        parent.setLayoutParams(params);*/
+    }
+
+    /**
+     * 变化布局大小
+     * @param left
+     */
+    public void animation(boolean left) {
+        int screenHeight = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.actionBarSize)-statusBarHeight;
+        int bottomHeight = bottomView.getHeight();
+        int height = parent.getHeight();
+        int toHeight = 0;
+        int cha=(int)(5*getResources().getDisplayMetrics().density);
+        if (!left) {
+            if (Math.abs(height-bottomHeight) <=cha  || Math.abs(height-screenHeight) <=cha ) {
+                toHeight = screenHeight >> 1;
+            } else if (Math.abs(height-screenHeight*0.5) <=cha) {
+                toHeight = bottomHeight;
+            }
+        } else {
+            if (Math.abs(height-bottomHeight) <=cha) {
+                toHeight = screenHeight >> 1;
+            } else if (Math.abs(height-screenHeight*0.5) <=cha) {
+                toHeight = screenHeight;
+            }
+        }
+        if (toHeight > 0) {
+            ValueAnimator anim = ObjectAnimator.ofInt(height, toHeight).setDuration(300);
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int value = (int) animation.getAnimatedValue();
+                    ViewGroup.LayoutParams params = parent.getLayoutParams();
+                    params.height = value;
+                    parent.setLayoutParams(params);
+                }
+            });
+
+            anim.start();
+        }
+    }
+
+    private int getStatusBarHeight() {
+        try {
+            Class<?> c = Class.forName("com.android.internal.R$dimen");
+            Object obj = c.newInstance();
+            Field field = c.getField("status_bar_height");
+            int x = Integer.parseInt(field.get(obj).toString());
+            int dimensionPixelSize = getResources().getDimensionPixelSize(x);
+            return dimensionPixelSize;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**
@@ -161,7 +255,7 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
                     }
                 } else {
                     ToastUtil.showMessage(response.getMessage());
-                    getActivity().finish();
+                    EventBus.getDefault().post(new EventOpenRealTime(null,false));
                 }
                 mCount.setText(mMarkers.size() + "人正在共享位置");
             }
@@ -328,9 +422,9 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
                 image.setImageBitmap(bitmap);
                 markerOption.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view)));
                 mMarkers.get(userId).mMarker = mAmap.addMarker(markerOption);
-                for(int i=0;i<mMarkers.size();i++){
-                    int key=mMarkers.keyAt(i);
-                    if(mMarkers.get(key)!=null&&mMarkers.get(key).mMarker!=null) {
+                for (int i = 0; i < mMarkers.size(); i++) {
+                    int key = mMarkers.keyAt(i);
+                    if (mMarkers.get(key) != null && mMarkers.get(key).mMarker != null) {
                         boundsBuilder.include(mMarkers.get(key).mMarker.getPosition());//把所有点都include进去（LatLng类型）
                     }
                 }

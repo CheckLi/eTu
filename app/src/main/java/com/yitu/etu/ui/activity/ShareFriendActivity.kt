@@ -14,6 +14,7 @@ import com.yitu.etu.widget.chat.ShareMessage
 import io.rong.imkit.RongIM
 import io.rong.imkit.model.UIConversation
 import io.rong.imlib.model.Conversation
+import io.rong.message.ImageMessage
 import kotlinx.android.synthetic.main.actionbar_layout.view.*
 import kotlinx.android.synthetic.main.activity_share_friend.*
 import org.jetbrains.anko.bundleOf
@@ -21,11 +22,16 @@ import org.jetbrains.anko.bundleOf
 
 class ShareFriendActivity : BaseActivity() {
     var message: ShareMessage? = null
+    var messageImage: ImageMessage? = null
 
     companion object {
         @JvmStatic
         fun startActivity(context: Context, message: ShareMessage) {
             activityUtil.nextActivity(context, ShareFriendActivity::class.java, bundleOf("message" to message), false)
+        }
+        @JvmStatic
+        fun startActivity(context: Context, message: ImageMessage) {
+            activityUtil.nextActivity(context, ShareFriendActivity::class.java, bundleOf("messageImage" to message), false)
         }
     }
 
@@ -54,6 +60,7 @@ class ShareFriendActivity : BaseActivity() {
 
     override fun initView() {
         message = intent.getParcelableExtra("message")
+        messageImage = intent.getParcelableExtra("messageImage")
         supportFragmentManager.beginTransaction().replace(content.id, LYFragment.getInstance(1)).commitAllowingStateLoss()
     }
 
@@ -90,9 +97,13 @@ class ShareFriendActivity : BaseActivity() {
             val dialog = TipsDialog(this@ShareFriendActivity, "温馨提示")
             dialog.setMessage("是否分享到聊天")
             dialog.setRightBtn("确认") {
-                message?.userId = p2?.conversationTargetId
-                dialog.dismiss()
-                Tools.sendMessage(message, this@ShareFriendActivity)
+                if(messageImage!=null){
+                    Tools.sendImageMessage(messageImage,p2?.conversationType,p2?.conversationTargetId)
+                }else {
+                    message?.userId = p2?.conversationTargetId
+                    dialog.dismiss()
+                    Tools.sendMessage(message, p2?.conversationType, this@ShareFriendActivity)
+                }
             }
             dialog.showDialog()
             return true

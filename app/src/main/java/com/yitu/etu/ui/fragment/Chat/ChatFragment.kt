@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment
 import android.text.InputType
 import android.view.Gravity
 import com.amap.api.maps.model.LatLng
-import com.huizhuang.zxsq.utils.nextActivity
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
@@ -18,11 +17,11 @@ import com.yitu.etu.dialog.InputPriceDialog
 import com.yitu.etu.dialog.InputPriceTwoDialog
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.PinAnBean
+import com.yitu.etu.eventBusItem.EventOpenRealTime
 import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http
 import com.yitu.etu.tools.Urls
-import com.yitu.etu.ui.activity.AMapRealTimeActivity
 import com.yitu.etu.ui.activity.BaseActivity
 import com.yitu.etu.ui.activity.MainActivity
 import com.yitu.etu.ui.activity.ShareMyLocationActivity
@@ -42,6 +41,7 @@ import io.rong.message.LocationMessage
 import io.rong.message.TextMessage
 import okhttp3.Call
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.bundleOf
 import java.io.File
 import java.lang.Exception
 import java.util.*
@@ -167,9 +167,11 @@ class MyPlugin(val type: Int) : IPluginModule {
                         mes.extra = "RCZXJRLMap"
                         val message = Message.obtain(mTargetId, type, mes)
                         sendMessage(message)
-                        activity.nextActivity<AMapRealTimeActivity>(
+                        EventBus.getDefault().post(EventOpenRealTime(bundleOf("title" to activity.intent.data.getQueryParameter("title"),
+                                "chat_id" to this, "type" to Message.MessageDirection.SEND,"chatType" to type),true))
+                       /* activity.nextActivity<AMapRealTimeActivity>(
                                 "title" to activity.intent.data.getQueryParameter("title"),
-                                "chat_id" to this, "type" to Message.MessageDirection.SEND,"chatType" to type)
+                                "chat_id" to this, "type" to Message.MessageDirection.SEND,"chatType" to type)*/
                     }
                 } else {
                     activity.showToast(response.message)

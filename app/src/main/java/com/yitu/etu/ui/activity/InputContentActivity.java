@@ -44,7 +44,12 @@ public class InputContentActivity extends BaseActivity {
 
     @Override
     public void initListener() {
-
+        findViewById(R.id.fl_content).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

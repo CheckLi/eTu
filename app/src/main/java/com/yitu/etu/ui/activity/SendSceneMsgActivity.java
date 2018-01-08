@@ -86,7 +86,7 @@ public class SendSceneMsgActivity extends BaseActivity {
                 showToast("请选择地址");
                 return;
             } else {
-                params.put("location", "");
+                params.put("location", latLng.longitude+","+latLng.latitude);
             }
         } else if (type == 2) {
             if (err_msg.getText().toString().trim().equals("")) {

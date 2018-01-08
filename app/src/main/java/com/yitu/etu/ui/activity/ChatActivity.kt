@@ -11,40 +11,59 @@ import com.xiaozhi.firework_core.FireWorkView
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
+import com.yitu.etu.eventBusItem.EventOpenRealTime
 import com.yitu.etu.eventBusItem.EventPlayYanHua
 import com.yitu.etu.tools.GsonCallback
+import com.yitu.etu.tools.Http
 import com.yitu.etu.tools.Urls
-import com.yitu.etu.ui.fragment.Chat.uri
+import com.yitu.etu.ui.fragment.Chat.sendMessage
+import com.yitu.etu.ui.fragment.RealTimeMapFragment
 import com.yitu.etu.util.Empty
 import com.yitu.etu.util.Tools
 import com.yitu.etu.util.isLogin
 import com.yitu.etu.util.post
+import com.yitu.etu.widget.chat.RealTimeLocationEndMessage
 import io.rong.imkit.RongIM
 import io.rong.imkit.fragment.ConversationFragment
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.Discussion
+import io.rong.imlib.model.Message
 import kotlinx.android.synthetic.main.actionbar_layout.view.*
+import kotlinx.android.synthetic.main.activity_chat.*
 import okhttp3.Call
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.jetbrains.anko.bundleOf
 import java.lang.Exception
 import java.util.*
 
 
 class ChatActivity : BaseActivity() {
+    private var mConversationType: Conversation.ConversationType? = null
+    private var messageType: Message.MessageDirection? = null
+    private var chatId: String? = null
     private lateinit var yanhua: FireWorkView
+    private var isFriend=false
+
     override fun getLayout(): Int = R.layout.activity_chat
 
     override fun initActionBar() {
         title = intent.data.getQueryParameter("title")
+        checkFriden()
+    }
+
+    private fun setRightBtn() {
         setRightClick(R.drawable.icon145) {
-            uri = intent.data
-            var mConversationType: Conversation.ConversationType? = null
+            val uri = intent.data
             val typeStr = uri?.lastPathSegment?.toUpperCase(Locale.US)
             mConversationType = Conversation.ConversationType.valueOf(typeStr.Empty())
             if (mConversationType == Conversation.ConversationType.PRIVATE) {
-                val pop = Tools.getPopupWindow(this@ChatActivity, arrayOf("旅友圈", "加为好友"), object : AdapterView.OnItemClickListener {
+                var array=arrayOf("旅友圈", "加为好友")
+                if(isFriend){
+                    array=arrayOf("旅友圈")
+                }
+                val pop = Tools.getPopupWindow(this@ChatActivity,array , object : AdapterView.OnItemClickListener {
                     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (!isLogin()) {
                             showToast("请先登录")
@@ -71,10 +90,10 @@ class ChatActivity : BaseActivity() {
                         p0?.memberIdList?.forEach {
                             s.append(it + ",")
                         }
-                        nextActivity<ChatGroupActivity>("users" to if(s.length>1) s.toString().substring(0,s.length-1) else ""
+                        nextActivity<ChatGroupActivity>("users" to if (s.length > 1) s.toString().substring(0, s.length - 1) else ""
                                 , "chat_id" to intent.data.getQueryParameter("targetId"),
                                 "title" to intent.data.getQueryParameter("title")
-                        ,"sendId" to p0?.creatorId?.toInt())
+                                , "sendId" to p0?.creatorId?.toInt())
                     }
 
                     override fun onError(p0: RongIMClient.ErrorCode?) {
@@ -87,6 +106,7 @@ class ChatActivity : BaseActivity() {
 
     override fun initView() {
         EventBus.getDefault().register(this)
+//        addMaps()
     }
 
     fun playAnimation() {
@@ -162,4 +182,82 @@ class ChatActivity : BaseActivity() {
             (window.decorView as ViewGroup).removeView(yanhua)
         }
     }
+
+    /**
+     * 打开位置共享
+     */
+    @Subscribe
+    fun onEventOpenRealTime(event: EventOpenRealTime) {
+        if (event.add) {
+            messageType=event.bundle?.getSerializable("type") as Message.MessageDirection
+            mConversationType=event.bundle?.getSerializable("chatType") as Conversation.ConversationType
+            this.chatId=event.bundle?.getString("chat_id")
+            addMaps(chatId.Empty())
+        } else {
+            exitRealTime()
+        }
+    }
+
+    fun addMaps(chatId: String) {
+
+        val fragment = RealTimeMapFragment()
+        fragment.arguments = bundleOf("chat_id" to chatId)
+        val begin = supportFragmentManager.beginTransaction()
+        begin.addToBackStack(null)
+        begin.replace(map_content.id, fragment, "maps").commitAllowingStateLoss()
+        setRightClick(R.drawable.icon146, resources.getColor(R.color.white)) {
+            setRightBtn()
+            exitRealTime()
+        }
+    }
+
+    /**
+     * 退出共享发送消息
+     */
+    fun exitRealTime() {
+        if (messageType == Message.MessageDirection.SEND) {
+            val message1 = RealTimeLocationEndMessage.obtain("位置共享结束")
+            val message = Message.obtain(intent.data.getQueryParameter("targetId"), mConversationType, message1)
+            sendMessage(message)
+            cancel(Urls.URL_CANCEL_LOCATION, hashMapOf("chat_id" to chatId.Empty()))
+        } else {
+            cancel(Urls.URL_CANCEL_LOCATION, hashMapOf("chat_id" to chatId.Empty()))
+        }
+        messageType=null
+        chatId=null
+        mConversationType=null
+        supportFragmentManager.popBackStack()
+    }
+
+    private fun cancel(url: String, params: HashMap<String, String>) {
+
+        Http.post(url, params, object : GsonCallback<ObjectBaseEntity<Any>>() {
+            override fun onResponse(response: ObjectBaseEntity<Any>, id: Int) {
+
+            }
+
+            override fun onError(call: Call?, e: Exception?, id: Int) {
+
+            }
+
+        })
+    }
+
+    /**
+     * 检查关系
+     */
+    private fun checkFriden(){
+        Http.post(Urls.URL_CHECK_FRIEND, hashMapOf("suser_id" to intent.data.getQueryParameter("targetId")), object : GsonCallback<ObjectBaseEntity<Any>>() {
+            override fun onResponse(response: ObjectBaseEntity<Any>, id: Int) {
+                isFriend=response.success()
+                setRightBtn()
+            }
+
+            override fun onError(call: Call?, e: Exception?, id: Int) {
+
+            }
+
+        })
+    }
+
 }

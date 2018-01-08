@@ -123,4 +123,5 @@ public class Urls {
     public static final String URL_PACKET_GET=address+"/chat/getPacket";
     public static final String URL_LOGIN_WEIXIN=address+"/user/wxlogin";
     public static final String URL_LOGIN_WEIBO=address+"/user/wblogin";
+    public static final String URL_CHECK_FRIEND=address+"/chat/isFrend";//检查是否是好友
 }

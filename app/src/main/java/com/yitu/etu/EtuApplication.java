@@ -25,12 +25,12 @@ import com.yitu.etu.entity.ChatToken;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.UserInfo;
 import com.yitu.etu.eventBusItem.EventClearSuccess;
+import com.yitu.etu.eventBusItem.EventOpenRealTime;
 import com.yitu.etu.eventBusItem.LoginSuccessEvent;
 import com.yitu.etu.service.UpdateLocationService;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
-import com.yitu.etu.ui.activity.AMapRealTimeActivity;
 import com.yitu.etu.ui.activity.MapActivity;
 import com.yitu.etu.ui.activity.SearchResultUserActivity;
 import com.yitu.etu.ui.fragment.Chat.MyExtensionModule;
@@ -201,7 +201,8 @@ public class EtuApplication extends Application {
                                     bundle.putString("title",activity.getIntent().getData().getQueryParameter("title"));
                                     bundle.putSerializable("type", Message.MessageDirection.RECEIVE);
                                     bundle.putSerializable("chatType", message.getConversationType());
-                                    activityUtil.nextActivity(context, AMapRealTimeActivity.class, bundle, false);
+//                                    activityUtil.nextActivity(context, AMapRealTimeActivity.class, bundle, false);
+                                    sendRealTime(bundle);
                                 } else {
                                     ToastUtil.showMessage(response.getMessage());
                                 }
@@ -213,7 +214,8 @@ public class EtuApplication extends Application {
                         bundle.putSerializable("type", Message.MessageDirection.RECEIVE);
                         bundle.putString("title",activity.getIntent().getData().getQueryParameter("title"));
                         bundle.putSerializable("chatType", message.getConversationType());
-                        activityUtil.nextActivity(context, AMapRealTimeActivity.class, bundle, false);
+//                        activityUtil.nextActivity(context, AMapRealTimeActivity.class, bundle, false);
+                        sendRealTime(bundle);
                     }
                     return true;
                 }
@@ -230,6 +232,14 @@ public class EtuApplication extends Application {
                 return false;
             }
         });
+    }
+
+    /**
+     * 发送加入申请
+     * @param bundle
+     */
+    private void sendRealTime(Bundle bundle){
+        EventBus.getDefault().post(new EventOpenRealTime(bundle,true));
     }
 
     /**
