@@ -7,13 +7,18 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.RadioButton
 import com.yitu.etu.R
 import com.yitu.etu.entity.EmojiChildBean
+import com.yitu.etu.ui.activity.BaseActivity
 import com.yitu.etu.ui.fragment.EmojiFragment
 import com.yitu.etu.util.JsonUtil
 import com.yitu.etu.util.TextUtils
@@ -33,7 +38,7 @@ import java.util.*
 class SendMsgView : FrameLayout {
     var isEmoji = false
     var emojiView: View? = null
-    var viewpager:ViewPager?=null
+    var viewpager: ViewPager? = null
     internal var sendMsg: SendMsgListener? = null
 
     constructor(context: Context) : super(context) {
@@ -49,11 +54,22 @@ class SendMsgView : FrameLayout {
     }
 
     private lateinit var editText: EditText
-
+    private var isCheck = false
     internal fun init() {
         val v = LayoutInflater.from(context).inflate(R.layout.layout_send_msg, null)
         addView(v)
         editText = v.findViewById(R.id.text) as EditText
+        editText.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                editText.requestFocus()
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
+                isEmoji = false
+                iv_emoji.isSelected = false
+                emojiView?.visibility = View.GONE
+            }
+            true
+        }
         editText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 if (sendMsg != null) {
@@ -75,14 +91,40 @@ class SendMsgView : FrameLayout {
             iv_emoji.isSelected = isEmoji
             if (emojiView == null) {
                 emojiView = view_emoji_stub.inflate()
-                viewpager=emojiView?.findViewById(R.id.viewpager) as ViewPager
+                viewpager = emojiView?.findViewById(R.id.viewpager) as ViewPager
+                setCheckClick(rb_emoji_rw)
+                setCheckClick(rb_emoji_zr)
+                setCheckClick(rb_emoji_rc)
+                setCheckClick(rb_emoji_jt)
+                setCheckClick(rb_emoji_fh)
                 initData()
             }
             if (isEmoji) {
+                (context as BaseActivity).hideSoftInput()
                 emojiView?.visibility = View.VISIBLE
             } else {
+                editText.requestFocus()
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
                 emojiView?.visibility = View.GONE
             }
+            iv_back_del.setOnClickListener {
+                val keyCode = KeyEvent.KEYCODE_DEL
+                val keyEventDown = KeyEvent(KeyEvent.ACTION_DOWN, keyCode)
+                val keyEventUp = KeyEvent(KeyEvent.ACTION_UP, keyCode)
+                editText.onKeyDown(keyCode, keyEventDown)
+                editText.onKeyUp(keyCode, keyEventUp)
+            }
+        }
+    }
+
+    private fun setCheckClick(view: View) {
+        view.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP && !(v as RadioButton).isChecked) {
+                v.isChecked = !v.isChecked
+                viewpager?.setCurrentItem((viewpager?.adapter as? MyPagerAdapter)?.getIndex(v.id) ?: 0, true)
+            }
+            true
         }
     }
 
@@ -102,10 +144,10 @@ class SendMsgView : FrameLayout {
                 addBean(key, "vehicle", "交通", R.id.rb_emoji_jt, array, list)
                 addBean(key, "number", "符号", R.id.rb_emoji_fh, array, list)
             }
-            val context=context
-            if(context is AppCompatActivity){
-                val activity=context
-                viewpager?.adapter = MyPagerAdapter(editText,list, activity.supportFragmentManager)
+            val context = context
+            if (context is AppCompatActivity) {
+                val activity = context
+                viewpager?.adapter = MyPagerAdapter(editText, list, activity.supportFragmentManager)
                 viewpager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                     override fun onPageScrollStateChanged(state: Int) {
 
@@ -188,6 +230,15 @@ private class MyPagerAdapter(var editText: EditText, var list: MutableList<Emoji
         return list.size
     }
 
+    fun getIndex(id: Int): Int {
+        list.forEachIndexed { index, emojiChildBean ->
+            if (id == emojiChildBean.id) {
+                return index
+            }
+        }
+        return 0
+    }
+
     override fun getPageTitle(position: Int): CharSequence {
         return list[position].name
     }
@@ -199,4 +250,5 @@ private class MyPagerAdapter(var editText: EditText, var list: MutableList<Emoji
         }
         return fragment
     }
+
 }

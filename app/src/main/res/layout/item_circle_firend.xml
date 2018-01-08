@@ -109,13 +109,15 @@
                     android:src="@drawable/icon79" />
             </LinearLayout>
 
-            <com.yitu.etu.widget.MgridView1
+            <com.yitu.etu.widget.MListView
                 android:id="@+id/chartGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:cacheColorHint="@color/transparent"
                 android:listSelector="@color/transparent"
                 android:numColumns="1"
+                android:divider="@color/transparent"
+                android:dividerHeight="2dp"
                 android:verticalSpacing="2dp" />
         </LinearLayout>
 

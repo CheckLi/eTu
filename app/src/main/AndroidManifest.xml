@@ -338,7 +338,7 @@
         <activity android:name=".ui.activity.MyWalletHistoryActivity"/>
         <activity
             android:name=".ui.activity.SearchResultSceneActivity"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity android:name=".ui.activity.RelaseTravelActivity"/>
         <activity android:name=".ui.activity.SendSceneMsgActivity"/>
         <activity android:name=".ui.activity.MapActivity"/>

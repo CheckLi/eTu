@@ -1,6 +1,7 @@
 package com.yitu.etu.ui.adapter;
 
 import android.content.Context;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -63,8 +64,7 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
         viewHolder.btn_delete = (ImageView) convertView.findViewById(R.id.btn_delete);
 
     }
-
-    boolean showDelete = false;
+    SparseArray<String> delArray=new SparseArray<String>();
 
     @Override
     public void bindData(final int position, View convertView, final ViewHolder viewHolder) {
@@ -114,8 +114,7 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
                     }
                 }
             });
-            if (showDelete) {
-                viewHolder.btn_delete.setVisibility(View.VISIBLE);
+
                 viewHolder.btn_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -123,11 +122,14 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
                         removeByPosition(position);
                     }
                 });
-            }
+                if(delArray.indexOfKey(position)>-1){
+                    viewHolder.btn_delete.setVisibility(View.VISIBLE);
+                }
+
             convertView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    showDelete = true;
+                    delArray.put(position,position+"");
                     notifyDataSetChanged();
                     return true;
                 }

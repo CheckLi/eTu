@@ -3,6 +3,7 @@ package com.yitu.etu.ui.adapter;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yitu.etu.EtuApplication;
@@ -52,7 +53,7 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
     @Override
     public void initItemView(int position, View convertView, ViewHolder viewHolder) {
         viewHolder.imageGridView = (MgridView1) convertView.findViewById(R.id.gridView);
-        viewHolder.chartGridView = (MgridView1) convertView.findViewById(R.id.chartGridView);
+        viewHolder.chartGridView = (ListView) convertView.findViewById(R.id.chartGridView);
         viewHolder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
         viewHolder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
         viewHolder.tv_good = (TextView) convertView.findViewById(R.id.tv_good);
@@ -200,7 +201,7 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {
         MgridView1 imageGridView;
-        MgridView1 chartGridView;
+        ListView chartGridView;
         TextView tv_name, tv_time, tv_good, text, tv_delete;
         ImageView image, img_pl, img_dz;
 

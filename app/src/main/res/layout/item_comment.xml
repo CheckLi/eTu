@@ -58,8 +58,13 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-            <TextView
+            <EditText
                 android:id="@+id/text"
+                android:enabled="false"
+                android:focusable="false"
+                android:editable="false"
+                android:background="@null"
+                android:focusableInTouchMode="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="的撒多撒多121"

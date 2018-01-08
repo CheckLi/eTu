@@ -127,10 +127,10 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
             }
         });
         statusBarHeight=getStatusBarHeight();
-       /* int screenHeight = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.actionBarSize)-statusBarHeight;
+        int screenHeight = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.actionBarSize)-statusBarHeight;
         ViewGroup.LayoutParams params = parent.getLayoutParams();
         params.height = (int) (screenHeight*0.5f);
-        parent.setLayoutParams(params);*/
+        parent.setLayoutParams(params);
     }
 
     /**
@@ -142,8 +142,8 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         int bottomHeight = bottomView.getHeight();
         int height = parent.getHeight();
         int toHeight = 0;
-        int cha=(int)(5*getResources().getDisplayMetrics().density);
-        if (!left) {
+        int cha=(int)(10*getResources().getDisplayMetrics().density);
+        if (left) {
             if (Math.abs(height-bottomHeight) <=cha  || Math.abs(height-screenHeight) <=cha ) {
                 toHeight = screenHeight >> 1;
             } else if (Math.abs(height-screenHeight*0.5) <=cha) {
@@ -237,9 +237,9 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
                                 } else {
                                     filterKey = bean2.id;
                                 }
-                                if (filterKey >= 0) {
-                                    remove(key);
-                                }
+                            }
+                            if (filterKey >= 0) {
+                                remove(key);
                             }
                         }
                     } else {
@@ -411,24 +411,27 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         markerOption.position(new LatLng(lat, lng));
         markerOption.draggable(true);//设置Marker可拖动
         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-        markerOption.setFlat(true);//设置marker平贴地图效果
+        markerOption.setFlat(false);//设置marker平贴地图效果
 
         Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 final View view = LayoutInflater.from(getActivity()).inflate(R.layout.mark_real_time, null,
                         false);
-                ImageView image = (ImageView) view.findViewById(R.id.image);
-                image.setImageBitmap(bitmap);
-                markerOption.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view)));
-                mMarkers.get(userId).mMarker = mAmap.addMarker(markerOption);
-                for (int i = 0; i < mMarkers.size(); i++) {
-                    int key = mMarkers.keyAt(i);
-                    if (mMarkers.get(key) != null && mMarkers.get(key).mMarker != null) {
-                        boundsBuilder.include(mMarkers.get(key).mMarker.getPosition());//把所有点都include进去（LatLng类型）
+                if(mMarkers.indexOfKey(userId)>=0&&mMarkers.get(userId)!=null){
+                    ImageView image = (ImageView) view.findViewById(R.id.image);
+                    image.setImageBitmap(bitmap);
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view)));
+                    mMarkers.get(userId).mMarker = mAmap.addMarker(markerOption);
+                    for (int i = 0; i < mMarkers.size(); i++) {
+                        int key = mMarkers.keyAt(i);
+                        if (mMarkers.get(key) != null && mMarkers.get(key).mMarker != null) {
+                            boundsBuilder.include(mMarkers.get(key).mMarker.getPosition());//把所有点都include进去（LatLng类型）
+                        }
                     }
+                    mAmap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));//第二个参数为四周留空宽度
                 }
-                mAmap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 15));//第二个参数为四周留空宽度
+
             }
 
             @Override
@@ -441,6 +444,9 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
 
             }
         };
+        if(url.startsWith(Urls.address+"http")){
+            url=url.replace(Urls.address,"");
+        }
         Picasso.with(getActivity())
                 .load(url)
                 .config(Bitmap.Config.RGB_565)

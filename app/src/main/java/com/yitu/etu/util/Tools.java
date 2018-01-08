@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -392,4 +394,38 @@ public class Tools {
     public static void  sendImageMessage(ImageMessage message, Conversation.ConversationType type,String mTargetId) {
         RongIM.getInstance().sendImageMessage(type, mTargetId, message, null, null, null);
     }
+
+    /**
+     * 解决在页面底部置输入框，输入法弹出遮挡部分输入框的问题
+     * @param root 页面根元素
+     */
+    public static void controlKeyboardLayout(final View root,
+                                             final View editLayout) {
+        // TODO Auto-generated method stub
+        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                // TODO Auto-generated method stub
+                Rect rect=new Rect();
+                //获取root在窗体的可视区域
+                root.getWindowVisibleDisplayFrame(rect);
+                //获取root在窗体的不可视区域高度(被其他View遮挡的区域高度)
+                int rootInVisibleHeigh=root.getRootView().getHeight()-rect.bottom;
+                //若不可视区域高度大于100，则键盘显示
+                if (rootInVisibleHeigh > 100) {
+                    int[] location = new int[2];
+                    //获取editLayout在窗体的坐标
+                    editLayout.getLocationInWindow(location);
+                    //计算root滚动高度，使editLayout在可见区域
+                    int srollHeight = (location[1] + editLayout.getHeight()) - rect.bottom;
+                    root.scrollTo(0, srollHeight);
+                } else {
+                    //键盘隐藏
+                    root.scrollTo(0, 0);
+                }
+            }
+        });
+    }
+
 }

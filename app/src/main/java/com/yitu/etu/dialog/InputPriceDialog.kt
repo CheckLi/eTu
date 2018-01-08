@@ -63,8 +63,13 @@ class InputPriceDialog : Dialog {
     fun setRightBtn(content: String, tips: String, onClick: (price: Float) -> Unit) {
         btn_yes.text = content
         btn_yes.setOnClickListener {
-            if (!tv_input_price.text.isNullOrBlank()) {
-                onClick(tv_input_price.text.toString().toFloat())
+            if (!tv_input_price.text.isNullOrBlank()||tips.isNullOrBlank()) {
+                if(tips.isNullOrBlank()){
+                    onClick(0f)
+                }else{
+                    onClick(tv_input_price.text.toString().toFloat())
+                }
+
             } else {
                 context.showToast(tips)
             }
@@ -83,10 +88,11 @@ class InputPriceDialog : Dialog {
     }
 
     fun setLeftBtnResultText(content: String, tips: String, onClick: (content: String) -> Unit) {
-        btn_yes.text = content
-        btn_yes.setOnClickListener {
-            if (!tv_input_price.text.isNullOrBlank()) {
+        btn_cancel.text = content
+        btn_cancel.setOnClickListener {
+            if (!tv_input_price.text.isNullOrBlank()||tips.isNullOrBlank()) {
                 onClick(tv_input_price.text.toString())
+                dismiss()
             } else {
                 context.showToast(tips)
             }
@@ -96,6 +102,7 @@ class InputPriceDialog : Dialog {
     fun setLeftBtn(content: String, onClick: (v: View) -> Unit) {
         btn_yes.text = content
         btn_yes.setOnClickListener {
+            it.tag=tv_input_price.text.toString()
             onClick(it)
             dismiss()
         }

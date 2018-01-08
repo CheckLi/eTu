@@ -369,7 +369,7 @@ public class SearchResultSceneActivity extends BaseActivity {
         }
     }
 
-    public void sendMsg(String text) {
+    public void sendMsg(final String text) {
         if (EtuApplication.getInstance().isLogin()) {
             HashMap<String, String> params = new HashMap<>();
             params.put("spot_id", id);
@@ -388,6 +388,7 @@ public class SearchResultSceneActivity extends BaseActivity {
                     userBean.setName(userInfo.getName());
                     userBean.setId(userInfo.getId());
                     response.getData().setUser(userBean);
+                    response.getData().setText(text);
                     commentAdapter.addToFirst(response.getData());
                     ToastUtil.showMessage(response.getMessage());
                 }

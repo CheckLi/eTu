@@ -163,6 +163,9 @@ class ChatActivity : BaseActivity() {
     override fun onDestroy() {
         EventBus.getDefault().unregister(this)
         hand.removeCallbacks(run)
+        if(chatId!=null) {
+           sendMessage()
+        }
         super.onDestroy()
     }
 
@@ -215,6 +218,14 @@ class ChatActivity : BaseActivity() {
      * 退出共享发送消息
      */
     fun exitRealTime() {
+        sendMessage()
+        messageType=null
+        chatId=null
+        mConversationType=null
+        supportFragmentManager.popBackStack()
+    }
+
+    private fun sendMessage() {
         if (messageType == Message.MessageDirection.SEND) {
             val message1 = RealTimeLocationEndMessage.obtain("位置共享结束")
             val message = Message.obtain(intent.data.getQueryParameter("targetId"), mConversationType, message1)
@@ -223,10 +234,6 @@ class ChatActivity : BaseActivity() {
         } else {
             cancel(Urls.URL_CANCEL_LOCATION, hashMapOf("chat_id" to chatId.Empty()))
         }
-        messageType=null
-        chatId=null
-        mConversationType=null
-        supportFragmentManager.popBackStack()
     }
 
     private fun cancel(url: String, params: HashMap<String, String>) {

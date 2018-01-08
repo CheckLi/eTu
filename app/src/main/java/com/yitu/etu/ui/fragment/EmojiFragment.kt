@@ -28,7 +28,7 @@ class EmojiFragment : BaseFragment() {
     override fun getLayout(): Int = R.layout.emoji_fragment_layout
 
     override fun initView() {
-        data = arguments.getSerializable("list") as EmojiChildBean
+        data = arguments.getParcelable("list")
         if (data != null) {
             gridView.adapter = EmojiAdapter(data?.list ?: mutableListOf())
         }
