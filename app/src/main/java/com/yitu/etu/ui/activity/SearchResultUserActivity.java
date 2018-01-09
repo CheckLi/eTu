@@ -17,6 +17,7 @@ import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
 import com.yitu.etu.ui.adapter.CircleFirendAdapter;
+import com.yitu.etu.util.KotlinUtilKt;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.ListSlideView;
@@ -50,7 +51,7 @@ public class SearchResultUserActivity extends BaseActivity {
     private void checkFriend(String uiserid) {
         HashMap<String, String> params = new HashMap<>();
         params.put("suser_id", uiserid);
-        Http.post(Urls.CIRCLE_USER_INDEX, params, new GsonCallback<ObjectBaseEntity<Object>>() {
+        Http.post(Urls.URL_CHECK_FRIEND, params, new GsonCallback<ObjectBaseEntity<Object>>() {
             @Override
             public void onError(Call call, Exception e, int i) {
                 hideWaitDialog();
@@ -70,13 +71,18 @@ public class SearchResultUserActivity extends BaseActivity {
                 if (EtuApplication.getInstance().isLogin()) {
                     String[] array = new String[]{"加为好友", "发起聊天"};
                     if (isFriend) {
-                        array = new String[]{"发起聊天"};
+                        array = new String[]{"修改备注","发起聊天"};
                     }
                     Tools.getPopupWindow(SearchResultUserActivity.this, array, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             if (position == 0) {
-                                addFriend();
+                                if(isFriend){
+                                    KotlinUtilKt.changOtherName(SearchResultUserActivity.this,data.user_id);
+                                }else{
+                                    addFriend();
+                                }
+
                             } else if (position == 1) {
                                 if (info != null && info.getUser() != null) {
                                     Tools.startChat(info.getUser().name, info.getUser().getId() + "", SearchResultUserActivity.this);

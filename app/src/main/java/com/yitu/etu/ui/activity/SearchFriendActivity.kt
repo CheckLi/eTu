@@ -49,7 +49,7 @@ class SearchFriendActivity : BaseActivity() {
 
     override fun initListener() {
         iv_search.setOnClickListener {
-            if (et_search_keyword.text.isNullOrBlank()) {
+            if (et_search_keyword.text.isNullOrBlank()&&type==0) {
                 showToast("请输入昵称或手机号")
             } else {
                 search()
@@ -77,7 +77,11 @@ class SearchFriendActivity : BaseActivity() {
 
     fun search() {
         showWaitDialog("搜索中...")
-        post(Urls.URL_SEARCH_USER, hashMapOf("type" to type.toString(), "name" to et_search_keyword.text.toString()), object : GsonCallback<ObjectBaseEntity<UserInfo>>() {
+        var keyword=et_search_keyword.text.toString()
+        if(type==1){
+            keyword=et_search_keyword.tag?.toString()?:""
+        }
+        post(Urls.URL_SEARCH_USER, hashMapOf("type" to type.toString(), "name" to keyword), object : GsonCallback<ObjectBaseEntity<UserInfo>>() {
             override fun onError(call: Call?, e: Exception?, id: Int) {
                 showToast("用户不存在")
                 hideWaitDialog()
@@ -111,8 +115,7 @@ class SearchFriendActivity : BaseActivity() {
                 var content = data?.getStringExtra("content")
                 if (!TextUtils.isEmpty(content) && content.indexOf("etuXs72hfjepIdnv76") >= 0) {
                     content = content.replace(Regex("etuXs72hfjepIdnv76://ID"), "")
-                    et_search_keyword.setText(content)
-                    et_search_keyword.setSelection(et_search_keyword.text.length)
+                    et_search_keyword.tag=content
                     iv_search.performClick()
                 } else {
                     showToast("无法识别用户信息")

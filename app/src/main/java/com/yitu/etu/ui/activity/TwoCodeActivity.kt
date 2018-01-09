@@ -7,13 +7,13 @@ import android.net.Uri
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
+import com.google.zxing.qrcode.QRCodeWriter
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.yitu.etu.R
 import com.yitu.etu.util.ImageUtil
 import com.yitu.etu.util.addHost
 import com.yitu.etu.util.userInfo
-import com.yitu.etu.widget.image.QRCodeWriter
 import io.rong.message.ImageMessage
 import kotlinx.android.synthetic.main.activity_two_code.*
 import java.io.File

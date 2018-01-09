@@ -13,15 +13,13 @@ import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
 import com.yitu.etu.eventBusItem.EventOpenRealTime
 import com.yitu.etu.eventBusItem.EventPlayYanHua
+import com.yitu.etu.eventBusItem.EventRefreshName
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.fragment.Chat.sendMessage
 import com.yitu.etu.ui.fragment.RealTimeMapFragment
-import com.yitu.etu.util.Empty
-import com.yitu.etu.util.Tools
-import com.yitu.etu.util.isLogin
-import com.yitu.etu.util.post
+import com.yitu.etu.util.*
 import com.yitu.etu.widget.chat.RealTimeLocationEndMessage
 import io.rong.imkit.RongIM
 import io.rong.imkit.fragment.ConversationFragment
@@ -44,7 +42,7 @@ class ChatActivity : BaseActivity() {
     private var messageType: Message.MessageDirection? = null
     private var chatId: String? = null
     private lateinit var yanhua: FireWorkView
-    private var isFriend=false
+    private var isFriend = false
 
     override fun getLayout(): Int = R.layout.activity_chat
 
@@ -53,9 +51,9 @@ class ChatActivity : BaseActivity() {
         val uri = intent.data
         val typeStr = uri?.lastPathSegment?.toUpperCase(Locale.US)
         mConversationType = Conversation.ConversationType.valueOf(typeStr.Empty())
-        if(mConversationType==Conversation.ConversationType.PRIVATE) {
+        if (mConversationType == Conversation.ConversationType.PRIVATE) {
             checkFriden()
-        }else{
+        } else {
             setRightBtn()
         }
     }
@@ -66,11 +64,11 @@ class ChatActivity : BaseActivity() {
             val typeStr = uri?.lastPathSegment?.toUpperCase(Locale.US)
             mConversationType = Conversation.ConversationType.valueOf(typeStr.Empty())
             if (mConversationType == Conversation.ConversationType.PRIVATE) {
-                var array=arrayOf("旅友圈", "加为好友")
-                if(isFriend){
-                    array=arrayOf("旅友圈")
+                var array = arrayOf("旅友圈", "加为好友")
+                if (isFriend) {
+                    array = arrayOf("旅友圈", "修改备注")
                 }
-                val pop = Tools.getPopupWindow(this@ChatActivity,array , object : AdapterView.OnItemClickListener {
+                val pop = Tools.getPopupWindow(this@ChatActivity, array, object : AdapterView.OnItemClickListener {
                     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         if (!isLogin()) {
                             showToast("请先登录")
@@ -79,7 +77,12 @@ class ChatActivity : BaseActivity() {
                                 0 -> nextActivity<SearchResultUserActivity>(
                                         "user_id" to intent.data.getQueryParameter("targetId")
                                 )
-                                1 -> addFriend()
+                                1 ->
+                                    if (isFriend) {
+                                        changOtherName(intent.data.getQueryParameter("targetId"))
+                                    } else {
+                                        addFriend()
+                                    }
                                 else -> ""
                             }
                         }
@@ -170,8 +173,8 @@ class ChatActivity : BaseActivity() {
     override fun onDestroy() {
         EventBus.getDefault().unregister(this)
         hand.removeCallbacks(run)
-        if(chatId!=null) {
-           sendMessage()
+        if (chatId != null) {
+            sendMessage()
         }
         super.onDestroy()
     }
@@ -199,9 +202,9 @@ class ChatActivity : BaseActivity() {
     @Subscribe
     fun onEventOpenRealTime(event: EventOpenRealTime) {
         if (event.add) {
-            messageType=event.bundle?.getSerializable("type") as Message.MessageDirection
-            mConversationType=event.bundle?.getSerializable("chatType") as Conversation.ConversationType
-            this.chatId=event.bundle?.getString("chat_id")
+            messageType = event.bundle?.getSerializable("type") as Message.MessageDirection
+            mConversationType = event.bundle?.getSerializable("chatType") as Conversation.ConversationType
+            this.chatId = event.bundle?.getString("chat_id")
             addMaps(chatId.Empty())
         } else {
             exitRealTime()
@@ -226,9 +229,9 @@ class ChatActivity : BaseActivity() {
      */
     fun exitRealTime() {
         sendMessage()
-        messageType=null
-        chatId=null
-        mConversationType=null
+        messageType = null
+        chatId = null
+        mConversationType = null
         supportFragmentManager.popBackStack()
     }
 
@@ -260,10 +263,10 @@ class ChatActivity : BaseActivity() {
     /**
      * 检查关系
      */
-    private fun checkFriden(){
+    private fun checkFriden() {
         Http.post(Urls.URL_CHECK_FRIEND, hashMapOf("suser_id" to intent.data.getQueryParameter("targetId")), object : GsonCallback<ObjectBaseEntity<Any>>() {
             override fun onResponse(response: ObjectBaseEntity<Any>, id: Int) {
-                isFriend=response.success()
+                isFriend = response.success()
                 setRightBtn()
             }
 
@@ -274,4 +277,8 @@ class ChatActivity : BaseActivity() {
         })
     }
 
+    @Subscribe
+    fun onEventRefershName(event: EventRefreshName) {
+        title = event.name
+    }
 }

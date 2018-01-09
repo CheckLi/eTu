@@ -87,8 +87,10 @@ class FriendListActivity : BaseActivity() {
 
     fun refresh(isRefresh: Boolean) {
         if (isRefresh) {
+            showWaitDialog("获取中...")
             RefreshSuccessInit(layout_refresh, isRefresh)
         }
+
         post(Urls.URL_FRIEND_LIST, hashMapOf("page" to page.toString()), object : GsonCallback<ArrayBaseEntity<UserInfo>>() {
             override fun onResponse(response: ArrayBaseEntity<UserInfo>, id: Int) {
                 hideWaitDialog()

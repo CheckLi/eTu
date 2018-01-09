@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
@@ -115,7 +116,6 @@ public class Tools {
         } else {
             view.setBackgroundResource(R.drawable.bg1111);
         }
-
         listView.setLayoutParams(new LinearLayout.LayoutParams(maxLength + dp2px(context, 3), LinearLayout.LayoutParams.WRAP_CONTENT));
         listView.setAdapter(new SimpleAdapter(context, list, R.layout.item_pop, new String[]{"data"}, new int[]{R.id.text}));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -435,6 +435,17 @@ public class Tools {
 
             }
         });
+    }
+
+    /**
+     * 修改名字
+     * @param id
+     * @param name
+     * @param url
+     */
+    public static void changName(String id,String name,String url){
+        io.rong.imlib.model.UserInfo userInfo = new io.rong.imlib.model.UserInfo(id,name, Uri.parse(url));
+        RongIM.getInstance().refreshUserInfoCache(userInfo);
     }
 
     /**
