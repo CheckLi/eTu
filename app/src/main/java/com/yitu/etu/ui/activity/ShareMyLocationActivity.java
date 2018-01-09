@@ -2,9 +2,12 @@ package com.yitu.etu.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +42,13 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.yitu.etu.R;
 import com.yitu.etu.ui.adapter.PoiSearchAdapter;
+import com.yitu.etu.util.Tools;
 import com.yitu.etu.widget.MapContainer;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ShareMyLocationActivity extends BaseActivity {
     LatLonPoint point;
@@ -58,6 +65,7 @@ public class ShareMyLocationActivity extends BaseActivity {
         setRightText("完成", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                mapsFragment.getMapBitmap();
                 getAddress();
             }
         });
@@ -98,7 +106,21 @@ public class ShareMyLocationActivity extends BaseActivity {
     public void initListener() {
 
     }
+//把传进来的bitmap对象转换为宽度为x,长度为y的bitmap对象
 
+    public static Bitmap big(Bitmap b,float x,float y)
+    {
+        float f=y/x;
+        int w=b.getWidth();
+        int h=b.getHeight();
+        float sx=f*w;//要强制转换，不转换我的在这总是死掉。
+        float sy=(float)y/h;
+        Matrix matrix = new Matrix();
+        matrix.postScale(sx, sy); // 长和宽放大缩小的比例
+        Bitmap resizeBmp = Bitmap.createBitmap(b, 0, 0, w,
+                h, matrix, true);
+        return resizeBmp;
+    }
     @SuppressLint("ValidFragment")
     public class MapsFragment2 extends SupportMapFragment implements AMapLocationListener, LocationSource {
         // 我的位置监听器
@@ -113,6 +135,44 @@ public class ShareMyLocationActivity extends BaseActivity {
 
         private Marker marker;
         private PoiSearchAdapter poiSearchAdapter;
+
+        public void getMapBitmap(){
+            showWaitDialog("请稍等...");
+            /**
+             * 对地图进行截屏
+             */
+            mAmap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
+                @Override
+                public void onMapScreenShot(Bitmap bitmap) {
+
+                }
+
+                @Override
+                public void onMapScreenShot(Bitmap bitmap, int status) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+                    if(null == bitmap){
+                        return;
+                    }
+                    String path= Environment.getExternalStorageDirectory()+"/etuLocation/"+ sdf.format(new Date()) + ".png";
+                    Tools.saveImage(path,big(bitmap,300f,200f),200);
+
+                    if (point != null) {
+                        Intent intent = new Intent();
+                        hideWaitDialog();
+                        PoiItem data = mapsFragment.poiSearchAdapter.getSelectStr();
+                        if (data != null) {
+                            intent.putExtra("address", data.getSnippet());
+                            LatLng latLng = new LatLng(data.getLatLonPoint().getLatitude(), data.getLatLonPoint().getLongitude());
+                            intent.putExtra("latLng", latLng);
+                            intent.putExtra("image", Uri.fromFile(new File(path)));
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+
+                }
+            });
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,

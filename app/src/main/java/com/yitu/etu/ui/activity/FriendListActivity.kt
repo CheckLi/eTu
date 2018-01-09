@@ -36,9 +36,9 @@ class FriendListActivity : BaseActivity() {
         if (select) {
             setRightText("发起群聊") {
                 val list = adapter.getIds()
-                list.add("22")
                 if (list.size > 0) {
                     Tools.startChatGroup(this@FriendListActivity, list, userInfo().name+"的群聊")
+                    finish()
                 } else {
                     showToast("请选择用户")
                 }

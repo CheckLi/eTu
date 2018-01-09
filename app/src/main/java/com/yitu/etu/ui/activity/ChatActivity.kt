@@ -50,7 +50,14 @@ class ChatActivity : BaseActivity() {
 
     override fun initActionBar() {
         title = intent.data.getQueryParameter("title")
-        checkFriden()
+        val uri = intent.data
+        val typeStr = uri?.lastPathSegment?.toUpperCase(Locale.US)
+        mConversationType = Conversation.ConversationType.valueOf(typeStr.Empty())
+        if(mConversationType==Conversation.ConversationType.PRIVATE) {
+            checkFriden()
+        }else{
+            setRightBtn()
+        }
     }
 
     private fun setRightBtn() {

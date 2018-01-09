@@ -146,6 +146,9 @@ data class PayBean(var id:Int,var price:Float,var desc:String,var rechargetype: 
 data class PayResultBean(
 		@SerializedName("parstr") val parstr: Parstr = Parstr()
 )
+data class ListHeadBean(
+		@SerializedName("result") val result: Int =0
+)
 
 data class Parstr(
 		@SerializedName("appid") val appid: String = "", //wx0f5237d79cf12c32

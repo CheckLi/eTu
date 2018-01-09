@@ -3,6 +3,7 @@ package com.yitu.etu.dialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.text.InputType
 import android.view.View
 import com.yitu.etu.R
 import com.yitu.etu.tools.InputFilterHelper
@@ -31,6 +32,7 @@ class WithdrawDialog : Dialog {
             when(checkedId){
                 R.id.rb_alipay->{
                     type=1
+                    et_user_account.inputType=InputType.TYPE_CLASS_NUMBER
                     et_user_account.setText("")
                     et_user_account.hint = "请输入到账支付宝账号"
                     et_user_card.visibility=View.GONE
@@ -38,6 +40,7 @@ class WithdrawDialog : Dialog {
                 }
                 R.id.rb_weixin->{
                     type=2
+                    et_user_account.inputType=InputType.TYPE_CLASS_TEXT
                     et_user_account.setText("")
                     et_user_account.hint = "请输入到账微信账号"
                     et_user_card.visibility=View.GONE
@@ -45,6 +48,7 @@ class WithdrawDialog : Dialog {
                 }
                 R.id.rb_bank_card->{
                     type=3
+                    et_user_account.inputType=InputType.TYPE_CLASS_NUMBER
                     et_user_account.setText("")
                     et_user_account.hint = "请输入到账银行卡账号"
                     et_user_card.visibility=View.VISIBLE
@@ -76,6 +80,7 @@ class WithdrawDialog : Dialog {
             1->{
                 when {
                     userAccount.isNullOrBlank() -> {
+
                         context.showToast("请输入支付宝账号")
                         false
                     }
@@ -89,6 +94,7 @@ class WithdrawDialog : Dialog {
             2->{
                 when {
                     userAccount.isNullOrBlank() -> {
+
                         context.showToast("请输入微信账号")
                         false
                     }
@@ -143,5 +149,19 @@ class WithdrawDialog : Dialog {
 
     fun getType():Int{
         return type
+    }
+
+    fun getContent(pos:Int):String{
+        val userAccount=et_user_account.text.toString()
+        val userCard=et_user_card.text.toString()
+        val userName=et_user_name.text.toString()
+        val userPrice=et_user_price.text.toString()
+        return when(pos){
+            0->userAccount
+            1->userCard
+            2->userName
+            3->userPrice
+            else ->""
+        }
     }
 }

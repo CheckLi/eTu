@@ -63,7 +63,7 @@ data class OrderDetail(
 		@SerializedName("check_sn") val checkSn: String, //20171208125304125654
 		@SerializedName("check_time") val checkTime: Int, //1513313584
 		@SerializedName("status") val status: Int, //2
-		@SerializedName("created") val created: Int, //1512708784
+		@SerializedName("created") val created: Long, //1512708784
 		@SerializedName("updated") val updated: Int, //1512711540
 		@SerializedName("product") val product: List<Product2>,
 		@SerializedName("shop") val shop: Shop

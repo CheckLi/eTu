@@ -98,12 +98,12 @@ class ShareFriendActivity : BaseActivity() {
             dialog.setMessage("是否分享到聊天")
             dialog.setRightBtn("确认") {
                 if(messageImage!=null){
-                    Tools.sendImageMessage(messageImage,p2?.conversationType,p2?.conversationTargetId)
+                    Tools.sendImageMessage(messageImage,p2?.conversationType,p2?.conversationTargetId,this@ShareFriendActivity)
                 }else {
                     message?.userId = p2?.conversationTargetId
-                    dialog.dismiss()
                     Tools.sendMessage(message, p2?.conversationType, this@ShareFriendActivity)
                 }
+                dialog.dismiss()
             }
             dialog.showDialog()
             return true

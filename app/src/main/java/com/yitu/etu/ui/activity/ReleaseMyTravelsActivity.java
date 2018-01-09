@@ -137,19 +137,31 @@ public class ReleaseMyTravelsActivity extends BaseActivity {
                         Http.post(Urls.RELEASE_My_Travel, params, new GsonCallback<HttpStateEntity>() {
                             @Override
                             public void onError(Call call, Exception e, int i) {
-                                hideWaitDialog();
-                                showToast("发布失败");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideWaitDialog();
+                                        hideWaitDialog();
+                                        showToast("发布失败");
+                                    }
+                                });
+
                             }
 
                             @Override
-                            public void onResponse(HttpStateEntity response, int i) {
-                                hideWaitDialog();
-                                if (response.success()) {
-                                    EventBus.getDefault().post(new EventRefresh(className));
-                                    setResult(RESULT_OK);
-                                    finish();
-                                }
-                                showToast(response.getMessage());
+                            public void onResponse(final HttpStateEntity response, int i) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideWaitDialog();
+                                        if (response.success()) {
+                                            EventBus.getDefault().post(new EventRefresh(MyTravelsActivity.class.getSimpleName()));
+                                            setResult(RESULT_OK);
+                                            finish();
+                                        }
+                                        showToast(response.getMessage());
+                                    }
+                                });
 
                             }
                         });

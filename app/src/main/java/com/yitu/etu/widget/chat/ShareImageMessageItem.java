@@ -74,7 +74,7 @@ public class ShareImageMessageItem extends IContainerItemProvider.MessageProvide
     public void onItemClick(View view, int i, ShareMessage textMessage, UIMessage uiMessage) {
         Bundle bundle = new Bundle();
         bundle.putString("id", textMessage.getBindid());
-        bundle.putString("travels_id", textMessage.getBindid());
+        bundle.putInt("travels_id", Integer.parseInt(textMessage.getBindid()));
         bundle.putString("title", textMessage.getTitle());
         bundle.putString("type", textMessage.getType());
         switch (textMessage.getType()) {

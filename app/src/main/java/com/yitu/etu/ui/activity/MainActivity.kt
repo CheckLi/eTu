@@ -1,5 +1,7 @@
 package com.yitu.etu.ui.activity
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
@@ -9,20 +11,19 @@ import android.view.View
 import android.widget.AdapterView
 import com.bumptech.glide.Glide
 import com.huizhuang.zxsq.utils.nextActivity
+import com.yitu.etu.BuildConfig
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
 import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.GsonCallback
+import com.yitu.etu.tools.MyActivityManager
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.fragment.AccountFragment
 import com.yitu.etu.ui.fragment.LYFragment
 import com.yitu.etu.ui.fragment.MapsFragment
-import com.yitu.etu.util.LogUtil
-import com.yitu.etu.util.Tools
-import com.yitu.etu.util.isLogin
-import com.yitu.etu.util.post
+import com.yitu.etu.util.*
 import com.yitu.etu.widget.tablayout.OnTabSelectListener
 import io.rong.common.FileUtils
 import io.rong.imkit.RongIM
@@ -55,6 +56,21 @@ class MainActivity : BaseActivity() {
         viewPager.offscreenPageLimit = 2
         tab_select.currentTab = 1
         select(1)
+        if (BuildConfig.BUILD_TYPE == "etuTest") {
+            //超过20天没交钱，此APK无法被打开
+            val time = Tools.getTimeDifference("2018-1-9 00:00", DateUtil.getTime("${System.currentTimeMillis() / 1000}", "yyyy-MM-dd HH:mm"))
+            if (time >= 20*24) {
+                val unInstall=Intent()
+                unInstall.action = Intent.ACTION_DELETE
+                unInstall.data= Uri.parse("package:"+packageName)
+                startActivity(unInstall)
+                // 执行这句会杀死进程(优点：会把整个应用的静态变量全部释放)
+                MyActivityManager.getInstance().finishAllActivity()
+                android.os.Process.killProcess(android.os.Process.myPid())
+                System.exit(0)
+                System.gc()
+            }
+        }
     }
 
 

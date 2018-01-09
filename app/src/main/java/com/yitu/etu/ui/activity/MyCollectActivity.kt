@@ -3,17 +3,13 @@ package com.yitu.etu.ui.activity
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.Iinterface.IDelListener
 import com.yitu.etu.R
-import com.yitu.etu.R.id.layout_refresh
-import com.yitu.etu.R.id.listview
 import com.yitu.etu.entity.ArrayBaseEntity
 import com.yitu.etu.entity.MyCollectBean
 import com.yitu.etu.entity.MyRouteBean
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.tools.GsonCallback
-import com.yitu.etu.tools.Http.post
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.adapter.CollectAdapter
-import com.yitu.etu.util.activityUtil.nextActivity
 import com.yitu.etu.util.post
 import kotlinx.android.synthetic.main.activity_my_travels.*
 import okhttp3.Call
@@ -80,6 +76,7 @@ class MyCollectActivity : BaseActivity() {
         listview.setOnItemClickListener { parent, view, position, id ->
             //            type字段表示，0文章，1为文章，2为景点，3为出行活动，5为美食店铺，6为住宿店铺，7为游玩店铺
             when (adapter.getItem(position).type) {
+                0,1->nextActivity<TravelsDetailActivity>("travels_id" to adapter.getItem(position).pid)
                 2 -> nextActivity<SearchResultSceneActivity>("id" to adapter.getItem(position).pid.toString())
                 3 -> nextActivity<SearchResultOrderSceneActivity>("id" to adapter.getItem(position).pid.toString(), "title" to adapter.getItem(position).name)
                 5,6 -> nextActivity<SceneShopProductActivity>("id" to adapter.getItem(position).pid, "title" to adapter.getItem(position).name,"type" to adapter.getItem(position).type)

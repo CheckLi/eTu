@@ -20,11 +20,13 @@
             android:padding="10dp">
 
             <EditText
+                android:id="@+id/et_title"
                 style="@style/recomment_edit_style"
                 android:layout_marginTop="0dp"
                 android:hint="景区名称"/>
 
             <EditText
+                android:id="@+id/et_intro"
                 style="@style/recomment_edit_style"
                 android:gravity="top"
                 android:hint="详细介绍..."
@@ -38,12 +40,14 @@
                 />
 
             <EditText
+                android:id="@+id/tv_ts"
                 style="@style/recomment_edit_style"
                 android:gravity="top"
                 android:hint="景区特色"/>
 
 
             <EditText
+                android:id="@+id/et_price"
                 style="@style/recomment_edit_style"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
@@ -75,6 +79,7 @@
             </LinearLayout>
 
             <EditText
+                android:id="@+id/et_phone"
                 style="@style/recomment_edit_style"
                 android:gravity="top"
                 android:hint="输入联系电话"

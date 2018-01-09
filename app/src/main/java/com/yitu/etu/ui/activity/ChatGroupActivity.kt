@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
+import com.yitu.etu.dialog.TipsDialog
 import com.yitu.etu.entity.GroupBean
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Http
+import com.yitu.etu.tools.MyActivityManager
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.adapter.MyBaseAdapter
 import com.yitu.etu.ui.adapter.ViewHolder
@@ -68,13 +70,6 @@ class ChatGroupActivity : BaseActivity() {
                                 itor.remove()
                             }
                         }
-                       /* response.data.result.forEach {
-                            if (sendId == it.id) {
-                                user = it
-                                response.data.result.remove(it)
-                                return@forEach
-                            }
-                        }*/
                         if (user != null) {
                             response.data.result.add(0, user)
                         }
@@ -104,6 +99,30 @@ class ChatGroupActivity : BaseActivity() {
     override fun initListener() {
         tv_see_action.setOnClickListener {
             nextActivity<SearchResultOrderSceneActivity>("id" to actionId.toString(), "title" to "旅行招募")
+        }
+
+        /**
+         * 退出并删除
+         */
+        btn_register.setOnClickListener {
+            val dialog=TipsDialog(this@ChatGroupActivity,"温馨提示")
+            dialog.setMessage("确认要退出聊天组吗？")
+            dialog.setRightBtn("确认"){
+                RongIM.getInstance().quitDiscussion(chat_id, object : RongIMClient.OperationCallback() {
+                    override fun onSuccess() {
+                        showToast("退出成功")
+                        dialog.dismiss()
+                        MyActivityManager.getInstance().finishActivity(ChatActivity::class.java)
+                        finish()
+                    }
+
+                    override fun onError(p0: RongIMClient.ErrorCode?) {
+                        showToast("退出失败")
+                    }
+
+                })
+            }
+            dialog.show()
         }
     }
 

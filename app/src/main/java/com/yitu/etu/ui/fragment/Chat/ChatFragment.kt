@@ -9,12 +9,15 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.text.InputType
 import android.view.Gravity
+import android.view.View
+import android.widget.ImageView
 import com.amap.api.maps.model.LatLng
 import com.huizhuang.zxsq.utils.nextActivityFromFragment
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.dialog.InputPriceDialog
 import com.yitu.etu.dialog.InputPriceTwoDialog
+import com.yitu.etu.entity.ListHeadBean
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.PinAnBean
 import com.yitu.etu.eventBusItem.EventOpenRealTime
@@ -26,12 +29,16 @@ import com.yitu.etu.ui.activity.BaseActivity
 import com.yitu.etu.ui.activity.MainActivity
 import com.yitu.etu.ui.activity.ShareMyLocationActivity
 import com.yitu.etu.util.Empty
+import com.yitu.etu.util.LogUtil
 import com.yitu.etu.util.userInfo
 import com.yitu.etu.widget.chat.PacketMessage
 import io.rong.imkit.DefaultExtensionModule
 import io.rong.imkit.RongExtension
 import io.rong.imkit.RongIM
+import io.rong.imkit.fragment.ConversationListFragment
+import io.rong.imkit.model.UIConversation
 import io.rong.imkit.plugin.IPluginModule
+import io.rong.imkit.widget.adapter.ConversationListAdapter
 import io.rong.imlib.IRongCallback
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
@@ -58,6 +65,59 @@ import java.util.*
 var mTargetId = ""
 var mConversationType: Conversation.ConversationType? = null
 var uri: Uri? = null
+
+/**
+ * 自定义列表
+ */
+class MyConversationListFragment : ConversationListFragment() {
+    override fun onResolveAdapter(context: Context?): ConversationListAdapter {
+        return MyConversationListAdapter(context)
+    }
+}
+
+/**
+ * 重写列表事件，强制修改图片
+ */
+
+class MyConversationListAdapter(val context: Context?) : ConversationListAdapter(context) {
+    override fun bindView(view: View?, position: Int, data: UIConversation?) {
+        super.bindView(view, position, data)
+        if (data?.conversationType == Conversation.ConversationType.DISCUSSION) {
+            val holder = view?.tag as ConversationListAdapter.ViewHolder
+            if(data.extra==null) {
+                getHead(data.conversationTargetId, data,holder.leftImageView)
+            }else{
+                holder.leftImageView.setImageResource(data.extra.toInt())
+            }
+        }
+    }
+}
+
+/**
+ * 设置头像
+ */
+fun getHead(chat_id: String,data: UIConversation?,image:ImageView) {
+    val map = HashMap<String, String>()
+    map.put("chat_id", chat_id)
+    map.put("name", data?.uiConversationTitle?:"")
+    Http.post(Urls.URL_GET_GROUP_INFO_HEAD, map, object : GsonCallback<ObjectBaseEntity<ListHeadBean>>() {
+        override fun onError(call: Call, e: Exception, id: Int) {
+            LogUtil.e(e.localizedMessage)
+        }
+
+        override fun onResponse(response: ObjectBaseEntity<ListHeadBean>, id: Int) {
+            if (response.success()) {
+                if(response.data.result==0) {
+                    image.setImageResource(R.drawable.icon84)
+                    data?.extra = "${R.drawable.icon84}"
+                }else{
+                    image.setImageResource(R.drawable.icon17)
+                    data?.extra = "${R.drawable.icon17}"
+                }
+            }
+        }
+    })
+}
 
 /**
  * 自定义面板，0拍摄，1位置，2位置共享，3平安符
@@ -168,10 +228,10 @@ class MyPlugin(val type: Int) : IPluginModule {
                         val message = Message.obtain(mTargetId, type, mes)
                         sendMessage(message)
                         EventBus.getDefault().post(EventOpenRealTime(bundleOf("title" to activity.intent.data.getQueryParameter("title"),
-                                "chat_id" to this, "type" to Message.MessageDirection.SEND,"chatType" to type),true))
-                       /* activity.nextActivity<AMapRealTimeActivity>(
-                                "title" to activity.intent.data.getQueryParameter("title"),
-                                "chat_id" to this, "type" to Message.MessageDirection.SEND,"chatType" to type)*/
+                                "chat_id" to this, "type" to Message.MessageDirection.SEND, "chatType" to type), true))
+                        /* activity.nextActivity<AMapRealTimeActivity>(
+                                 "title" to activity.intent.data.getQueryParameter("title"),
+                                 "chat_id" to this, "type" to Message.MessageDirection.SEND,"chatType" to type)*/
                     }
                 } else {
                     activity.showToast(response.message)

@@ -7,12 +7,15 @@ import com.yitu.etu.entity.ArrayBaseEntity
 import com.yitu.etu.entity.MyRouteBean
 import com.yitu.etu.entity.MyTravels
 import com.yitu.etu.entity.ObjectBaseEntity
+import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.adapter.TravelsAdapter
 import com.yitu.etu.util.post
 import kotlinx.android.synthetic.main.activity_my_travels.*
 import okhttp3.Call
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.lang.Exception
 
 class MyTravelsActivity : BaseActivity() {
@@ -27,6 +30,7 @@ class MyTravelsActivity : BaseActivity() {
     }
 
     override fun initView() {
+        EventBus.getDefault().register(this)
         adapter=TravelsAdapter(listOf())
         listview.adapter=adapter
     }
@@ -107,5 +111,17 @@ class MyTravelsActivity : BaseActivity() {
             }
 
         })
+    }
+
+    @Subscribe
+    fun onEventRefresh(event:EventRefresh){
+        if(event.classname==className){
+            refresh(true)
+        }
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
     }
 }

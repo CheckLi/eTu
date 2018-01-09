@@ -28,7 +28,7 @@ class SoftWareShareActivity : BaseActivity() {
 
         ShareAction(this)
                 .withText("hello")
-                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
+                .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
                 .setCallback(object : UMShareListener {
                     override fun onResult(p0: SHARE_MEDIA?) {
                         showToast("分享成功")

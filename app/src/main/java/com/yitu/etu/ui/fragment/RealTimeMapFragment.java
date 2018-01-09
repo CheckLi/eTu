@@ -65,6 +65,9 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
     private SparseArray<RealTimeListBean> mMarkers;
+    private ImageView left;
+    private ImageView right;
+
     private String id = "";
     private LatLng mLatLng;
     private LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();//存放所有点的经纬度
@@ -97,6 +100,8 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mCount = (TextView) view.findViewById(R.id.tv_count);
+        left = (ImageView) view.findViewById(R.id.iv_left_chang);
+        right = (ImageView) view.findViewById(R.id.iv_right_chang);
         parent = view.findViewById(R.id.fl_real_time_parent);
         bottomView = view.findViewById(R.id.rl_real_time_content);
         initListener();
@@ -110,7 +115,7 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         /**
          * 左侧改变大小按钮
          */
-        getView().findViewById(R.id.iv_left_chang).setOnClickListener(new View.OnClickListener() {
+        left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 animation(true);
@@ -120,7 +125,7 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         /**
          * 右侧改变大小按钮
          */
-        getView().findViewById(R.id.iv_right_chang).setOnClickListener(new View.OnClickListener() {
+        right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 animation(false);
@@ -144,16 +149,24 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         int toHeight = 0;
         int cha=(int)(10*getResources().getDisplayMetrics().density);
         if (left) {
-            if (Math.abs(height-bottomHeight) <=cha  || Math.abs(height-screenHeight) <=cha ) {
+            if (Math.abs(height-bottomHeight) <=cha  || Math.abs(height-screenHeight) <=cha) {
                 toHeight = screenHeight >> 1;
+                this.left.setImageResource(R.drawable.icon_up);
+                this.right.setImageResource(R.drawable.icon_down);
             } else if (Math.abs(height-screenHeight*0.5) <=cha) {
+                this.left.setImageResource(R.drawable.icon_down);
+                this.right.setImageResource(R.drawable.icon_down);
                 toHeight = bottomHeight;
             }
         } else {
-            if (Math.abs(height-bottomHeight) <=cha) {
+            if (Math.abs(height-bottomHeight) <=cha|| Math.abs(height-screenHeight) <=cha) {
                 toHeight = screenHeight >> 1;
+                this.right.setImageResource(R.drawable.icon_down);
+                this.left.setImageResource(R.drawable.icon_up);
             } else if (Math.abs(height-screenHeight*0.5) <=cha) {
                 toHeight = screenHeight;
+                this.left.setImageResource(R.drawable.icon_up);
+                this.right.setImageResource(R.drawable.icon_up);
             }
         }
         if (toHeight > 0) {

@@ -1,14 +1,17 @@
 package com.yitu.etu.ui.activity
 
 import android.content.Intent
+import android.widget.TableRow
 import android.widget.TextView
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.Poi
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.OrderDetail
 import com.yitu.etu.entity.OrderList
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.Urls
-import com.yitu.etu.util.Empty
+import com.yitu.etu.util.Tools
 import com.yitu.etu.util.getTime
 import com.yitu.etu.util.post
 import kotlinx.android.synthetic.main.activity_order_detail.*
@@ -29,7 +32,7 @@ class OrderDetailActivity : BaseActivity() {
     }
 
     override fun initView() {
-        with(order) {
+      /*  with(order) {
             tr_order.run {
                 for (pos in 0 until childCount) {
                     val text = (getChildAt(pos) as TextView)
@@ -40,9 +43,9 @@ class OrderDetailActivity : BaseActivity() {
                         3 -> text.text = created.getTime()
                     }
                 }
-                tv_number.text = "兑换编码：$checkSn"
+
             }
-        }
+        }*/
     }
 
     override fun getData() {
@@ -59,6 +62,27 @@ class OrderDetailActivity : BaseActivity() {
                     with(response.data.shop) {
                         tv_address.text = "地址：$address"
                         tv_phone.text = "电话：$phone"
+                    }
+                    response.data?.run{
+                        product?.forEach {
+                            val tableRow = layoutInflater.inflate(R.layout.item_table_row, null) as TableRow
+                            for (i in 0 until tableRow.childCount){
+                                val text=tableRow.getChildAt(i) as TextView
+                                when(i){
+                                    0->text.text=it.name
+                                    1->text.text=this.id.toString()
+                                    2->text.text=this.price
+                                    3->text.text=this.created.getTime()
+
+                                }
+                            }
+                            tableLayout.addView(tableRow,tableLayout.childCount-1)
+                        }
+                        tv_number.text = "兑换编码：$checkSn"
+                        tv_address.setOnClickListener {
+                            val end = Poi(shop.address, LatLng(shop.addressLat, shop.addressLng), "")
+                            Tools.navi(context, end)
+                        }
                     }
                 } else {
                     showToast(response.message)

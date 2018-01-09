@@ -60,6 +60,14 @@ public class Urls {
     public static final String URL_ADD_FRIEND=address+"/chat/applyFrend";//添加好友
     public static final String URL_CHANG_BEIZHU=address+"/chat/saveName";//修改好友备注
     public static final String URL_FRIEND_LIST=address+"/chat/get_frend_list";//获取好友列表
+    /**
+     * 景点标题title、景点价格price、景
+     点图⽚（多张）images、景点地址
+     address、景点坐标address_lat、
+     景点坐标address_lng、景点说明
+     text、景点特⾊feature
+     */
+    public static final String URL_ADD_SPOT=address+"/spot/addSpot";//推荐景点
     public static final String URL_GET_GROUP_INFO=address+"/chat/getusers";//传入token、users（传入英文逗号间隔的id）、chat_id
 
     /**
@@ -117,6 +125,19 @@ public class Urls {
      时传⼊）
      */
     public static final String URL_SHOP_PROJECT=address+"/shop/create_order";
+    /**
+     * 提现类型type（1为⽀付宝，2为微
+     信，3为银⾏卡）、身份证号
+     sfz（type=3时传⼊）、持卡⼈姓
+     名realname（type=3时传⼊）、账
+     号name、提现⾦额money
+     */
+    public static final String URL_GET_MONEY=address+"/user/cashOrder";
+    /*
+     传入token、title_id
+     */
+    public static final String URL_TITLECOLLECT=address+"/title/titlecollect";
+    public static final String URL_AGREEFIEND=address+"/chat/agreeFrend";
     /**
      * 抢平安符
      */

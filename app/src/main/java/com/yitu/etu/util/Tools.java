@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -39,7 +40,14 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -391,8 +399,42 @@ public class Tools {
     /**
      * 发送图片
      */
-    public static void  sendImageMessage(ImageMessage message, Conversation.ConversationType type,String mTargetId) {
-        RongIM.getInstance().sendImageMessage(type, mTargetId, message, null, null, null);
+    public static void  sendImageMessage(ImageMessage message, Conversation.ConversationType type, String mTargetId, final Activity activity) {
+        RongIM.getInstance().sendImageMessage(type, mTargetId, message, null, null, new RongIMClient.SendMediaMessageCallback() {
+            @Override
+            public void onAttached(Message message) {
+                SingleTipsDialog dialog = new SingleTipsDialog(activity, "温馨提示");
+                dialog.setMessage("发送成功");
+                dialog.setLeftBtn("确定", new Function1<View, Unit>() {
+                    @Override
+                    public Unit invoke(View view) {
+                        return null;
+                    }
+                });
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        activity.finish();
+                    }
+                });
+                dialog.showDialog();
+            }
+
+            @Override
+            public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+
+            }
+
+            @Override
+            public void onSuccess(Message message) {
+
+            }
+
+            @Override
+            public void onProgress(Message message, int i) {
+
+            }
+        });
     }
 
     /**
@@ -428,4 +470,83 @@ public class Tools {
         });
     }
 
+
+    /**
+     * 计算时间差
+     *
+     * @param starTime
+     *            开始时间
+     * @param endTime
+     *            结束时间
+     *            返回类型 ==1----天，时，分。 ==2----时
+     * @return 返回时间差
+     */
+    public static long getTimeDifference(String starTime, String endTime) {
+        long timeString = 0;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        try {
+            Date parse = dateFormat.parse(starTime);
+            Date parse1 = dateFormat.parse(endTime);
+
+            long diff = parse1.getTime() - parse.getTime();
+
+            long day = diff / (24 * 60 * 60 * 1000);
+            long hour = (diff / (60 * 60 * 1000) - day * 24);
+            long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+            long s = (diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
+            long ms = (diff - day * 24 * 60 * 60 * 1000 - hour * 60 * 60 * 1000
+                    - min * 60 * 1000 - s * 1000);
+            // System.out.println(day + "天" + hour + "小时" + min + "分" + s +
+            // "秒");
+            long hour1 = diff / (60 * 60 * 1000);
+            String hourString = hour1 + "";
+            long min1 = ((diff / (60 * 1000)) - hour1 * 60);
+            timeString = hour1;
+            // System.out.println(day + "天" + hour + "小时" + min + "分" + s +
+            // "秒");
+
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return timeString;
+
+    }
+
+    /**
+     * 保存图片到指定路径
+     * Save image with specified size
+     *
+     * @param filePath the image file save path 储存路径
+     * @param bitmap   the image what be save   目标图片
+     * @param size     the file size of image   期望大小
+     */
+    public static File saveImage(String filePath, Bitmap bitmap, long size) {
+
+        File result = new File(filePath.substring(0, filePath.lastIndexOf("/")));
+
+        if (!result.exists() && !result.mkdirs()) return null;
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        int options = 100;
+        bitmap.compress(Bitmap.CompressFormat.JPEG, options, stream);
+
+        while (stream.toByteArray().length / 1024 > size && options > 4) {
+            stream.reset();
+            options -= 4;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, options, stream);
+        }
+
+        try {
+            FileOutputStream fos = new FileOutputStream(filePath);
+            fos.write(stream.toByteArray());
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new File(filePath);
+    }
 }

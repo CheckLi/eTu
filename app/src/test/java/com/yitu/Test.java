@@ -11,6 +11,14 @@ import java.io.File;
 public class Test {
 
     @org.junit.Test
+    public void getTimeSum(){
+//        String time=System.currentTimeMillis();
+//        DateUtil.getTime(System.currentTimeMillis()+"",null);
+    }
+
+
+
+    @org.junit.Test
     public void stringTest(){
         String s="sdfsdf.png";
         System.out.println(s.substring(s.lastIndexOf(".")+1));

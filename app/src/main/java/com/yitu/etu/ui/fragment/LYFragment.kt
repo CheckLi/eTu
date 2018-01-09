@@ -5,7 +5,7 @@ import com.huizhuang.zxsq.utils.nextCheckLoginActivity
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.ui.activity.CircleFirendActivity
-import io.rong.imkit.fragment.ConversationListFragment
+import com.yitu.etu.ui.fragment.Chat.MyConversationListFragment
 import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.ly_head.*
 import org.jetbrains.anko.bundleOf
@@ -35,19 +35,19 @@ class LYFragment : BaseFragment() {
     }
 
     override fun initView() {
-        if(arguments!=null) {
+        if (arguments != null) {
             type = arguments.getInt("type")
         }
         addFragment()
     }
 
     private fun addFragment() {
-        val fragment = ConversationListFragment()
+        val fragment = MyConversationListFragment()
         val uri = Uri.parse("rong://" + EtuApplication.getInstance().packageName).buildUpon()
                 .appendPath("conversationlist")
                 .appendQueryParameter(Conversation.ConversationType.PRIVATE.getName(), "false")
                 .appendQueryParameter(Conversation.ConversationType.GROUP.getName(), "false")
-                .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "false")
+                .appendQueryParameter(Conversation.ConversationType.SYSTEM.getName(), "true")
                 .appendQueryParameter(Conversation.ConversationType.APP_PUBLIC_SERVICE.getName(), "false")
                 .appendQueryParameter(Conversation.ConversationType.PUSH_SERVICE.getName(), "false")
                 .appendQueryParameter(Conversation.ConversationType.DISCUSSION.getName(), "false")

@@ -59,7 +59,6 @@ import io.rong.imkit.IExtensionModule;
 import io.rong.imkit.RongExtensionManager;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.model.Conversation;
-import io.rong.imlib.model.Group;
 import io.rong.imlib.model.Message;
 import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
@@ -113,7 +112,7 @@ public class EtuApplication extends Application {
         initChat();
 
         share();
-        Picasso.with(this).setIndicatorsEnabled(true);
+//        Picasso.with(this).setIndicatorsEnabled(true);
         initLocation();//获取定位信息
         initWeixinPay();//初始化微信支付
     }
@@ -453,34 +452,18 @@ public class EtuApplication extends Application {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         LogUtil.e(e.getLocalizedMessage());
-                        if(s.length()>5){
-                            HashMap<String, String> map = new HashMap<>();
-                            map.put("chat_id", s);
-                            Http.post(Urls.URL_GET_GROUP_INFO_HEAD, map, new GsonCallback<ObjectBaseEntity<UserInfo>>() {
-                                @Override
-                                public void onError(Call call, Exception e, int id) {
-                                    LogUtil.e(e.getLocalizedMessage());
-                                }
 
-                                @Override
-                                public void onResponse(ObjectBaseEntity<UserInfo> response, int id) {
-                                    if (response.success()) {
-                                        UserInfo info = response.data;
-                                        io.rong.imlib.model.UserInfo userInfo = new io.rong.imlib.model.UserInfo(String.valueOf(info.getId()), info.getName(), Uri.parse(Urls.address + info.getHeader()));
-                                        RongIM.getInstance().refreshUserInfoCache(userInfo);
-                                     /*   Discussion discussion=new Discussion(s,"这是讨论组");
-                                        RongIM.getInstance().refreshDiscussionCache(discussion);*/
-                                    }
-                                }
-                            });
-                        }
                     }
 
                     @Override
                     public void onResponse(ObjectBaseEntity<UserInfo> response, int id) {
                         if (response.success()) {
                             UserInfo info = response.data;
-                            io.rong.imlib.model.UserInfo userInfo = new io.rong.imlib.model.UserInfo(String.valueOf(info.getId()), info.getName(), Uri.parse(Urls.address + info.getHeader()));
+                            String url=Urls.address + info.getHeader();
+                            if(url.startsWith(Urls.address+"http")){
+                                url=url.replace(Urls.address,"");
+                            }
+                            io.rong.imlib.model.UserInfo userInfo = new io.rong.imlib.model.UserInfo(String.valueOf(info.getId()), info.getName(), Uri.parse(url));
                             RongIM.getInstance().refreshUserInfoCache(userInfo);
                         }
                     }
@@ -488,12 +471,6 @@ public class EtuApplication extends Application {
                 return null;
             }
         }, true);
-        RongIM.setGroupInfoProvider(new RongIM.GroupInfoProvider() {
-            @Override
-            public Group getGroupInfo(String s) {
-                return null;
-            }
-        },true);
     }
 
     public void stopUpLocationService() {

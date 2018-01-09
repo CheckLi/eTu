@@ -45,11 +45,34 @@ public class SearchResultUserActivity extends BaseActivity {
     @Override
     public void initActionBar() {
         setTitle("用户信息");
+    }
+
+    private void checkFriend(String uiserid) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("suser_id", uiserid);
+        Http.post(Urls.CIRCLE_USER_INDEX, params, new GsonCallback<ObjectBaseEntity<Object>>() {
+            @Override
+            public void onError(Call call, Exception e, int i) {
+                hideWaitDialog();
+            }
+
+            @Override
+            public void onResponse(ObjectBaseEntity<Object> response, int i) {
+                setRight(response.success());
+            }
+        });
+    }
+
+    private void setRight(final boolean isFriend) {
         mActionBarView.setRightImage(R.drawable.icon145, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (EtuApplication.getInstance().isLogin()) {
-                    Tools.getPopupWindow(SearchResultUserActivity.this, new String[]{"加为好友", "发起聊天"}, new AdapterView.OnItemClickListener() {
+                    String[] array = new String[]{"加为好友", "发起聊天"};
+                    if (isFriend) {
+                        array = new String[]{"发起聊天"};
+                    }
+                    Tools.getPopupWindow(SearchResultUserActivity.this, array, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             if (position == 0) {
@@ -94,6 +117,7 @@ public class SearchResultUserActivity extends BaseActivity {
                 getUserIndex();
             }
         });
+        checkFriend(data.user_id);
         getUserIndex();
     }
 
