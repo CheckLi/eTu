@@ -87,7 +87,7 @@ public class EtuApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        readUserInfo();//读取个人登陆信息
+        readUserInfo();//读取个人登录信息
         if (isLogin()) {
             startUpLocationService();
         }
@@ -284,7 +284,7 @@ public class EtuApplication extends Application {
     }
 
     /**
-     * 判断登陆用
+     * 判断登录用
      *
      * @return
      */
@@ -309,7 +309,7 @@ public class EtuApplication extends Application {
         startUpLocationService();
         if (userInfo != null && userInfo.getId() != 0 && !TextUtils.isEmpty(userInfo.getToken())) {
             this.userInfo = userInfo;
-            //存储登陆信息，第二次进入直接读取
+            //存储登录信息，第二次进入直接读取
             PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_USER_INFO, userInfo);
             EventBus.getDefault().post(new LoginSuccessEvent(this.userInfo));
         } else {
@@ -326,7 +326,7 @@ public class EtuApplication extends Application {
     }
 
     /**
-     * 退出登陆
+     * 退出登录
      */
     public void loginOut() {
         stopUpLocationService();
@@ -337,7 +337,7 @@ public class EtuApplication extends Application {
         PrefrersUtil.getInstance().remove(AppConstant.PARAM_SAVE_BUY_CAR);
         EventBus.getDefault().post(new LoginSuccessEvent(null));
         RongIM.getInstance().logout();
-
+        RongIM.getInstance().disconnect();
        /* RongIM.getInstance().clearConversations(
                 new RongIMClient.ResultCallback() {
                     @Override

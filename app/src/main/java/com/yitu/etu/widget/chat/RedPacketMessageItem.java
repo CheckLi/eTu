@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.yitu.etu.R;
 import com.yitu.etu.dialog.LoadingDialog;
-import com.yitu.etu.dialog.SingleTipsDialog;
+import com.yitu.etu.dialog.TipsTimeDialog;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.eventBusItem.EventPlayYanHua;
 import com.yitu.etu.eventBusItem.EventRefresh;
@@ -72,14 +72,14 @@ public class RedPacketMessageItem extends IContainerItemProvider.MessageProvider
 
     @Override
     public void onItemClick(View view, int i, PacketMessage textMessage, UIMessage uiMessage) {
-        post(textMessage.getPinId(),view);
+        post(textMessage.getPinId(), view);
     }
 
-    private void post(String id, final View view){
-        final LoadingDialog dialog=new LoadingDialog(view.getContext(),"获取中...");
+    private void post(String id, final View view) {
+        final LoadingDialog dialog = new LoadingDialog(view.getContext(), "获取中...");
         dialog.show();
-        HashMap<String,String> params=new HashMap<>();
-        params.put("id",id);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("id", id);
         Http.post(Urls.URL_PACKET_GET, params, new GsonCallback<ObjectBaseEntity<Object>>() {
             @Override
             public void onError(Call call, Exception e, int id) {
@@ -90,10 +90,11 @@ public class RedPacketMessageItem extends IContainerItemProvider.MessageProvider
             @Override
             public void onResponse(ObjectBaseEntity<Object> response, int id) {
                 dialog.hideDialog();
-                if(response.success()){
+                if (response.success()) {
                     EventBus.getDefault().post(new EventRefresh(MainActivity.class.getSimpleName()));
-                    final SingleTipsDialog dialog = new SingleTipsDialog(view.getContext(), "平安符领取");
-                    dialog.setMessage("恭喜成功领取平安符,参数不详，无法进行下一步");
+                    final TipsTimeDialog dialog = new TipsTimeDialog(view.getContext());
+//                    dialog.setMessage("恭喜成功领取平安符");
+                    dialog.setCount(1);
                     dialog.showDialog();
                     EventBus.getDefault().post(new EventPlayYanHua(true));
                     view.postDelayed(new Runnable() {
@@ -101,14 +102,14 @@ public class RedPacketMessageItem extends IContainerItemProvider.MessageProvider
                         public void run() {
                             dialog.dismiss();
                         }
-                    },6000);
+                    }, 6000);
                     dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             EventBus.getDefault().post(new EventPlayYanHua(false));
                         }
                     });
-                }else{
+                } else {
                     ToastUtil.showMessage(response.getMessage());
                 }
             }

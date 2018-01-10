@@ -10,6 +10,7 @@ import com.yitu.etu.entity.PayResultBean
 import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.Http.post
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.ui.activity.MainActivity
 import com.yitu.etu.ui.activity.PayOrderActivity
 import com.yitu.etu.util.Empty
 import com.yitu.etu.util.JsonUtil
@@ -132,6 +133,8 @@ class PayUtil(val id: Int, val price: Float, val desc: String, val rechargetype:
                             activity.dialog.dismiss()
                             activity.finish()
                             EventBus.getDefault().post(EventRefresh(classname))
+                            EventBus.getDefault().post(EventRefresh(MainActivity::class.java.simpleName))
+
                         } else if (type == 1) {
                             thread {
                                 val alipay = PayTask(activity)

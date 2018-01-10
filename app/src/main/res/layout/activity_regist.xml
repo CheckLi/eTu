@@ -103,7 +103,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="2dp"
         android:background="@drawable/round_white_5dp_bottom"
-        android:hint="登陆密码"
+        android:hint="登录密码"
         android:singleLine="true"
         android:inputType="textPassword"
         android:padding="15dp"

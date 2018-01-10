@@ -62,6 +62,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.reflect.TypeToken;
 import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
+import com.yitu.etu.dialog.TipsDialog;
 import com.yitu.etu.entity.AreaEntity;
 import com.yitu.etu.entity.CityEntity;
 import com.yitu.etu.entity.HttpStateEntity;
@@ -72,6 +73,7 @@ import com.yitu.etu.entity.MerchantBaseEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.entity.SceneEntity;
 import com.yitu.etu.eventBusItem.MLatLng;
+import com.yitu.etu.system.system.PermissionUtils;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
@@ -100,6 +102,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import okhttp3.Call;
 
 import static com.yitu.etu.tools.Urls.address;
@@ -381,7 +385,20 @@ public class MapsFragment extends SupportMapFragment implements
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        PermissionUtil.checkHaveAllPermissions(grantResults);
+        if (!PermissionUtil.checkHaveAllPermissions(grantResults)) {
+            if (!PermissionUtil.checkHaveAllPermissions(grantResults)) {
+                TipsDialog dialog =new  TipsDialog(getActivity(), "权限提示");
+                dialog.setMessage("地图使用需要使用定位权限，您已经拒绝，需要到权限界面手动设置");
+                dialog.setRightBtn("去授权", new Function1<View, Unit>() {
+                    @Override
+                    public Unit invoke(View view) {
+                        PermissionUtils.statrtPermission(getActivity());
+                        return null;
+                    }
+                });
+                dialog.show();
+            }
+        }
     }
 
     private void initMap() {

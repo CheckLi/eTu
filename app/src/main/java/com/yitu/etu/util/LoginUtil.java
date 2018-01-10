@@ -23,7 +23,7 @@ import okhttp3.Call;
 
 /**
  * @className:LoginUtil
- * @description:第三方登陆类
+ * @description:第三方登录类
  * @author: JIAMING.LI
  * @date:2018年01月07日 12:32
  */
@@ -37,7 +37,7 @@ public class LoginUtil implements UMAuthListener {
 
     public LoginUtil(Context context) {
         mContext = context;
-        mDialog = new LoadingDialog(mContext, "登陆中...");
+        mDialog = new LoadingDialog(mContext, "登录中...");
     }
 
     public static LoginUtil getInstance(Context mContext) {
@@ -87,13 +87,13 @@ public class LoginUtil implements UMAuthListener {
     @Override
     public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
         mDialog.hideDialog();
-        ToastUtil.showMessage("登陆失败");
+        ToastUtil.showMessage("登录失败");
     }
 
     @Override
     public void onCancel(SHARE_MEDIA share_media, int i) {
         mDialog.hideDialog();
-        ToastUtil.showMessage("取消登陆");
+        ToastUtil.showMessage("取消登录");
     }
 
 
@@ -106,7 +106,7 @@ public class LoginUtil implements UMAuthListener {
         Http.post(url, params, new GsonCallback<ObjectBaseEntity<UserInfo>>() {
             @Override
             public void onError(Call call, Exception e, int id) {
-                ToastUtil.showMessage("登陆失败");
+                ToastUtil.showMessage("登录失败");
                 mDialog.hideDialog();
             }
 
@@ -116,7 +116,7 @@ public class LoginUtil implements UMAuthListener {
                 if (response.success()) {
 //                    PrefrersUtil.getInstance().saveValue(AppConstant.PARAM_SAVE_USERNAME, name);
                     EtuApplication.getInstance().setUserInfo(response.data);
-                    EtuApplication.getInstance().connectChat();//登陆聊天服务器
+                    EtuApplication.getInstance().connectChat();//登录聊天服务器
                     MyActivityManager.getInstance().finishActivity(LoginActivity.class);
                 } else {
                     ToastUtil.showMessage(response.getMessage());

@@ -22,7 +22,7 @@ class LoginActivity : BaseActivity() {
     override fun getLayout(): Int = R.layout.activity_login
 
     override fun initActionBar() {
-        title = "用户登陆"
+        title = "用户登录"
         setLeftText("取消") {
             finish()
         }
@@ -45,7 +45,7 @@ class LoginActivity : BaseActivity() {
 
     override fun initListener() {
         /**
-         * 登陆
+         * 登录
          */
         btn_login.setOnClickListener {
             val username = et_username.text
@@ -67,14 +67,14 @@ class LoginActivity : BaseActivity() {
             nextActivity<ForgetPasswordActivity>(1001)
         }
         /**
-         * 微信登陆
+         * 微信登录
          */
         iv_login_weixin.setOnClickListener {
             LoginUtil.getInstance(this@LoginActivity).startLogin(LoginUtil.TYPE_LOGIN_WEIXIN)
         }
 
         /**
-         * 微博d登陆
+         * 微博d登录
          */
         iv_login_weibo.setOnClickListener {
             LoginUtil.getInstance(this@LoginActivity).startLogin(LoginUtil.TYPE_LOGIN_WEIBO)
@@ -82,7 +82,7 @@ class LoginActivity : BaseActivity() {
     }
 
     /**
-     * 登陆
+     * 登录
      */
     private fun login(name: String, password: String) {
         showWaitDialog("登录中...")
@@ -92,7 +92,7 @@ class LoginActivity : BaseActivity() {
                 object : GsonCallback<ObjectBaseEntity<UserInfo>>() {
                     override fun onError(call: Call, e: Exception, id: Int) {
                         Log.e("Exception", "Exception")
-                        showToast("登陆失败")
+                        showToast("登录失败")
                         hideWaitDialog()
                     }
 
@@ -101,7 +101,7 @@ class LoginActivity : BaseActivity() {
                         if (response.success()) {
                             PrefrersUtil.getInstance().saveValue(AppConstant.PARAM_SAVE_USERNAME, name)
                             EtuApplication.getInstance().userInfo = response.data
-                            EtuApplication.getInstance().connectChat()//登陆聊天服务器
+                            EtuApplication.getInstance().connectChat()//登录聊天服务器
                             finish()
                         } else {
                             showToast(response.message)
@@ -111,7 +111,7 @@ class LoginActivity : BaseActivity() {
     }
 
     /**
-     * 注册完成后需要模拟点击登陆
+     * 注册完成后需要模拟点击登录
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

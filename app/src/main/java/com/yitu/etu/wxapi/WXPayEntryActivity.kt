@@ -13,6 +13,7 @@ import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.ui.activity.BaseActivity
+import com.yitu.etu.ui.activity.MainActivity
 import com.yitu.etu.ui.activity.MyWalletActivity
 import kotlinx.android.synthetic.main.pay_result.*
 import org.greenrobot.eventbus.EventBus
@@ -68,6 +69,7 @@ class WXPayEntryActivity : BaseActivity(), IWXAPIEventHandler {
             }
             if(resp.errCode==0){
                 EventBus.getDefault().post(EventRefresh(MyWalletActivity::class.java.simpleName))
+                EventBus.getDefault().post(EventRefresh(MainActivity::class.java.simpleName))
             }
         }
     }

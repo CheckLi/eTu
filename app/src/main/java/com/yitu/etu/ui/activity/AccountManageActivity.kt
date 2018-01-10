@@ -114,11 +114,11 @@ class AccountManageActivity : BaseActivity() {
         }
 
         /**
-         * 退出登陆
+         * 退出登录
          */
         login_out.setOnClickListener {
             val dialog=TipsDialog(this,"温馨提示")
-            dialog.setMessage("确认要退出登陆吗？")
+            dialog.setMessage("确认要退出登录吗？")
             dialog.setRightBtn("确认"){
                 UMShareAPI.get(this).deleteOauth(this@AccountManageActivity, SHARE_MEDIA.WEIXIN, null)
                 UMShareAPI.get(this).deleteOauth(this@AccountManageActivity, SHARE_MEDIA.SINA, null)

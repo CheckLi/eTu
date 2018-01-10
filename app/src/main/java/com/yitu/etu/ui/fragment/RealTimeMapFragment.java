@@ -91,7 +91,7 @@ public class RealTimeMapFragment extends SupportMapFragment implements AMapLocat
         mAmap.getUiSettings().setLogoPosition(
                 AMapOptions.LOGO_POSITION_BOTTOM_LEFT);// logo位置
         mAmap.getUiSettings().setScaleControlsEnabled(false);// 标尺开关
-        mAmap.getUiSettings().setCompassEnabled(true);// 指南针开关
+        mAmap.getUiSettings().setCompassEnabled(false);// 指南针开关
         mAmap.getUiSettings().setZoomControlsEnabled(false);
         initMyLocation();
         return mRoot;

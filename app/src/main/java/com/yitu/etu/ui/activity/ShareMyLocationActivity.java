@@ -1,10 +1,14 @@
 package com.yitu.etu.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -106,21 +110,97 @@ public class ShareMyLocationActivity extends BaseActivity {
     public void initListener() {
 
     }
+
+
+    /**
+     * 获取指定宽高缩放尺寸图片
+     *
+     * @return
+     */
+    public  Bitmap calculateInSampleSize(Context mcontext, int res, float width) {
+
+        Bitmap src = BitmapFactory.decodeResource(mcontext.getResources(), res);
+        float sc = width / (float) src.getWidth();
+        // 缩放的矩阵
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(sc, sc);
+        Bitmap bitmap = Bitmap.createBitmap(src, 0, 0,
+                src.getWidth(), src.getHeight(), scaleMatrix, true);
+        if (src.isRecycled()) {
+            src.recycle();
+        }
+        return bitmap;
+    }
+
 //把传进来的bitmap对象转换为宽度为x,长度为y的bitmap对象
 
-    public static Bitmap big(Bitmap b,float x,float y)
-    {
-        float f=y/x;
-        int w=b.getWidth();
-        int h=b.getHeight();
-        float sx=f*w;//要强制转换，不转换我的在这总是死掉。
-        float sy=(float)y/h;
-        Matrix matrix = new Matrix();
-        matrix.postScale(sx, sy); // 长和宽放大缩小的比例
-        Bitmap resizeBmp = Bitmap.createBitmap(b, 0, 0, w,
-                h, matrix, true);
-        return resizeBmp;
+    public  Bitmap big(Bitmap b, int x, int y) {
+        int w = b.getWidth();
+        int h = b.getHeight();
+        int yCha=h>y?h-y:0;
+        int xCha=w>y?w-y:0;
+        int resH =(int) (yCha*0.5f);
+        int resW=(int) (xCha*0.5f);
+        Bitmap resizeBmp = Bitmap.createBitmap(b, resW, resH,x,
+                y, null, false);
+        //创建一个bitmap
+        PaintFlagsDrawFilter  pfd = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);
+        Paint paint=new Paint();
+        paint.setAntiAlias(true);
+        Bitmap newb = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);// 创建一个新的和SRC长度宽度一样的位图
+        Canvas canvas=new Canvas(newb);
+        canvas.setDrawFilter(pfd);
+        canvas.drawBitmap(resizeBmp,0,0,paint);
+
+        Bitmap location=calculateInSampleSize(this,R.drawable.icon124,10*getResources().getDisplayMetrics().density);
+        int lw=location.getWidth();
+        int lh=location.getHeight();
+        canvas.drawBitmap(location,(x-lw)*0.5f,y*0.5f-lh,paint);
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.restore();
+        if(b!=null&&!b.isRecycled()){
+            b.recycle();
+        }
+        if(location!=null&&!location.isRecycled()){
+            location.recycle();
+        }
+        if(resizeBmp!=null&&!resizeBmp.isRecycled()){
+            resizeBmp.recycle();
+        }
+        return newb;
     }
+
+    /**
+     * fuction: 设置固定的宽度，高度随之变化，使图片不会变形
+     *
+     * @param target
+     * 需要转化bitmap参数
+     * @param newWidth
+     * 设置新的宽度
+     * @return
+     */
+    public static Bitmap fitBitmap(Bitmap target, int newWidth)
+    {
+        int width = target.getWidth();
+        int height = target.getHeight();
+        Matrix matrix = new Matrix();
+        float scaleWidth = ((float) newWidth) / width;
+        // float scaleHeight = ((float)newHeight) / height;
+        int newHeight = (int) (scaleWidth * height);
+        matrix.postScale(scaleWidth, scaleWidth);
+        // Bitmap result = Bitmap.createBitmap(target,0,0,width,height,
+        // matrix,true);
+        Bitmap bmp = Bitmap.createBitmap(target, 0, 0, width, height, matrix,
+                true);
+        if (target != null && !target.equals(bmp) && !target.isRecycled())
+        {
+            target.recycle();
+            target = null;
+        }
+        return bmp;// Bitmap.createBitmap(target, 0, 0, width, height, matrix,
+        // true);
+    }
+
     @SuppressLint("ValidFragment")
     public class MapsFragment2 extends SupportMapFragment implements AMapLocationListener, LocationSource {
         // 我的位置监听器
@@ -136,8 +216,9 @@ public class ShareMyLocationActivity extends BaseActivity {
         private Marker marker;
         private PoiSearchAdapter poiSearchAdapter;
 
-        public void getMapBitmap(){
+        public void getMapBitmap() {
             showWaitDialog("请稍等...");
+            marker.remove();
             /**
              * 对地图进行截屏
              */
@@ -150,12 +231,12 @@ public class ShareMyLocationActivity extends BaseActivity {
                 @Override
                 public void onMapScreenShot(Bitmap bitmap, int status) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                    if(null == bitmap){
+                    if (null == bitmap) {
                         return;
                     }
-                    String path= Environment.getExternalStorageDirectory()+"/etuLocation/"+ sdf.format(new Date()) + ".png";
-                    Tools.saveImage(path,big(bitmap,300f,200f),200);
-
+                    String path = Environment.getExternalStorageDirectory() + "/etuLocation/" + sdf.format(new Date()) + ".png";
+                    Tools.saveImage(path,big(bitmap,400,230), 500);
+//                    Bitmap bmp=BitmapFactory.decodeFile("/data/user/0/com.yitu.etu/files/XTDCEAtyFJaU7wbTd2Bx7A/39");
                     if (point != null) {
                         Intent intent = new Intent();
                         hideWaitDialog();
@@ -168,6 +249,8 @@ public class ShareMyLocationActivity extends BaseActivity {
                             setResult(RESULT_OK, intent);
                             finish();
                         }
+                    }else{
+                        mAmap.addMarker(marker.getOptions());
                     }
 
                 }
@@ -411,9 +494,9 @@ public class ShareMyLocationActivity extends BaseActivity {
     }
 
     private Uri getMapUrl(double x, double y) {
-        String url = "http://restapi.amap.com/v3/staticmap?location=" + y + "," + x +
-                "&zoom=17&scale=2&size=300*200&markers=mid,,A:" + y + ","
-                + x + "&key=" + "be40ebd66fbbe4358c331c58d69ae086";
-        return Uri.parse(url);
+        return Uri.parse("http://restapi.amap.com/v3/staticmap?location="
+                + y + "," + x
+                + "&zoom=16&scale=2&size=408*240&markers=-1,http://api.91eto.com/assets/data/sys/icon124.png,0:"
+                + y + "," + x + "&key=be40ebd66fbbe4358c331c58d69ae086");
     }
 }

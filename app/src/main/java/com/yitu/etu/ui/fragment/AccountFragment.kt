@@ -45,13 +45,8 @@ class AccountFragment : BaseFragment() {
 
         EventBus.getDefault().register(this)
         initUserInfo(EtuApplication.getInstance().userInfo)
-        val location = EtuApplication.getInstance().location
-        if (location == null) {
-            LocationUtil.getInstance().startLocation {
-                tv_location.text = it?.city.Empty()
-            }
-        } else {
-            tv_location.text = location.city
+        LocationUtil.getInstance().startLocation {
+            tv_location.text = it?.city.Empty("定位失败")
         }
     }
 
@@ -165,11 +160,11 @@ class AccountFragment : BaseFragment() {
     }
 
     /**
-     * 登陆成功回调
+     * 登录成功回调
      */
     @Subscribe
     fun onEventLoginSuccess(event: LoginSuccessEvent?) {
-        //等于空代表退出登陆
+        //等于空代表退出登录
         initUserInfo(event?.userInfo)
     }
 

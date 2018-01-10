@@ -40,6 +40,7 @@ class PayOrderActivity : BaseActivity() {
                         finish()
                         if (bean.rechargetype == 0) {
                             EventBus.getDefault().post(EventRefresh(bean.classname))
+                            EventBus.getDefault().post(EventRefresh(MainActivity::class.java.simpleName))
                         }
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。

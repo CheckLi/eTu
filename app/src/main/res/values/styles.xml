@@ -22,6 +22,17 @@
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
 
+    <!-- 弹出框样式 -->
+    <style name="LoadingDialog2" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 模糊 -->
+        <item name="android:backgroundDimAmount">0.3</item>
+    </style>
+
     <style name="LoginDialog" parent="@android:style/Theme.Dialog">
         <!-- 背景透明 -->
         <item name="android:windowBackground">@android:color/transparent</item>

@@ -31,14 +31,14 @@ inline fun <reified T : Any> Context.post(url: String, params: HashMap<String, S
 }
 
 /**
- * 判断是否登陆
+ * 判断是否登录
  */
 fun Fragment.isLogin(): Boolean {
     return EtuApplication.getInstance().isLogin
 }
 
 /**
- * 判断是否登陆
+ * 判断是否登录
  */
 fun Context.isLogin(): Boolean {
     return EtuApplication.getInstance().isLogin

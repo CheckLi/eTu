@@ -72,7 +72,7 @@ inline fun <reified T : Activity> Context.nextActivity(requestCode: Int) {
 }
 
 /**
- * 进入下一个activity,需要检查是否登陆，如果未登录需要跳转到登陆界面
+ * 进入下一个activity,需要检查是否登录，如果未登录需要跳转到登录界面
  */
 inline fun <reified T : Activity> Context.nextCheckLoginActivity() {
     if(isLogin()) {
@@ -83,7 +83,7 @@ inline fun <reified T : Activity> Context.nextCheckLoginActivity() {
 }
 
 /**
- * 进入下一个activity,需要检查是否登陆，如果未登录需要跳转到登陆界面
+ * 进入下一个activity,需要检查是否登录，如果未登录需要跳转到登录界面
  */
 inline fun <reified T : Activity> Fragment.nextCheckLoginActivity() {
     if(isLogin()) {
@@ -94,7 +94,7 @@ inline fun <reified T : Activity> Fragment.nextCheckLoginActivity() {
 }
 
 /**
- * 进入下一个activity,需要检查是否登陆，如果未登录需要跳转到登陆界面
+ * 进入下一个activity,需要检查是否登录，如果未登录需要跳转到登录界面
  */
 inline fun <reified T : Activity> Fragment.nextCheckLoginActivity(vararg params: Pair<String, Any?>) {
     if(isLogin()) {
@@ -106,7 +106,7 @@ inline fun <reified T : Activity> Fragment.nextCheckLoginActivity(vararg params:
 }
 
 /**
- * 进入下一个activity,需要检查是否登陆，如果未登录需要跳转到登陆界面
+ * 进入下一个activity,需要检查是否登录，如果未登录需要跳转到登录界面
  */
 inline fun <reified T : Activity> Context.nextCheckLoginActivity(vararg params: Pair<String, Any?>) {
     if(isLogin()) {
