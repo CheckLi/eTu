@@ -1,7 +1,6 @@
 package com.yitu.etu.widget.chat;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Gravity;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.yitu.etu.R;
 import com.yitu.etu.dialog.LoadingDialog;
-import com.yitu.etu.dialog.TipsTimeDialog;
 import com.yitu.etu.entity.ObjectBaseEntity;
 import com.yitu.etu.eventBusItem.EventPlayYanHua;
 import com.yitu.etu.eventBusItem.EventRefresh;
@@ -92,23 +90,7 @@ public class RedPacketMessageItem extends IContainerItemProvider.MessageProvider
                 dialog.hideDialog();
                 if (response.success()) {
                     EventBus.getDefault().post(new EventRefresh(MainActivity.class.getSimpleName()));
-                    final TipsTimeDialog dialog = new TipsTimeDialog(view.getContext());
-//                    dialog.setMessage("恭喜成功领取平安符");
-                    dialog.setCount(1);
-                    dialog.showDialog();
                     EventBus.getDefault().post(new EventPlayYanHua(true));
-                    view.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            dialog.dismiss();
-                        }
-                    }, 6000);
-                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            EventBus.getDefault().post(new EventPlayYanHua(false));
-                        }
-                    });
                 } else {
                     ToastUtil.showMessage(response.getMessage());
                 }
