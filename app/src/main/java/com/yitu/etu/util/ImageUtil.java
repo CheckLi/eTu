@@ -25,6 +25,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.util.Base64;
@@ -48,7 +49,7 @@ import java.io.InputStream;
 public class ImageUtil {
 
     private static float[] carray = new float[20];
-    private static String cachePath = "/zoomImg";//压缩图片的时候使用的缓存路径
+    public static String cachePath = Environment.getExternalStorageDirectory() + "/etuImageCache/";//压缩图片的时候使用的缓存路径
 
     /**
      * 以最省内存的方式读取本地资源的图片

@@ -85,8 +85,8 @@ public class Tools {
 
         intent.putExtra("width", imageView.getWidth());//必须
         intent.putExtra("height", imageView.getHeight());//必须
-        context.startActivity(intent);
         ((BaseActivity) context).overridePendingTransition(0, 0);
+        context.startActivity(intent);
     }
 
     public static PopupWindow getPopupWindow(Context context, String[] strings, final AdapterView.OnItemClickListener onItemClick, String bgType) {
@@ -233,6 +233,9 @@ public class Tools {
      */
     public static void startChat(String title, String id, String chatContent, Context context) {
         RongIM.getInstance().startPrivateChat(context, id, title);
+        if(TextUtils.isEmpty(chatContent)){
+            return;
+        }
         // 构造 TextMessage 实例
         TextMessage myTextMessage = TextMessage.obtain(chatContent);
 

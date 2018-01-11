@@ -104,3 +104,19 @@ data class HistoryPanBean(
 		@SerializedName("created") val created: String = "", //2017-12-24 19:32:16
 		@SerializedName("status") val status: String = "" //已成功
 )
+
+
+
+data class OrderActionInfo(
+		@SerializedName("id") val id: Int = 0, //3
+		@SerializedName("action_id") val actionId: Int = 0, //23
+		@SerializedName("user_id") val userId: Int = 0, //22
+		@SerializedName("paytype") val paytype: Int = 0, //0
+		@SerializedName("money") val money: String = "", //0.10
+		@SerializedName("status") val status: String = "", //订单成功
+		@SerializedName("created") val created: Int = 0, //1515594720
+		@SerializedName("updated") val updated: Int = 0, //1515594720
+		@SerializedName("user") val user: UserInfo = UserInfo(),
+		@SerializedName("created_time") val createdTime: String = "" //2018-01-10 22:32:00
+)
+

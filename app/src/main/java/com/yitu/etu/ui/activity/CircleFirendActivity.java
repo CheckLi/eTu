@@ -76,7 +76,7 @@ public class CircleFirendActivity extends BaseActivity {
                 getUserIndex(false);
             }
         });
-        getUserIndex(true);
+
     }
 
     public void refresh(final boolean isRefresh) {
@@ -85,7 +85,8 @@ public class CircleFirendActivity extends BaseActivity {
 
     @Override
     public void getData() {
-
+        showWaitDialog("加载中...");
+        getUserIndex(true);
     }
 
     @Override
@@ -95,7 +96,6 @@ public class CircleFirendActivity extends BaseActivity {
 
     public void getUserIndex(final boolean isRefresh) {
         if (isRefresh) {
-            showWaitDialog("加载中...");
             page = 1;
             RefreshSuccessInit(layout_refresh,isRefresh);
         }

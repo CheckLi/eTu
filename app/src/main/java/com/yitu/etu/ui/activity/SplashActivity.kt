@@ -1,14 +1,17 @@
 package com.yitu.etu.ui.activity
 
+import android.content.Intent
 import android.os.Handler
 import android.view.View
-import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.R
 
 class SplashActivity : BaseActivity() {
     private var mHandler = Handler()
     private var mTime = Runnable {
-        nextActivity<MainActivity>(true)
+        startActivity(Intent(this,MainActivity::class.java))
+        overridePendingTransition(R.anim.abc_fade_in,R.anim.abc_fade_out)
+//        nextActivity<MainActivity>(true)
+        finish()
     }
 
     override fun getLayout(): Int = R.layout.activity_test
@@ -21,6 +24,7 @@ class SplashActivity : BaseActivity() {
     override fun initView() {
         mHandler.postDelayed(mTime, 1000)
     }
+
 
     override fun getData() {
     }
@@ -36,7 +40,7 @@ class SplashActivity : BaseActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.open_animation, R.anim.close_animation)
+        overridePendingTransition(R.anim.abc_fade_in,R.anim.abc_fade_out)
     }
 
 

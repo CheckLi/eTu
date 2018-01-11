@@ -310,8 +310,7 @@
         <activity
             android:name=".ui.activity.PayOrderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.MyBoonActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

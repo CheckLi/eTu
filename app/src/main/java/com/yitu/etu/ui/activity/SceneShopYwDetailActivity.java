@@ -254,7 +254,7 @@ public class SceneShopYwDetailActivity extends BaseActivity {
                     .toPayActivity(this,params);
         }
         if (v.getId() == R.id.image) {
-            Tools.startChat(shopData.getName(),shopData.getUser_id()+"","可以一起去旅行吗？",this);
+            Tools.startChat(shopData.getName(),shopData.getUser_id()+"","",this);
         }
 
     }

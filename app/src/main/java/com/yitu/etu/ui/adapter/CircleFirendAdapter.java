@@ -21,7 +21,7 @@ import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
 import com.yitu.etu.util.activityUtil;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
-import com.yitu.etu.widget.MgridView1;
+import com.yitu.etu.widget.MGridView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
 
     @Override
     public void initItemView(int position, View convertView, ViewHolder viewHolder) {
-        viewHolder.imageGridView = (MgridView1) convertView.findViewById(R.id.gridView);
+        viewHolder.imageGridView = (MGridView) convertView.findViewById(R.id.gridView);
         viewHolder.chartGridView = (ListView) convertView.findViewById(R.id.chartGridView);
         viewHolder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
         viewHolder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
@@ -200,7 +200,7 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
     }
 
     class ViewHolder extends BaseAdapter.abstractViewHodler {
-        MgridView1 imageGridView;
+        MGridView imageGridView;
         ListView chartGridView;
         TextView tv_name, tv_time, tv_good, text, tv_delete;
         ImageView image, img_pl, img_dz;

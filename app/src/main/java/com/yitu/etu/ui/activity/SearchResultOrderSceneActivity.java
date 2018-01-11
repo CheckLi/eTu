@@ -2,25 +2,30 @@ package com.yitu.etu.ui.activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
 import com.yitu.etu.entity.MerchantBaseEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
+import com.yitu.etu.entity.OrderActionInfo;
 import com.yitu.etu.entity.OrderSceneEntity;
 import com.yitu.etu.entity.UserInfo;
 import com.yitu.etu.tools.GsonCallback;
 import com.yitu.etu.tools.Http;
 import com.yitu.etu.tools.Urls;
+import com.yitu.etu.ui.adapter.OrderActionAdapter;
 import com.yitu.etu.util.DateUtil;
 import com.yitu.etu.util.TextUtils;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.Tools;
+import com.yitu.etu.util.activityUtil;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.util.pay.BuyType;
 import com.yitu.etu.util.pay.PayUtil;
@@ -36,6 +41,14 @@ import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import okhttp3.Call;
 
+/**
+ * 第一，出行活动下方有参与者的列表，以及参与状态
+ * 第二，出行活动发起者最初看到的有三个列表，分别是收藏、创建群聊、申请结算
+ * 创建群聊：当没有参与者时则提示尚无参与者，有的话直接执行创建操作，创建之后，当chat_id不为空时，这里则变成进入群聊，点击进入对应群聊
+ * 申请结算：申请结算之后，当status=3，为已申请结算，当status=4，为结算完成
+ * 第三，出行活动参与者最初看到的是收藏、参与
+ * 当参与之后，则变成收藏、进入群聊、以及第三个确认付款，当点击确认付款之后，第三个根据orderinfo的status=2时，则为已确认付款
+ */
 public class SearchResultOrderSceneActivity extends BaseActivity {
 
 
@@ -54,10 +67,12 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
     private TextView tv_need_money;
     private CarouselView carouselView;
     private LinearLayout li_content;
+    private ListView mListView;
     private boolean isFromMe;
     private LinearLayout li2;
     private int status;
     private OrderSceneEntity data;
+    OrderActionAdapter adapter;
 
     @Override
     public int getLayout() {
@@ -100,6 +115,9 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
         li_content = (LinearLayout) findViewById(R.id.li_content);
         carouselView = (CarouselView) findViewById(R.id.carouselView);
 
+        mListView = (ListView) findViewById(R.id.listview_user);
+        adapter = new OrderActionAdapter(new ArrayList<OrderActionInfo>());
+        mListView.setAdapter(adapter);
         tv_address = (TextView) findViewById(R.id.tv_address);
         tv_collect = (TextView) findViewById(R.id.tv_collect);
         tv_ql = (TextView) findViewById(R.id.tv_ql);
@@ -143,23 +161,23 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
                     public void onClick(View v) {
                         if (TextUtils.isEmpty(bean.getChat_id())) {
                             //创建群聊
-                            createChat(bean.id+"");
+                            createChat(bean.id + "");
                         } else {
                             //发起群聊
-                            Tools.startGroupChat(v.getContext(),bean.chat_id,bean.name+"群聊");
+                            Tools.startGroupChat(v.getContext(), bean.chat_id, bean.name + "群聊");
                         }
                     }
                 });
-               // 已申请结算这个，是根据status状态来的，当为3时表示 已申请结算；当为4时表示 结算完成
-                if(bean.status==3) {
+                // 已申请结算这个，是根据status状态来的，当为3时表示 已申请结算；当为4时表示 结算完成
+                if (bean.status == 3) {
                     tv_js.setEnabled(false);
                     tv_js.setText("已申请结算");
-                }else  if(bean.status==4){
+                } else if (bean.status == 4) {
                     tv_js.setEnabled(false);
                     tv_js.setText("结算完成");
                 }
             }
-        } else if(bean!=null){
+        } else if (bean != null) {
             /**
              * 快乐 ^ 物语  16:55:19
              对于用户来说有一个is_join字段，
@@ -168,12 +186,44 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
              如果是1的话，当状态为2时，
              则只有一个已确认付款的不可点击的按钮，当有chat_id时，则有进入群聊的按钮
              */
-            switch(bean.is_join){
-                case 2:
-                    if(TextUtils.isEmpty(bean.chat_id)){
-                        tv_state.setText("已确认付款");
-                    }else{
-                        tv_state.setText("进入群聊");
+            switch (bean.is_join) {
+                case 1:
+                    if (TextUtils.isEmpty(bean.chat_id)) {
+                        if (bean.status == 2) {
+                            tv_state.setEnabled(false);
+                            tv_state.setText("已确认付款");
+                        } else {
+                            tv_state.setText("确认付款");
+                            tv_state.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    tyAction();
+                                }
+                            });
+                        }
+                    } else {
+                        li2.setVisibility(View.VISIBLE);
+                        tv_state.setVisibility(View.GONE);
+                        tv_ql.setText("进入群聊");
+                        if (bean.status == 2) {
+                            tv_js.setEnabled(false);
+                            tv_js.setText("已确认付款");
+                        } else {
+                            tv_js.setText("确认付款");
+                            tv_js.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    tyAction();
+                                }
+                            });
+                        }
+                        tv_ql.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //发起群聊
+                                Tools.startGroupChat(v.getContext(), bean.chat_id, bean.name + "群聊");
+                            }
+                        });
                     }
                     break;
 
@@ -185,21 +235,17 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
 
     /**
      * 创建群聊
+     *
      * @param action_id
      */
-    private void createChat(final String action_id){
-        List<UserInfo> list=new ArrayList<>();
-        UserInfo userInfo=new UserInfo();
-        userInfo.setId(22);
-        list.add(userInfo);
-        data.setUserlist(list);
-        if(data.getUserlist()==null||data.getUserlist().size()==0) {
+    private void createChat(final String action_id) {
+        if (data.getUserlist() == null || data.getUserlist().size() == 0) {
             showToast("没有用户参与无法创建群聊");
             return;
         }
-        List<String> targetUserIds=new ArrayList<>();
+        List<String> targetUserIds = new ArrayList<>();
         for (UserInfo info : data.getUserlist()) {
-            targetUserIds.add(info.getId()+"");
+            targetUserIds.add(info.getId() + "");
         }
         RongIM.getInstance().createDiscussionChat(context, targetUserIds, title, new RongIMClient.CreateDiscussionCallback() {
             @Override
@@ -218,7 +264,7 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
                             UserInfo info = response.data;
                             io.rong.imlib.model.UserInfo userInfo = new io.rong.imlib.model.UserInfo(String.valueOf(info.getId()), info.getName(), Uri.parse(Urls.address + info.getHeader()));
                             RongIM.getInstance().refreshUserInfoCache(userInfo);
-                        }else{
+                        } else {
                             showToast(response.getMessage());
                         }
                     }
@@ -233,9 +279,45 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
 
     }
 
+    /**
+     * 用户付款后确认同意活动付款
+     */
+    private void tyAction() {
+        showWaitDialog("确认中...");
+        HashMap<String, String> map = new HashMap<>();
+        map.put("action_id", id);
+        Http.post(Urls.URL_AGREE_ACTION_PAY, map, new GsonCallback<ObjectBaseEntity<Object>>() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                showToast("无法确认");
+                hideWaitDialog();
+            }
+
+            @Override
+            public void onResponse(ObjectBaseEntity<Object> response, int id) {
+                hideWaitDialog();
+                if (response.success()) {
+                    tv_js.setEnabled(false);
+                    tv_js.setText("已确认付款");
+                    tv_state.setEnabled(false);
+                    tv_state.setText("已确认付款");
+                } else {
+                    showToast(response.getMessage());
+                }
+            }
+        });
+    }
+
     @Override
     public void initListener() {
-
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("user_id", data.getUser_id() + "");
+                activityUtil.nextActivity(context, SearchResultUserActivity.class, bundle, false);
+            }
+        });
     }
 
     //活动收藏
@@ -297,7 +379,7 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
                         tv_need_money.setText("无需出行费");
                     }
                     ImageLoadUtil.getInstance().loadImage(image, Urls.address + data.getUser().getHeader(), 200, 200);
-
+                    adapter.replaceAll(response.data.getOrderlist());
                 }
             }
         });
@@ -319,7 +401,7 @@ public class SearchResultOrderSceneActivity extends BaseActivity {
                 @Override
                 public void onResponse(ObjectBaseEntity<MerchantBaseEntity> response, int i) {
                     hideWaitDialog();
-                    if(response.success()) {
+                    if (response.success()) {
                         tv_js.setText("已申请结算");
                         tv_js.setEnabled(false);
                     }

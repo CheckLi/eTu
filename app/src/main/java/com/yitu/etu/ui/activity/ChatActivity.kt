@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.huizhuang.zxsq.utils.nextActivity
-import com.xiaozhi.firework_core.FireWorkView
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
@@ -20,6 +19,7 @@ import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.fragment.Chat.sendMessage
 import com.yitu.etu.ui.fragment.RealTimeMapFragment
 import com.yitu.etu.util.*
+import com.yitu.etu.widget.FireWorkView
 import com.yitu.etu.widget.chat.RealTimeLocationEndMessage
 import io.rong.imkit.RongIM
 import io.rong.imkit.fragment.ConversationFragment
@@ -42,6 +42,8 @@ class ChatActivity : BaseActivity() {
     private var messageType: Message.MessageDirection? = null
     private var chatId: String? = null
     private lateinit var yanhua: FireWorkView
+    private lateinit var yanhua1: FireWorkView
+    private lateinit var yanhua2: FireWorkView
     private var isFriend = false
 
     override fun getLayout(): Int = R.layout.activity_chat
@@ -83,6 +85,7 @@ class ChatActivity : BaseActivity() {
                                     } else {
                                         addFriend()
                                     }
+                                2 ->onEventPlay(EventPlayYanHua(true))
                                 else -> ""
                             }
                         }
@@ -123,10 +126,16 @@ class ChatActivity : BaseActivity() {
         /**
          * 添加烟花曾
          */
-        yanhua = FireWorkView(this@ChatActivity, R.drawable.icon1)
+        yanhua = FireWorkView(this@ChatActivity, R.drawable.icon_1)
+        yanhua1 = FireWorkView(this@ChatActivity, R.drawable.icon_2)
+        yanhua2 = FireWorkView(this@ChatActivity, R.drawable.icon_3)
         val params = FrameLayout.LayoutParams(-1, -1)
         (window.decorView as ViewGroup).addView(yanhua, params)
+        (window.decorView as ViewGroup).addView(yanhua1, params)
+        (window.decorView as ViewGroup).addView(yanhua2, params)
         yanhua.playAnim()
+        yanhua1.playAnim()
+        yanhua2.playAnim()
     }
 
     override fun getData() {
@@ -181,18 +190,27 @@ class ChatActivity : BaseActivity() {
 
     val hand = Handler()
     val run = Runnable {
+        fl_animation.visibility = View.GONE
+        stopView()
+    }
+
+    private fun stopView() {
         yanhua.stopAnim()
+        yanhua2.stopAnim()
+        yanhua1.stopAnim()
         (window.decorView as ViewGroup).removeView(yanhua)
+        (window.decorView as ViewGroup).removeView(yanhua1)
+        (window.decorView as ViewGroup).removeView(yanhua2)
     }
 
     @Subscribe
     fun onEventPlay(event: EventPlayYanHua) {
         if (event.play) {
             playAnimation()
-            hand.postDelayed(run, 6000)
+            fl_animation.visibility = View.VISIBLE
+            hand.postDelayed(run, 4000)
         } else {
-            yanhua.stopAnim()
-            (window.decorView as ViewGroup).removeView(yanhua)
+            stopView()
         }
     }
 

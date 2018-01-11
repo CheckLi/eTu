@@ -176,12 +176,12 @@ public class ReleaseMyTravelsInputAdapter extends BaseAdapter<String, ReleaseMyT
                 String s = data.get(i);
                 if (s.contains("https:") || s.contains("http:")) {
                     if (images.containsKey(s)) {
-                        buffer.append(String.format(str.get(i) + "<img  src=\"%s\"/>", images.get(s)));
+                        buffer.append(String.format(str.get(i) + "<img width=\"%s\" src=\"%s\" />","100%", images.get(s)));
                     }
                 } else {
-                    buffer.append(String.format(str.get(i) + "<img  src=\"%s\"/>", FileUtil.GetImageStr(s)));
+                    buffer.append(String.format(str.get(i) + "<img width=\"%s\" src=\"%s\"/>","100%", FileUtil.GetImageStr(s),"100%"));
 
-                    buffer2.append(String.format(str.get(i) + "<img  src=\"%s\"/>", s));
+                    buffer2.append(String.format(str.get(i) + "<img width=\"%s\" src=\"%s\"/>","100%", s));
                 }
             }
         }

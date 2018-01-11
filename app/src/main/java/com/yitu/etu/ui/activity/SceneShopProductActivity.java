@@ -301,7 +301,7 @@ public class SceneShopProductActivity extends BaseActivity {
             startActivity(new Intent(context, BuyCarActivity.class));
         }
         if (v.getId() == R.id.image) {
-            Tools.startChat(response.getInfo().getName(), response.getInfo().getUser_id() + "", "可以一起去旅行吗？", this);
+            Tools.startChat(response.getInfo().getName(), response.getInfo().getUser_id() + "", "", this);
         }
     }
 }

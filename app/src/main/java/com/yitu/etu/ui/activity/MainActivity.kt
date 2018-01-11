@@ -240,6 +240,22 @@ class MainActivity : BaseActivity() {
             refreshMyInfo()
         }
     }
+
+    var time=0L
+
+    override fun onBackPressed() {
+        if(System.currentTimeMillis()-time>2000){
+            showToast("再按一次返回退出程序")
+            time=System.currentTimeMillis()
+        }else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(-1,R.anim.abc_fade_out)
+    }
 }
 
 private class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {

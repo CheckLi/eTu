@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +22,7 @@ import com.yitu.etu.Iinterface.ImageSelectSuccessListener;
 import com.yitu.etu.R;
 import com.yitu.etu.dialog.LoadingDialog;
 import com.yitu.etu.tools.MyActivityManager;
+import com.yitu.etu.util.ImageUtil;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.ActionBarView;
@@ -27,7 +31,12 @@ import com.yuyh.library.imgsel.common.ImageLoader;
 import com.yuyh.library.imgsel.config.ISCameraConfig;
 import com.yuyh.library.imgsel.config.ISListConfig;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @className:BaseActivity
@@ -46,10 +55,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     public ActionBarView mActionBarView;
     public ImageSelectSuccessListener mSuccessListener;
     public Context context;
+    public boolean isCrop = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context=this;
+        context = this;
         className = getClass().getSimpleName();
         setContentView(getLayout());
         getIntentExtra(getIntent());
@@ -97,6 +108,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void Single(boolean crop) {
+        this.isCrop = crop;
         ISListConfig config = new ISListConfig.Builder()
                 // 是否多选
                 .multiSelect(false)
@@ -123,7 +135,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         ISNav.getInstance().toListActivity(this, config, REQUEST_LIST_CODE);
     }
 
-    public void Camera(boolean isCrop,int aspectX,int aspectY,int outx,int outy) {
+    public void Camera(boolean isCrop, int aspectX, int aspectY, int outx, int outy) {
+        this.isCrop = isCrop;
         ISCameraConfig config = new ISCameraConfig.Builder()
                 .needCrop(isCrop)
                 .cropSize(aspectX, aspectY, outx, outy)
@@ -133,7 +146,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void Camera() {
-        Camera(true,1,1,200,200);
+        Camera(true, 1, 1, 200, 200);
     }
 
     @Override
@@ -141,16 +154,62 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LIST_CODE && resultCode == RESULT_OK && data != null) {
             List<String> pathList = data.getStringArrayListExtra("result");
-            selectSuccess(pathList);
-            if (pathList.size() > 0) {
-                imageResult(pathList.get(0));
-            }
+            zoomImage(pathList);
         } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK && data != null) {
             String path = data.getStringExtra("result");
             selectSuccess(path);
             imageResult(path);
         }
     }
+
+    /**
+     * 压缩图片
+     */
+    private void zoomImage(final List<String> pathList) {
+        showWaitDialog("压缩中...");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        final String toPath = ImageUtil.cachePath + sdf.format(new Date()) + ".png";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (pathList.size() > 0) {
+                    try {
+                        String path = pathList.get(0);
+                        ImageUtil.transImage(path, toPath, 1, 400, 50);
+                        Message msg = mHandler1.obtainMessage();
+                        msg.obj = toPath;
+                        msg.what = 1;
+                        msg.sendToTarget();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        mHandler1.sendEmptyMessage(2);
+                    }
+                }
+            }
+        }).start();
+
+
+    }
+
+    /**
+     * 处理图片压缩后值的返回
+     */
+    Handler mHandler1 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            hideWaitDialog();
+            if (msg.what == 1) {
+                String toPath = (String) msg.obj;
+                List<String> list = new ArrayList<>();
+                list.add(toPath);
+                selectSuccess(list);
+                if (list.size() > 0) {
+                    imageResult(toPath);
+                }
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public abstract @LayoutRes
     int getLayout();
@@ -178,6 +237,49 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 InputMethodManager.HIDE_NOT_ALWAYS);
             }
         }
+    }
+
+    /**
+     * 延时显示键盘
+     *
+     * @param v
+     * @param delayTime
+     */
+    public void showSoftInput(final View v, long delayTime) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager m = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                m.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, delayTime);
+    }
+
+    /**
+     * 弹出键盘
+     */
+    public void showSoftInput() {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    //强制显示或者关闭系统键盘
+    public static void KeyBoard(final EditText txtSearchKey, final String status) {
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                InputMethodManager m = (InputMethodManager)
+                        txtSearchKey.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (status.equals("open")) {
+                    m.showSoftInput(txtSearchKey, InputMethodManager.SHOW_FORCED);
+                } else {
+                    m.hideSoftInputFromWindow(txtSearchKey.getWindowToken(), 0);
+                }
+            }
+        }, 300);
     }
 
     /**
@@ -310,8 +412,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      *
      * @param listener
      */
-    public void setRightClick(@DrawableRes int drawable,int color, View.OnClickListener listener) {
-        mActionBarView.setRightImage(drawable,color, listener);
+    public void setRightClick(@DrawableRes int drawable, int color, View.OnClickListener listener) {
+        mActionBarView.setRightImage(drawable, color, listener);
     }
 
     /**

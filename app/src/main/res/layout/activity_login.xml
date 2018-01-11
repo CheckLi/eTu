@@ -22,6 +22,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="30dp"
+            android:textSize="14sp"
             android:singleLine="true"
             android:background="@drawable/round_white_5dp_top"
             android:hint="手机号/昵称"

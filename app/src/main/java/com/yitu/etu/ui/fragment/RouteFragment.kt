@@ -48,7 +48,7 @@ class RouteFragment : BaseFragment() {
     override fun initView() {
         EventBus.getDefault().register(this)
         type = arguments.getInt("type")
-        adapter = RouteAdapter(listOf())
+        adapter = RouteAdapter(type,listOf())
         listView_order.adapter = adapter
     }
 
@@ -145,8 +145,9 @@ class RouteFragment : BaseFragment() {
             }
         }
         listView_order.setOnItemClickListener { parent, view, position, id ->
+            val toId=if(type==2)adapter.getItem(position).id.toString()else adapter.getItem(position).actionId
             nextActivityFromFragment<SearchResultOrderSceneActivity>(
-                    "id" to adapter.getItem(position).id.toString(),
+                    "id" to toId,
                     "title" to adapter.getItem(position).name,
                     "isFrom" to true)
         }

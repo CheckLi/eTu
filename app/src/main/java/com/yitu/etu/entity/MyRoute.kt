@@ -40,7 +40,10 @@ data class MyRouteBean(
         @SerializedName("map_id") val mapId: Int = 0, //0
         @SerializedName("created") val created: String = "", //2017-12-08 20:54:28
         @SerializedName("updated") val updated: Int = 0, //0
-        @SerializedName("image") val image: String = "" ///assets/data/20171208/15127376676145.jpg
+        @SerializedName("image") val image: String = "", ///assets/data/20171208/15127376676145.jpg
+        @SerializedName("action_name") val actionName: String = "", ///assets/data/20171208/15127376676145.jpg
+        @SerializedName("action_id") val actionId: String = "", ///assets/data/20171208/15127376676145.jpg
+        @SerializedName("paytype") val paytype: String = "" ///assets/data/20171208/15127376676145.jpg
 )
 
 

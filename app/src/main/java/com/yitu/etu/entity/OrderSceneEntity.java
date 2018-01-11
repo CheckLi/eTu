@@ -87,8 +87,15 @@ public class OrderSceneEntity {
     public int is_join;
     public List<String> images;
     public List<UserInfo> userlist;
-//    public List<?> orderlist;
+    public List<OrderActionInfo> orderlist;
 
+    public List<OrderActionInfo> getOrderlist() {
+        return orderlist;
+    }
+
+    public void setOrderlist(List<OrderActionInfo> orderlist) {
+        this.orderlist = orderlist;
+    }
 
     public List<UserInfo> getUserlist() {
         return userlist;
