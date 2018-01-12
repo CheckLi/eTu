@@ -120,10 +120,13 @@ public class ChooseImageAdapter extends BaseAdapter<String, ChooseImageAdapter.V
                     public void onClick(View v) {
                         images.remove(getItem(position));
                         removeByPosition(position);
+                        delArray.remove(position);
                     }
                 });
                 if(delArray.indexOfKey(position)>-1){
                     viewHolder.btn_delete.setVisibility(View.VISIBLE);
+                }else{
+                    viewHolder.btn_delete.setVisibility(View.GONE);
                 }
 
             convertView.setOnLongClickListener(new View.OnLongClickListener() {
