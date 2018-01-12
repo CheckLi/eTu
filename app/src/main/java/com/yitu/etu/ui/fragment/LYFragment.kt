@@ -63,6 +63,7 @@ class LYFragment : BaseFragment() {
 
     }
 
+
     override fun initListener() {
         ll_ly.setOnClickListener {
             nextCheckLoginActivity<CircleFirendActivity>()

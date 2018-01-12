@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
@@ -39,6 +40,7 @@ import com.yitu.etu.util.PrefrersUtil;
 import com.yitu.etu.util.TextUtils;
 import com.yitu.etu.util.ToastUtil;
 import com.yitu.etu.util.activityUtil;
+import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.util.location.LocationUtil;
 import com.yitu.etu.widget.chat.PacketMessage;
 import com.yitu.etu.widget.chat.RealTimeLocationEndMessage;
@@ -46,6 +48,8 @@ import com.yitu.etu.widget.chat.RealTimeLocationMessageEndItem;
 import com.yitu.etu.widget.chat.RedPacketMessageItem;
 import com.yitu.etu.widget.chat.ShareImageMessageItem;
 import com.yitu.etu.widget.chat.ShareMessage;
+import com.yuyh.library.imgsel.ISNav;
+import com.yuyh.library.imgsel.common.ImageLoader;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -115,6 +119,15 @@ public class EtuApplication extends Application {
 //        Picasso.with(this).setIndicatorsEnabled(true);
         initLocation();//获取定位信息
         initWeixinPay();//初始化微信支付
+        /**
+         * 初始图片
+         */
+        ISNav.getInstance().init(new ImageLoader() {
+            @Override
+            public void displayImage(Context context, String path, ImageView imageView) {
+                ImageLoadUtil.getInstance().loadImage(imageView, path, 80, 80);
+            }
+        });
     }
 
     public String getAPP_ID() {

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -24,10 +23,8 @@ import com.yitu.etu.dialog.LoadingDialog;
 import com.yitu.etu.tools.MyActivityManager;
 import com.yitu.etu.util.ImageUtil;
 import com.yitu.etu.util.ToastUtil;
-import com.yitu.etu.util.imageLoad.ImageLoadUtil;
 import com.yitu.etu.widget.ActionBarView;
 import com.yuyh.library.imgsel.ISNav;
-import com.yuyh.library.imgsel.common.ImageLoader;
 import com.yuyh.library.imgsel.config.ISCameraConfig;
 import com.yuyh.library.imgsel.config.ISListConfig;
 
@@ -79,12 +76,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void init() {
         mWaitDialog = new LoadingDialog(this, "");
-        ISNav.getInstance().init(new ImageLoader() {
-            @Override
-            public void displayImage(Context context, String path, ImageView imageView) {
-                ImageLoadUtil.getInstance().loadImage(imageView, path, 80, 80);
-            }
-        });
     }
 
     public void Multiselect() {

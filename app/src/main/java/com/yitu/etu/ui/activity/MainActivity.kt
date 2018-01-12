@@ -39,6 +39,7 @@ import java.lang.Exception
 
 
 class MainActivity : BaseActivity() {
+    private var defaultPosition=1;
     override fun getLayout(): Int = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,13 +50,18 @@ class MainActivity : BaseActivity() {
         mActionBarView.hideLeftImage()
     }
 
+    override fun getIntentExtra(intent: Intent?) {
+        defaultPosition=intent?.getIntExtra("defaultPosition",1)?:1
+        super.getIntentExtra(intent)
+    }
+
     override fun initView() {
         EventBus.getDefault().register(this)
         viewPager.adapter = MyPagerAdapter(supportFragmentManager)
         tab_select.setViewPager(viewPager, intArrayOf(R.drawable.icon136, -1, R.drawable.icon130))
         viewPager.offscreenPageLimit = 2
-        tab_select.currentTab = 1
-        select(1)
+        tab_select.currentTab = defaultPosition
+        select(defaultPosition)
         if (BuildConfig.BUILD_TYPE == "etuTest") {
             //超过20天没交钱，此APK无法被打开
             val time = Tools.getTimeDifference("2018-1-9 00:00", DateUtil.getTime("${System.currentTimeMillis() / 1000}", "yyyy-MM-dd HH:mm"))
@@ -211,6 +217,7 @@ class MainActivity : BaseActivity() {
         Glide.get(this).clearMemory()
         RongIM.getInstance().disconnect()
         RongIM.getInstance().removeUnReadMessageCountChangedObserver(unReadListener)
+        MyActivityManager.getInstance().finishAllActivity()
         super.onDestroy()
     }
 
@@ -253,6 +260,10 @@ class MainActivity : BaseActivity() {
     }
 
     override fun finish() {
+
+        android.os.Process.killProcess(android.os.Process.myPid())
+        System.exit(0)
+        System.gc()
         super.finish()
         overridePendingTransition(-1,R.anim.abc_fade_out)
     }

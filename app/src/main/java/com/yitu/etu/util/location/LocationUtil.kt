@@ -21,13 +21,14 @@ class LocationUtil {
     companion object {
         @JvmStatic
         fun getInstance(): LocationUtil {
-            return LocationUtilInstance.instance
+            return LocationUtil()
         }
     }
 
-    object LocationUtilInstance {
-        val instance=LocationUtil()
+    fun onDestory(){
+        mLocationClient?.onDestroy()
     }
+
     
     init {
         //初始化定位
@@ -72,6 +73,7 @@ class LocationUtil {
         mLocationClient?.setLocationListener {it->
             locationListener(it)
             mLocationClient?.stopLocation()
+            onDestory()
         }
         mLocationClient?.stopLocation()
         // 启动定位

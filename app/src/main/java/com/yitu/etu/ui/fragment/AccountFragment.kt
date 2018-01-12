@@ -50,6 +50,11 @@ class AccountFragment : BaseFragment() {
         }
     }
 
+    override fun onDestroyView() {
+        LocationUtil.getInstance().onDestory()
+        super.onDestroyView()
+    }
+
     override fun getData() {
 
     }

@@ -24,7 +24,10 @@ public class SealNotificationReceiver extends PushMessageReceiver {
     /* push 通知点击事件 */
     @Override
     public boolean onNotificationMessageClicked(Context context, PushNotificationMessage message) {
-        context.startActivity(new Intent(context,MainActivity.class));
+        Intent intent=new Intent(context,MainActivity.class);
+        intent.putExtra("defaultPosition",0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
         return true; // 返回 false, 会走融云 SDK 默认处理逻辑, 即点击该通知会打开会话列表或会话界面; 返回 true, 则由您自定义处理逻辑。
     }
 }
