@@ -49,12 +49,23 @@ object BuyCarUtil {
         } else {
             buys.forEachIndexed { index, Car ->
                 if (Car.id == buycar.id) {
-                    buys.remove(buycar)
+                    buys.remove(Car)
                     PrefrersUtil.getInstance().saveClass(AppConstant.PARAM_SAVE_BUY_CAR, buys)
                     return
                 }
             }
 
+        }
+    }
+
+    @JvmStatic
+    fun removeCar(ids:String){
+        if(ids.isNullOrBlank()){
+            return
+        }
+        val id=ids.split(",")
+        id?.forEach {
+            cutBuyCar(BuyCar(it.toInt()))
         }
     }
 

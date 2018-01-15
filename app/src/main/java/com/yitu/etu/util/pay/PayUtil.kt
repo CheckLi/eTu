@@ -10,6 +10,7 @@ import com.yitu.etu.entity.PayResultBean
 import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.tools.Http.post
 import com.yitu.etu.tools.Urls
+import com.yitu.etu.ui.activity.BuyCarActivity
 import com.yitu.etu.ui.activity.MainActivity
 import com.yitu.etu.ui.activity.PayOrderActivity
 import com.yitu.etu.util.Empty
@@ -123,11 +124,12 @@ class PayUtil(val id: Int, val price: Float, val desc: String, val rechargetype:
         post(url, params, object : StringCallback() {
             override fun onResponse(response: String, id: Int) {
                 val json = JSONObject(response)
-
                 if (!activity.isFinishing) {
                     activity.hideWaitDialog()
                     if (json.getInt("status") == 1) {
-
+                    if(classname==BuyCarActivity::class.java.simpleName){
+                        EventBus.getDefault().post(EventRefresh(classname))
+                    }
                         if (type == 0) {
                             activity.showToast("支付成功")
                             activity.dialog.dismiss()

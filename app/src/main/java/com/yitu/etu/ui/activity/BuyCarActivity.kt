@@ -3,12 +3,16 @@ package com.yitu.etu.ui.activity
 import android.view.MotionEvent
 import android.view.View
 import com.yitu.etu.R
+import com.yitu.etu.entity.BuyCar
+import com.yitu.etu.eventBusItem.EventRefresh
 import com.yitu.etu.ui.adapter.BuyCarAdapter
 import com.yitu.etu.util.BuyCarUtil
 import com.yitu.etu.util.formatPrice
 import com.yitu.etu.util.pay.BuyType
 import com.yitu.etu.util.pay.PayUtil
 import kotlinx.android.synthetic.main.activity_buy_car2.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -19,9 +23,13 @@ class BuyCarActivity : BaseActivity() {
 
     override fun initActionBar() {
         title = "购物车"
+        setRightText("添加"){
+            BuyCarUtil.addBuyCar(BuyCar(Random().nextInt(10)))
+        }
     }
 
     override fun initView() {
+        EventBus.getDefault().register(this)
         adapter = BuyCarAdapter(listOf())
         listview.adapter = adapter
     }
@@ -102,14 +110,17 @@ class BuyCarActivity : BaseActivity() {
          */
         to_settlement.setOnClickListener {
             val params = HashMap<String, String>()
-            params.put("product_id", adapter.getPutId())
+            ids = adapter.getPutId()
+            params.put("product_id", ids)
             params.put("count", adapter.getPutCount())
             PayUtil.getInstance(-1, totalPrice, "购物车购买", BuyType.TYPE_BUY_SHOP_PROJECT)
                     .toPayActivity(this, params)
+            onEventClear(EventRefresh(className))
         }
 
     }
 
+    var ids: String = ""
     private fun initTotalPrice() {
         tv_total_price.setSpanText("合计：%￥${totalPrice.formatPrice()}%")
     }
@@ -121,4 +132,20 @@ class BuyCarActivity : BaseActivity() {
         super.onPause()
     }
 
+    /**
+     * 购买成功清空购物车
+     */
+    @Subscribe
+    fun onEventClear(event: EventRefresh) {
+        if (event.classname == className) {
+            BuyCarUtil.removeCar(ids)
+            ids=""
+            initData()
+        }
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
 }
