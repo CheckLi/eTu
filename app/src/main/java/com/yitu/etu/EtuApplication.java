@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -85,6 +86,12 @@ public class EtuApplication extends Application {
     public IWXAPI mIWXAPI;
     public static EtuApplication getInstance() {
         return mInstance;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
     }
 
     @Override
