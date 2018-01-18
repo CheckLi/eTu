@@ -146,4 +146,6 @@ public class Urls {
     public static final String URL_LOGIN_WEIBO=address+"/user/wblogin";
     public static final String URL_CHECK_FRIEND=address+"/chat/isFrend";//检查是否是好友
     public static final String URL_AGREE_ACTION_PAY=address+"/action/agreeOrder";//⽤户⽀付之后同意活动付款
+    public static final String URL_VERSION=address+"/page/version";//⽤户⽀付之后同意活动付款
+
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.huizhuang.zxsq.utils.nextActivity
+import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
@@ -58,6 +59,14 @@ class ChatActivity : BaseActivity() {
         } else {
             setRightBtn()
         }
+
+        if (mConversationType == Conversation.ConversationType.PRIVATE&&EtuApplication.getInstance().isLogin) {
+            val idd = Integer.parseInt(TextUtils.getText(intent.data.getQueryParameter("targetId"), "0"))
+            if (EtuApplication.getInstance().userInfo != null && EtuApplication.getInstance().userInfo.id == idd) {
+                ToastUtil.showMessage("不能和自己聊天")
+                finish()
+            }
+        }
     }
 
     private fun setRightBtn() {
@@ -85,7 +94,7 @@ class ChatActivity : BaseActivity() {
                                     } else {
                                         addFriend()
                                     }
-                                2 ->onEventPlay(EventPlayYanHua(true))
+                                2 -> onEventPlay(EventPlayYanHua(true))
                                 else -> ""
                             }
                         }

@@ -1,6 +1,9 @@
 package com.yitu.etu.ui.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -9,6 +12,8 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.View
 import android.widget.AdapterView
+import com.allenliu.versionchecklib.core.AllenChecker
+import com.allenliu.versionchecklib.core.VersionParams
 import com.bumptech.glide.Glide
 import com.huizhuang.zxsq.utils.nextActivity
 import com.yitu.etu.BuildConfig
@@ -16,7 +21,9 @@ import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
 import com.yitu.etu.entity.UserInfo
+import com.yitu.etu.entity.VersionBean
 import com.yitu.etu.eventBusItem.EventRefresh
+import com.yitu.etu.eventBusItem.EventRefreshLocation
 import com.yitu.etu.tools.GsonCallback
 import com.yitu.etu.tools.MyActivityManager
 import com.yitu.etu.tools.Urls
@@ -39,7 +46,7 @@ import java.lang.Exception
 
 
 class MainActivity : BaseActivity() {
-    private var defaultPosition=1;
+    private var defaultPosition = 1
     override fun getLayout(): Int = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,11 +58,12 @@ class MainActivity : BaseActivity() {
     }
 
     override fun getIntentExtra(intent: Intent?) {
-        defaultPosition=intent?.getIntExtra("defaultPosition",1)?:1
+        defaultPosition = intent?.getIntExtra("defaultPosition", 1) ?: 1
         super.getIntentExtra(intent)
     }
 
     override fun initView() {
+        registReciver()
         EventBus.getDefault().register(this)
         viewPager.adapter = MyPagerAdapter(supportFragmentManager)
         tab_select.setViewPager(viewPager, intArrayOf(R.drawable.icon136, -1, R.drawable.icon130))
@@ -65,10 +73,10 @@ class MainActivity : BaseActivity() {
         if (BuildConfig.BUILD_TYPE == "etuTest") {
             //超过20天没交钱，此APK无法被打开
             val time = Tools.getTimeDifference("2018-1-9 00:00", DateUtil.getTime("${System.currentTimeMillis() / 1000}", "yyyy-MM-dd HH:mm"))
-            if (time >= 20*24) {
-                val unInstall=Intent()
+            if (time >= 20 * 24) {
+                val unInstall = Intent()
                 unInstall.action = Intent.ACTION_DELETE
-                unInstall.data= Uri.parse("package:"+packageName)
+                unInstall.data = Uri.parse("package:" + packageName)
                 startActivity(unInstall)
                 // 执行这句会杀死进程(优点：会把整个应用的静态变量全部释放)
                 MyActivityManager.getInstance().finishAllActivity()
@@ -79,8 +87,25 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    val reciver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent != null) {
+                if (intent.action == "closeMainActivity") {
+                    finish()
+                }
+            }
+        }
+
+    }
+
+    fun registReciver() {
+        val filter=IntentFilter()
+        filter.addAction("closeMainActivity")
+        registerReceiver(reciver,filter)
+    }
 
     override fun getData() {
+        checkVersion()
         EtuApplication.getInstance().connectChat()//连接聊天服务器
         val buff = StringBuffer("")
         buff.append("缓存目录1$cacheDir\n")
@@ -156,6 +181,7 @@ class MainActivity : BaseActivity() {
             }
             2 -> {
                 registUnRead()
+                EventBus.getDefault().post(EventRefreshLocation())
                 mActionBarView.setTitle("个人中心")
                 mActionBarView.hideLeftImage()
                 mActionBarView.hideRightImage()
@@ -218,6 +244,8 @@ class MainActivity : BaseActivity() {
         RongIM.getInstance().disconnect()
         RongIM.getInstance().removeUnReadMessageCountChangedObserver(unReadListener)
         MyActivityManager.getInstance().finishAllActivity()
+        AllenChecker.cancelMission()
+        unregisterReceiver(reciver)
         super.onDestroy()
     }
 
@@ -239,6 +267,31 @@ class MainActivity : BaseActivity() {
     }
 
     /**
+     * 检查版本更新
+     */
+    fun checkVersion() {
+        post(Urls.URL_VERSION, hashMapOf("version" to packageManager.getPackageInfo(packageName, 0).versionName), object : GsonCallback<ObjectBaseEntity<VersionBean>>() {
+            override fun onResponse(response: ObjectBaseEntity<VersionBean>, id: Int) {
+                if (!response.success() && response.data != null) {
+                    response.data?.run {
+                        val builder = VersionParams.Builder().setOnlyDownload(true)
+                                .setDownloadUrl(url)
+                                .setOnlayUpdata(mustUpdate==1)
+                                .setTitle("检测到新版本")
+                                .setUpdateMsg(des)
+                        AllenChecker.startVersionCheck(EtuApplication.getInstance(), builder.build())
+                    }
+
+                }
+            }
+
+            override fun onError(call: Call?, e: Exception?, id: Int) {
+            }
+
+        })
+    }
+
+    /**
      * 刷新用户数据
      */
     @Subscribe
@@ -248,13 +301,13 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    var time=0L
+    var time = 0L
 
     override fun onBackPressed() {
-        if(System.currentTimeMillis()-time>2000){
+        if (System.currentTimeMillis() - time > 2000) {
             showToast("再按一次返回退出程序")
-            time=System.currentTimeMillis()
-        }else {
+            time = System.currentTimeMillis()
+        } else {
             super.onBackPressed()
         }
     }
@@ -265,7 +318,7 @@ class MainActivity : BaseActivity() {
         System.exit(0)
         System.gc()
         super.finish()
-        overridePendingTransition(-1,R.anim.abc_fade_out)
+        overridePendingTransition(-1, R.anim.abc_fade_out)
     }
 }
 

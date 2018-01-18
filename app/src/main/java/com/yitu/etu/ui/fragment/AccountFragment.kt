@@ -6,6 +6,7 @@ import com.huizhuang.zxsq.utils.nextCheckLoginActivity
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.entity.UserInfo
+import com.yitu.etu.eventBusItem.EventRefreshLocation
 import com.yitu.etu.eventBusItem.LoginSuccessEvent
 import com.yitu.etu.ui.activity.*
 import com.yitu.etu.util.Empty
@@ -48,6 +49,20 @@ class AccountFragment : BaseFragment() {
         LocationUtil.getInstance().startLocation {
             tv_location.text = it?.city.Empty("定位失败")
         }
+    }
+
+    @Subscribe
+    fun onEventRefreshLocation(event:EventRefreshLocation){
+        if (tv_location.text == "定位失败") {
+            LocationUtil.getInstance().startLocation {
+                tv_location.text = it?.city.Empty("定位失败")
+            }
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+
+        super.onHiddenChanged(hidden)
     }
 
     override fun onDestroyView() {

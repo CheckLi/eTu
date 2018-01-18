@@ -518,25 +518,30 @@ public class MapsFragment extends SupportMapFragment implements
                                 cloudItems) {
                             HashMap<String, String> filld = cloudItem.getCustomfield();
                             if (type == type_friend) {
-                                MapFriendEntity mapFirendEntity = new MapFriendEntity();
-                                mapFirendEntity.image = filld.get("image");
-                                mapFirendEntity.user_id = filld.get("user_id");
-                                mapFirendEntity.sex = filld.get("sex");
-                                mapFirendEntity.latLonPoint = cloudItem.getLatLonPoint();
-                                mapFirendEntity.address = cloudItem.getSnippet();
-                                mapFirendEntity.title = cloudItem.getTitle();
-                                mapFirendEntity.id = mapFirendEntity.user_id;
-                                if (mapFirendEntitys.size() == 0) {
-                                    mapFirendEntitys.add(mapFirendEntity);
-                                }
-                                for (int n = 0; n < mapFirendEntitys.size(); n++) {
-                                    if (mapFirendEntitys.get(n).getId().equals(mapFirendEntity.id)) {
-                                        break;
-                                    }
-                                    if (mapFirendEntitys.size() == n + 1) {
+                                String userid=filld.get("user_id");
+                                String myUserid=EtuApplication.getInstance().getUserInfo()!=null?EtuApplication.getInstance().getUserInfo().getId()+"":"";
+                                if(!userid.equals(myUserid)){
+                                    MapFriendEntity mapFirendEntity = new MapFriendEntity();
+                                    mapFirendEntity.image = filld.get("image");
+                                    mapFirendEntity.user_id = filld.get("user_id");
+                                    mapFirendEntity.sex = filld.get("sex");
+                                    mapFirendEntity.latLonPoint = cloudItem.getLatLonPoint();
+                                    mapFirendEntity.address = cloudItem.getSnippet();
+                                    mapFirendEntity.title = cloudItem.getTitle();
+                                    mapFirendEntity.id = mapFirendEntity.user_id;
+                                    if (mapFirendEntitys.size() == 0) {
                                         mapFirendEntitys.add(mapFirendEntity);
                                     }
+                                    for (int n = 0; n < mapFirendEntitys.size(); n++) {
+                                        if (mapFirendEntitys.get(n).getId().equals(mapFirendEntity.id)) {
+                                            break;
+                                        }
+                                        if (mapFirendEntitys.size() == n + 1) {
+                                            mapFirendEntitys.add(mapFirendEntity);
+                                        }
+                                    }
                                 }
+
                             } else if (type == type_order_scene) {
                                 MapOrderSceneEntity mapOrderSceneEntity = new MapOrderSceneEntity();
                                 mapOrderSceneEntity.is_spot = filld.get("is_spot");
@@ -652,7 +657,6 @@ public class MapsFragment extends SupportMapFragment implements
             if (!equals) {
                 mmark.remove();
                 markers.remove(i);
-                Log.e("removeid", "" + mmark.getId());
                 i = i - 1;
             } else {
                 merchantEntitys.remove(merchantEntity3);
@@ -1259,6 +1263,7 @@ public class MapsFragment extends SupportMapFragment implements
                 public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
                     if (!remove) {
                         MarkerOptions markerOption = new MarkerOptions();
+                        markerOption.zIndex(20);
                         markerOption.position(new LatLng(merchantEntity.getLatLonPoint().getLatitude(), merchantEntity.getLatLonPoint().getLongitude()));
                         markerOption.draggable(false);//设置Marker可拖动
                         View view = null;
@@ -1291,13 +1296,13 @@ public class MapsFragment extends SupportMapFragment implements
                             markerOption2.draggable(false);//设置Marker可拖动
                             markerOption2.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view2)));
                             // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-                            markerOption2.setFlat(true);//设置marker平贴地图效果
+                            markerOption2.setFlat(false);//设置marker平贴地图效果
                             fdmarker = mAmap.addMarker(markerOption2);
                             fdmarker.setVisible(false);
                         }
                         markerOption.icon(BitmapDescriptorFactory.fromBitmap(convertViewToBitmap(view)));
                         // 将Marker设置为贴地显示，可以双指下拉地图查看效果
-                        markerOption.setFlat(true);//设置marker平贴地图效果
+                        markerOption.setFlat(false);//设置marker平贴地图效果
                         marker = mAmap.addMarker(markerOption);
                         marker.setObject(merchantEntity);
                     }

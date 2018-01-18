@@ -221,7 +221,15 @@ public class Tools {
      * @param context
      */
     public static void startChat(String title, String id, Context context) {
-        RongIM.getInstance().startPrivateChat(context, id, title);
+        if(EtuApplication.getInstance().isLogin()){
+            int idd=Integer.parseInt(TextUtils.getText(id,"0"));
+            if(EtuApplication.getInstance().getUserInfo()!=null&&EtuApplication.getInstance().getUserInfo().getId()!=idd){
+                RongIM.getInstance().startPrivateChat(context, id, title);
+            }else{
+                ToastUtil.showMessage("不能和自己聊天");
+            }
+        }
+
     }
 
     /**
@@ -232,7 +240,15 @@ public class Tools {
      * @param context
      */
     public static void startChat(String title, String id, String chatContent, Context context) {
-        RongIM.getInstance().startPrivateChat(context, id, title);
+        if(EtuApplication.getInstance().isLogin()){
+            int idd=Integer.parseInt(TextUtils.getText(id,"0"));
+            if(EtuApplication.getInstance().getUserInfo()!=null&&EtuApplication.getInstance().getUserInfo().getId()!=idd){
+                RongIM.getInstance().startPrivateChat(context, id, title);
+            }else{
+                ToastUtil.showMessage("不能和自己聊天");
+            }
+        }
+
         if(TextUtils.isEmpty(chatContent)){
             return;
         }

@@ -147,3 +147,10 @@ data class ChatToken(
 		@SerializedName("token") val token: String //oRMa6ptbTrU2HBlCGrCiRweA30kxoEAEOTt+WC0cNJzLkt2gOSPDFXWlIfh07G9XZcsW/B1xOImLbXkCd6WbGw==
 )
 
+
+data class VersionBean(
+		@SerializedName("version") val version: Double = 0.0, //1.01
+		@SerializedName("must_update") val mustUpdate: Int = 0, //1 1为强制更新，0为选择更新
+		@SerializedName("des") val des: String = "", //修复了界面展示小问题、操作体验上的问题。
+		@SerializedName("url") val url: String = "" //http://91eto.com
+)
