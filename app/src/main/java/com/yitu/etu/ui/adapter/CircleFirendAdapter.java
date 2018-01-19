@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.yitu.etu.EtuApplication;
 import com.yitu.etu.R;
+import com.yitu.etu.dialog.TipsDialog;
 import com.yitu.etu.entity.CircleFirendEntity;
 import com.yitu.etu.entity.HttpStateEntity;
 import com.yitu.etu.entity.ObjectBaseEntity;
@@ -26,6 +27,8 @@ import com.yitu.etu.widget.MGridView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import okhttp3.Call;
 
 /**
@@ -143,25 +146,33 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
             viewHolder.tv_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("id", data.getId() + "");
-                    Http.post(Urls.CIRCLE_DELETE, params, new GsonCallback<HttpStateEntity>() {
+                    TipsDialog dialog = new TipsDialog(v.getContext(), "删除朋友圈");
+                    dialog.setMessage("确认要删除这条朋友圈？");
+                    dialog.setRightBtn("删除", new Function1<View, Unit>() {
                         @Override
-                        public void onError(Call call, Exception e, int i) {
+                        public Unit invoke(View view) {
+                            HashMap<String, String> params = new HashMap<>();
+                            params.put("id", data.getId() + "");
+                            Http.post(Urls.CIRCLE_DELETE, params, new GsonCallback<HttpStateEntity>() {
+                                @Override
+                                public void onError(Call call, Exception e, int i) {
 
+                                }
+
+                                @Override
+                                public void onResponse(HttpStateEntity response, int i) {
+                                    if (response.success()) {
+                                        removeByPosition(position);
+                                    } else {
+                                        ToastUtil.showMessage(response.getMessage());
+                                    }
+
+                                }
+                            }, true);
+                            return null;
                         }
-
-                        @Override
-                        public void onResponse(HttpStateEntity response, int i) {
-                            if (response.success()) {
-                                removeByPosition(position);
-                            } else {
-                                ToastUtil.showMessage(response.getMessage());
-                            }
-
-                        }
-                    }, true);
-
+                    });
+                    dialog.show();
                 }
             });
             viewHolder.img_dz.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +204,7 @@ public class CircleFirendAdapter extends BaseAdapter<CircleFirendEntity.CircleBe
                 @Override
                 public void onClick(View v) {
                     plPosition = position;
-                    activityUtil.nextActivity(getContext(),InputContentActivity.class,null,10001,false,R.anim.actionsheet_dialog_in,R.anim.actionsheet_dialog_out);
+                    activityUtil.nextActivity(getContext(), InputContentActivity.class, null, 10001, false, R.anim.actionsheet_dialog_in, R.anim.actionsheet_dialog_out);
                 }
             });
         }

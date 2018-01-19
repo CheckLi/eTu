@@ -31,7 +31,7 @@ class SoftWareShareActivity : BaseActivity() {
         val web=UMWeb("http://91eto.com")
         web.title="e途旅行平台"
         web.description="e途,一直等着你的旅行平台"
-        web.setThumb(UMImage(this@SoftWareShareActivity,R.mipmap.ic_launcher))
+        web.setThumb(UMImage(this@SoftWareShareActivity,R.mipmap.share_image))
         ShareAction(this)
                 .withMedia(web)
                 .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)

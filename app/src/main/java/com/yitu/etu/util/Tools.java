@@ -185,32 +185,40 @@ public class Tools {
      * @param id
      */
     public static void addFriend(final BaseActivity activity, String id) {
-        activity.showWaitDialog("添加中...");
-        HashMap<String, String> params = new HashMap<>();
-        params.put("suser_id", id);
-        Http.post(Urls.URL_ADD_FRIEND, params, new StringCallback() {
+        if(EtuApplication.getInstance().isLogin()){
+            int idd=Integer.parseInt(TextUtils.getText(id,"0"));
+            if(EtuApplication.getInstance().getUserInfo()!=null&&EtuApplication.getInstance().getUserInfo().getId()!=idd){
+                activity.showWaitDialog("添加中...");
+                HashMap<String, String> params = new HashMap<>();
+                params.put("suser_id", id);
+                Http.post(Urls.URL_ADD_FRIEND, params, new StringCallback() {
 
 
-            @Override
-            public void onError(Call call, Exception e, int id) {
-                activity.hideWaitDialog();
-                activity.showToast("添加失败");
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        activity.hideWaitDialog();
+                        activity.showToast("添加失败");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            activity.hideWaitDialog();
+                            activity.showToast(jsonObject.optString("message"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+
+                });
+            }else{
+                ToastUtil.showMessage("不能添加自己为好友");
             }
+        }
 
-            @Override
-            public void onResponse(String response, int id) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    activity.hideWaitDialog();
-                    activity.showToast(jsonObject.optString("message"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-
-        });
     }
 
     /**

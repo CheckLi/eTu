@@ -169,23 +169,29 @@ class ChatActivity : BaseActivity() {
      * 添加好友
      */
     fun addFriend() {
-        showWaitDialog("添加中...")
-        post(Urls.URL_ADD_FRIEND, hashMapOf("suser_id" to intent.data.getQueryParameter("targetId")), object : GsonCallback<ObjectBaseEntity<UserInfo>>() {
-            override fun onError(call: Call?, e: Exception?, id: Int) {
-                showToast("添加失败")
-                hideWaitDialog()
-            }
-
-            override fun onResponse(response: ObjectBaseEntity<UserInfo>, id: Int) {
-                hideWaitDialog()
-                if (response.success() && response.data != null) {
-                    showToast("添加成功")
-                } else {
-                    showToast(response.message)
+        val idd = Integer.parseInt(TextUtils.getText(intent.data.getQueryParameter("targetId"), "0"))
+        if (EtuApplication.getInstance().userInfo != null && EtuApplication.getInstance().userInfo.id == idd) {
+            ToastUtil.showMessage("不能添加自己为好友")
+        }else{
+            showWaitDialog("添加中...")
+            post(Urls.URL_ADD_FRIEND, hashMapOf("suser_id" to intent.data.getQueryParameter("targetId")), object : GsonCallback<ObjectBaseEntity<UserInfo>>() {
+                override fun onError(call: Call?, e: Exception?, id: Int) {
+                    showToast("添加失败")
+                    hideWaitDialog()
                 }
-            }
 
-        })
+                override fun onResponse(response: ObjectBaseEntity<UserInfo>, id: Int) {
+                    hideWaitDialog()
+                    if (response.success() && response.data != null) {
+                        showToast("添加成功")
+                    } else {
+                        showToast(response.message)
+                    }
+                }
+
+            })
+        }
+
     }
 
     override fun onDestroy() {
