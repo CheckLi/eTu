@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -51,6 +52,7 @@ import com.yitu.etu.widget.chat.ShareMessage;
 import com.yuyh.library.imgsel.ISNav;
 import com.yuyh.library.imgsel.common.ImageLoader;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.https.HttpsUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -88,6 +90,12 @@ public class EtuApplication extends Application {
     }
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
@@ -102,8 +110,10 @@ public class EtuApplication extends Application {
         /**
          * 网络配置
          */
+        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
 //                .addInterceptor(new LoggerInterceptor("TAG"))
+                .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 .connectTimeout(30000L, TimeUnit.MILLISECONDS)
                 .readTimeout(30000L, TimeUnit.MILLISECONDS)
                 //其他配置

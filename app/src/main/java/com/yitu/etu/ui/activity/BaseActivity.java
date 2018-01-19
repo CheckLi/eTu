@@ -126,6 +126,35 @@ public abstract class BaseActivity extends AppCompatActivity {
         ISNav.getInstance().toListActivity(this, config, REQUEST_LIST_CODE);
     }
 
+
+    public void Single(boolean isShowCam,boolean isCrop, int aspectX, int aspectY, int outx, int outy) {
+        this.isCrop = isCrop;
+        ISListConfig config = new ISListConfig.Builder()
+                // 是否多选
+                .multiSelect(false)
+                // 确定按钮背景色
+                //.btnBgColor(Color.parseColor(""))
+                // 确定按钮文字颜色
+                .btnTextColor(Color.WHITE)
+                // 使用沉浸式状态栏
+                .statusBarColor(getResources().getColor(R.color.actionBarColor))
+                // 返回图标ResId
+                .backResId(R.drawable.icon41)
+                .title("图片选择")
+                .titleColor(Color.WHITE)
+                .titleBgColor(getResources().getColor(R.color.actionBarColor))
+                .allImagesText("All Images")
+                .needCrop(isCrop)
+                .cropSize(aspectX, aspectY, outx, outy)
+                // 第一个是否显示相机
+                .needCamera(isShowCam)
+                // 最大选择图片数量
+                .maxNum(9)
+                .build();
+
+        ISNav.getInstance().toListActivity(this, config, REQUEST_LIST_CODE);
+    }
+
     public void Camera(boolean isCrop, int aspectX, int aspectY, int outx, int outy) {
         this.isCrop = isCrop;
         ISCameraConfig config = new ISCameraConfig.Builder()

@@ -20,6 +20,7 @@ import io.rong.imlib.model.CSCustomServiceInfo
 import kotlinx.android.synthetic.main.fragment_account_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.lang.Exception
 
 
 /**
@@ -160,6 +161,7 @@ class AccountFragment : BaseFragment() {
          * 联系客服
          */
         tv_call_service.setOnClickListener {
+            throw Exception("我崩溃看看")
             /**
              * 启动客户服聊天界面。
              *
