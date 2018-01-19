@@ -7,6 +7,8 @@ import com.umeng.socialize.ShareAction
 import com.umeng.socialize.UMShareAPI
 import com.umeng.socialize.UMShareListener
 import com.umeng.socialize.bean.SHARE_MEDIA
+import com.umeng.socialize.media.UMImage
+import com.umeng.socialize.media.UMWeb
 import com.yitu.etu.R
 
 
@@ -26,8 +28,12 @@ class SoftWareShareActivity : BaseActivity() {
 
     private fun share() {
 
+        val web=UMWeb("http://91eto.com")
+        web.title="e途旅行平台"
+        web.description="e途,一直等着你的旅行平台"
+        web.setThumb(UMImage(this@SoftWareShareActivity,R.mipmap.ic_launcher))
         ShareAction(this)
-                .withText("hello")
+                .withMedia(web)
                 .setDisplayList(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE)
                 .setCallback(object : UMShareListener {
                     override fun onResult(p0: SHARE_MEDIA?) {

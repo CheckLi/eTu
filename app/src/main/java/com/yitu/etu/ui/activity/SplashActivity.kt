@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Handler
 import android.view.View
 import com.yitu.etu.R
+import com.yitu.etu.util.PrefrersUtil
 
 class SplashActivity : BaseActivity() {
     private var mHandler = Handler()
@@ -22,6 +23,7 @@ class SplashActivity : BaseActivity() {
     }
 
     override fun initView() {
+        PrefrersUtil.getInstance().saveValue("isCrash1", false)
         mHandler.postDelayed(mTime, 1000)
     }
 

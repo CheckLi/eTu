@@ -52,6 +52,7 @@ import com.yitu.etu.widget.chat.ShareMessage;
 import com.yuyh.library.imgsel.ISNav;
 import com.yuyh.library.imgsel.common.ImageLoader;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.https.HttpsUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -109,8 +110,10 @@ public class EtuApplication extends Application {
         /**
          * 网络配置
          */
+        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(null, null, null);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
 //                .addInterceptor(new LoggerInterceptor("TAG"))
+                .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                 .connectTimeout(30000L, TimeUnit.MILLISECONDS)
                 .readTimeout(30000L, TimeUnit.MILLISECONDS)
                 //其他配置
