@@ -131,6 +131,12 @@ class MyPlugin(val type: Int) : IPluginModule {
         mConversationType = Conversation.ConversationType.valueOf(typeStr.Empty())
         if (activity is BaseActivity) {
             when (type) {
+                -1 -> {
+                    activity.Single(false,false, 3, 4, 720, 1280)
+                    activity.setSuccessListener {
+                        sendImageMessage(it)
+                    }
+                }
                 0 -> {
                     activity.Camera(true, 3, 4, 720, 1280)
                     activity.setSuccessListener {
@@ -248,6 +254,7 @@ class MyPlugin(val type: Int) : IPluginModule {
 
     override fun obtainDrawable(p0: Context?): Drawable {
         return EtuApplication.getInstance().resources.getDrawable(when (type) {
+            -1 -> R.drawable.rc_ext_plugin_image
             0 -> R.drawable.chat_location
             1 -> R.drawable.rc_ext_plugin_location
             2 -> R.drawable.rc_ext_plugin_location
@@ -258,6 +265,7 @@ class MyPlugin(val type: Int) : IPluginModule {
 
     override fun obtainTitle(p0: Context?): String {
         return when (type) {
+            -1->"照片"
             0 -> "拍摄"
             1 -> "位置"
             2 -> "位置共享"
@@ -291,9 +299,10 @@ class MyExtensionModule : DefaultExtensionModule() {
 
     override fun getPluginModules(conversationType: Conversation.ConversationType): List<IPluginModule> {
         val pluginModules = super.getPluginModules(conversationType)
-        if (pluginModules.size > 1) {
-            pluginModules.removeAt(1)
+        if (pluginModules.size > 0) {
+            pluginModules.clear()
         }
+        pluginModules.add(MyPlugin(-1))
         pluginModules.add(MyPlugin(0))
         pluginModules.add(MyPlugin(1))
         pluginModules.add(MyPlugin(2))
