@@ -39,6 +39,7 @@ public class CrashException extends Exception implements Thread.UncaughtExceptio
             PrefrersUtil.getInstance().saveValue("isCrash1",true);
         }
 
+
         SystemClock.sleep(2000);
         // 执行这句会杀死进程(优点：会把整个应用的静态变量全部释放)
         MyActivityManager.getInstance().finishAllActivity();
