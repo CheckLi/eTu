@@ -6,6 +6,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 14
+        multiDexEnabled true
         versionName "2.8.24 Dev"
     }
     buildTypes {
@@ -35,7 +36,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'src/main/libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
     implementation 'com.android.support:support-v4:23.0.0'
-    compile project (':IMLib')
+    compile project(':IMLib')
 }

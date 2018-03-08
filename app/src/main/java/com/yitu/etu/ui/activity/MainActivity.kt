@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -16,7 +14,6 @@ import com.allenliu.versionchecklib.core.AllenChecker
 import com.allenliu.versionchecklib.core.VersionParams
 import com.bumptech.glide.Glide
 import com.huizhuang.zxsq.utils.nextActivity
-import com.yitu.etu.BuildConfig
 import com.yitu.etu.EtuApplication
 import com.yitu.etu.R
 import com.yitu.etu.entity.ObjectBaseEntity
@@ -30,9 +27,10 @@ import com.yitu.etu.tools.Urls
 import com.yitu.etu.ui.fragment.AccountFragment
 import com.yitu.etu.ui.fragment.LYFragment
 import com.yitu.etu.ui.fragment.MapsFragment
-import com.yitu.etu.util.*
+import com.yitu.etu.util.Tools
+import com.yitu.etu.util.isLogin
+import com.yitu.etu.util.post
 import com.yitu.etu.widget.tablayout.OnTabSelectListener
-import io.rong.common.FileUtils
 import io.rong.imkit.RongIM
 import io.rong.imkit.manager.IUnReadMessageObserver
 import io.rong.imlib.model.Conversation
@@ -70,21 +68,25 @@ class MainActivity : BaseActivity() {
         viewPager.offscreenPageLimit = 2
         tab_select.currentTab = defaultPosition
         select(defaultPosition)
-        if (BuildConfig.BUILD_TYPE == "etuTest") {
+        /*if (BuildConfig.BUILD_TYPE == "etuTest") {
             //超过20天没交钱，此APK无法被打开
-            val time = Tools.getTimeDifference("2018-1-9 00:00", DateUtil.getTime("${System.currentTimeMillis() / 1000}", "yyyy-MM-dd HH:mm"))
+            val time = Tools.getTimeDifference("2018-2-11 00:00", DateUtil.getTime("${System.currentTimeMillis() / 1000}", "yyyy-MM-dd HH:mm"))
             if (time >= 20 * 24) {
-                val unInstall = Intent()
-                unInstall.action = Intent.ACTION_DELETE
-                unInstall.data = Uri.parse("package:" + packageName)
-                startActivity(unInstall)
-                // 执行这句会杀死进程(优点：会把整个应用的静态变量全部释放)
-                MyActivityManager.getInstance().finishAllActivity()
-                android.os.Process.killProcess(android.os.Process.myPid())
-                System.exit(0)
-                System.gc()
+                val tipsdialog = SingleTipsDialog(this, "到期提示")
+                tipsdialog.setCancelable(false)
+                tipsdialog.setCanceledOnTouchOutside(false)
+                tipsdialog.setMessage("测试包使用时间已经到期，请联系开发人员")
+                tipsdialog.setLeftBtn("我知道了") {
+                    // 执行这句会杀死进程(优点：会把整个应用的静态变量全部释放)
+                    MyActivityManager.getInstance().finishAllActivity()
+                    android.os.Process.killProcess(android.os.Process.myPid())
+                    System.exit(0)
+                    System.gc()
+                }
+                tipsdialog.showDialog()
+
             }
-        }
+        }*/
     }
 
     val reciver = object : BroadcastReceiver() {
@@ -99,15 +101,15 @@ class MainActivity : BaseActivity() {
     }
 
     fun registReciver() {
-        val filter=IntentFilter()
+        val filter = IntentFilter()
         filter.addAction("closeMainActivity")
-        registerReceiver(reciver,filter)
+        registerReceiver(reciver, filter)
     }
 
     override fun getData() {
         checkVersion()
         EtuApplication.getInstance().connectChat()//连接聊天服务器
-        val buff = StringBuffer("")
+        /*val buff = StringBuffer("")
         buff.append("缓存目录1$cacheDir\n")
         buff.append("缓存目录2$filesDir\n")
 
@@ -117,7 +119,7 @@ class MainActivity : BaseActivity() {
         val file = cacheDir
         getsize(file)
         buff.append("缓存目录1$cacheDir 大小 ${file.length() / 1024.0f}kb ${lenght}kb\n")
-        LogUtil.e("cache", buff.toString())
+        LogUtil.e("cache", buff.toString())*/
         refreshMyInfo()
     }
 
@@ -276,7 +278,7 @@ class MainActivity : BaseActivity() {
                     response.data?.run {
                         val builder = VersionParams.Builder().setOnlyDownload(true)
                                 .setDownloadUrl(url)
-                                .setOnlayUpdata(mustUpdate==1)
+                                .setOnlayUpdata(mustUpdate == 1)
                                 .setTitle("检测到新版本")
                                 .setUpdateMsg(des)
                         AllenChecker.startVersionCheck(EtuApplication.getInstance(), builder.build())
